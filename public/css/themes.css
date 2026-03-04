@@ -1,0 +1,193 @@
+/* public/css/themes.css - Sistema de diseño Apple Liquid Crystal */
+/* FUENTE ÚNICA DE VERDAD PARA TODAS LAS VARIABLES CSS */
+
+/* =============================================
+   MODO CLARO (por defecto)
+   ============================================= */
+:root,
+:root[data-theme="light"] {
+    /* ---- Colores de Marca ---- */
+    --primary:            #3b82f6;
+    --primary-dark:       #2563eb;
+    --primary-light:      rgba(59, 130, 246, 0.15);
+
+    /* Alias glass (mismos valores, compatibilidad) */
+    --glass-primary:      #3b82f6;
+    --glass-primary-dark: #2563eb;
+    --glass-primary-light:rgba(59, 130, 246, 0.15);
+
+    /* ---- Semánticos ---- */
+    --success:        #10b981;
+    --warning:        #f59e0b;
+    --danger:         #ef4444;
+    --info:           #06b6d4;
+    --glass-success:  #10b981;
+    --glass-warning:  #f59e0b;
+    --glass-danger:   #ef4444;
+    --glass-info:     #06b6d4;
+
+    /* ---- Paleta de colores directa ---- */
+    --blue:         #3b82f6;
+    --blue-light:   #60a5fa;
+    --blue-dark:    #2563eb;
+    --purple:       #8b5cf6;
+    --purple-light: #a78bfa;
+    --purple-dark:  #7c3aed;
+    --green:        #10b981;
+    --orange:       #f59e0b;
+    --red:          #ef4444;
+
+    /* ---- Fondo del cuerpo (gradiente Apple Liquid Crystal) ---- */
+    --body-bg: linear-gradient(135deg,
+        #dbeafe 0%,
+        #eff6ff 25%,
+        #f0f9ff 50%,
+        #f5f3ff 75%,
+        #fdf4ff 100%);
+    --body-bg-size: 400% 400%;
+
+    /* ---- Superficies ---- */
+    --bg-primary:   #ffffff;
+    --bg-secondary: #f8fafc;
+    --bg-tertiary:  #f1f5f9;
+
+    /* ---- Superficies Glass ---- */
+    --glass-bg:         rgba(255, 255, 255, 0.4);
+    --glass-bg-card:    rgba(255, 255, 255, 0.70);
+    --glass-bg-sidebar: rgba(255, 255, 255, 0.80);
+    --glass-bg-input:   rgba(255, 255, 255, 0.75);
+
+    /* ---- Bordes Glass ---- */
+    --glass-border: rgba(59, 130, 246, 0.20);
+    --border-color: rgba(59, 130, 246, 0.15);
+    --border-light: rgba(59, 130, 246, 0.08);
+
+    /* ---- Sombras Glass ---- */
+    --glass-shadow:       0 8px 32px 0 rgba(59, 130, 246, 0.12);
+    --glass-shadow-hover: 0 12px 40px 0 rgba(59, 130, 246, 0.22);
+    --glass-shadow-card:  0 4px 24px 0 rgba(59, 130, 246, 0.10);
+
+    /* ---- Sombras Bootstrap-style ---- */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.10);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.12);
+
+    /* ---- Efectos ---- */
+    --glass-blur:   blur(30px);
+    --glass-radius: 16px;
+
+    /* ---- Texto ---- */
+    --text-primary:   #1e293b;
+    --text-secondary: #475569;
+    --text-muted:     #64748b;
+
+    /* Alias glass */
+    --glass-text-main:  #1e293b;
+    --glass-text-muted: #64748b;
+    --glass-text-light: #94a3b8;
+
+    /* ---- Sidebar ---- */
+    --sidebar-bg:     rgba(255, 255, 255, 0.82);
+    --sidebar-hover:  rgba(59, 130, 246, 0.08);
+    --sidebar-active: rgba(59, 130, 246, 0.14);
+
+    /* ---- Radios ---- */
+    --radius-sm: 12px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+}
+
+/* =============================================
+   MODO OSCURO
+   ============================================= */
+:root[data-theme="dark"],
+body.dark-mode {
+    /* ---- Colores de Marca (dark) ---- */
+    --primary:            #60a5fa;
+    --primary-dark:       #3b82f6;
+    --primary-light:      rgba(96, 165, 250, 0.20);
+
+    --glass-primary:      #60a5fa;
+    --glass-primary-dark: #3b82f6;
+    --glass-primary-light:rgba(96, 165, 250, 0.20);
+
+    /* ---- Semánticos ---- */
+    --success:       #34d399;
+    --warning:       #fbbf24;
+    --danger:        #f87171;
+    --info:          #22d3ee;
+    --glass-success: #34d399;
+    --glass-warning: #fbbf24;
+    --glass-danger:  #f87171;
+    --glass-info:    #22d3ee;
+
+    /* ---- Paleta directa (dark) ---- */
+    --blue:         #60a5fa;
+    --blue-light:   #93c5fd;
+    --blue-dark:    #3b82f6;
+    --purple:       #a78bfa;
+    --purple-light: #c4b5fd;
+    --purple-dark:  #8b5cf6;
+    --green:        #34d399;
+    --orange:       #fbbf24;
+    --red:          #f87171;
+
+    /* ---- Fondo dark (gradiente oscuro) ---- */
+    --body-bg: linear-gradient(135deg,
+        #0f172a 0%,
+        #1e1b4b 30%,
+        #1e293b 70%,
+        #0f172a 100%);
+
+    /* ---- Superficies ---- */
+    --bg-primary:   #1e293b;
+    --bg-secondary: #0f172a;
+    --bg-tertiary:  #334155;
+
+    /* ---- Superficies Glass ---- */
+    --glass-bg:         rgba(30, 41, 59, 0.50);
+    --glass-bg-card:    rgba(30, 41, 59, 0.72);
+    --glass-bg-sidebar: rgba(15, 23, 42, 0.90);
+    --glass-bg-input:   rgba(15, 23, 42, 0.60);
+
+    /* ---- Bordes ---- */
+    --glass-border: rgba(96, 165, 250, 0.28);
+    --border-color: rgba(96, 165, 250, 0.22);
+    --border-light: rgba(96, 165, 250, 0.12);
+
+    /* ---- Sombras ---- */
+    --glass-shadow:       0 8px 32px 0 rgba(0, 0, 0, 0.50);
+    --glass-shadow-hover: 0 12px 40px 0 rgba(0, 0, 0, 0.65);
+    --glass-shadow-card:  0 4px 24px 0 rgba(0, 0, 0, 0.40);
+
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.40);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.50);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.60);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.70);
+
+    /* ---- Texto ---- */
+    --text-primary:   #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted:     #94a3b8;
+
+    --glass-text-main:  rgba(255, 255, 255, 0.95);
+    --glass-text-muted: rgba(255, 255, 255, 0.65);
+    --glass-text-light: rgba(255, 255, 255, 0.40);
+
+    /* ---- Sidebar ---- */
+    --sidebar-bg:     rgba(15, 23, 42, 0.92);
+    --sidebar-hover:  rgba(96, 165, 250, 0.10);
+    --sidebar-active: rgba(96, 165, 250, 0.20);
+}
+
+/* =============================================
+   TRANSICIÓN SUAVE ENTRE TEMAS
+   ============================================= */
+* {
+    transition:
+        background-color 0.25s ease,
+        border-color     0.25s ease,
+        color            0.25s ease,
+        box-shadow       0.25s ease;
+}
