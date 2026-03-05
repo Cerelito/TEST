@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $titulo ?? APP_NAME ?></title>
 
-    <link rel="stylesheet" href="<?= BASE_URL ?>public/css/themes.css?v=2.0.0">
-    <link rel="stylesheet" href="<?= BASE_URL ?>public/css/app.css?v=2.0.0">
-    <link rel="stylesheet" href="<?= BASE_URL ?>public/css/responsive.css?v=2.0.0">
+    <link rel="stylesheet" href="<?= BASE_URL ?>public/css/themes.css?v=2.2.0">
+    <link rel="stylesheet" href="<?= BASE_URL ?>public/css/app.css?v=2.2.0">
+    <link rel="stylesheet" href="<?= BASE_URL ?>public/css/responsive.css?v=2.2.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -126,7 +126,7 @@
                     </button>
                 </div>
 
-                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div class="topbar-right">
                     <!-- Theme Toggle -->
                     <button class="theme-toggle" aria-label="Cambiar tema">
                         <i class="bi bi-sun-fill theme-toggle-icon sun"></i>
@@ -134,7 +134,7 @@
                     </button>
 
                     <!-- Divider -->
-                    <div style="width: 1px; height: 24px; background: var(--glass-border);"></div>
+                    <div class="topbar-divider"></div>
 
                     <!-- User Info -->
                     <div class="topbar-user">
@@ -142,10 +142,10 @@
                             <?= strtoupper(substr(usuarioActual()['nombre'] ?? 'U', 0, 1)) ?>
                         </div>
                         <div>
-                            <div style="font-weight: 600; font-size: 0.9375rem; color: var(--glass-text-main);">
+                            <div class="topbar-user-name">
                                 <?= e(usuarioActual()['nombre'] ?? 'Usuario') ?>
                             </div>
-                            <div style="font-size: 0.8125rem; color: var(--glass-text-muted);">
+                            <div class="topbar-user-role">
                                 <?= e(usuarioActual()['perfil_nombre'] ?? usuarioActual()['rol'] ?? '') ?>
                             </div>
                         </div>

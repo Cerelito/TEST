@@ -61,13 +61,11 @@ require_once VIEWS_PATH . 'layouts/header.php';
             Seleccione los permisos que tendrá este perfil. Los permisos están agrupados por módulo.
         </div>
 
-        <div class="grid-container" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;">
+        <div class="grid-container grid-auto-fit-280">
             <?php foreach ($permisos_agrupados as $moduloKey => $grupo): ?>
-                <div class="glass-panel"
-                    style="background: var(--bg-secondary); padding: 1.25rem; margin-bottom: 0 !important;">
+                <div class="glass-panel perfil-module-card">
                     <div class="d-flex justify-between align-center mb-3 pb-2 border-bottom">
-                        <h3
-                            style="font-size: 1rem; font-weight: 600; color: var(--primary); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <h3 class="perfil-module-title">
                             <i class="bi <?= $grupo['info']['icono'] ?>"></i>
                             <?= $grupo['info']['titulo'] ?>
                         </h3>
@@ -84,11 +82,10 @@ require_once VIEWS_PATH . 'layouts/header.php';
                                     <input type="checkbox" id="perm_<?= $perm['id'] ?>" name="permisos[]" value="<?= $perm['id'] ?>"
                                         class="form-check-input" data-modulo="<?= $moduloKey ?>">
 
-                                    <label for="perm_<?= $perm['id'] ?>" class="form-check-label" style="font-size: 0.9rem;">
+                                    <label for="perm_<?= $perm['id'] ?>" class="form-check-label perfil-check-label">
                                         <strong><?= $perm['nombre'] ?></strong>
                                         <?php if (!empty($perm['descripcion'])): ?>
-                                            <br><span class="text-muted"
-                                                style="font-size: 0.8rem; font-weight: normal;"><?= e($perm['descripcion']) ?></span>
+                                            <br><span class="text-muted perfil-check-desc"><?= e($perm['descripcion']) ?></span>
                                         <?php endif; ?>
                                     </label>
                                 </div>
@@ -101,7 +98,7 @@ require_once VIEWS_PATH . 'layouts/header.php';
             <?php endforeach; ?>
         </div>
 
-        <div class="mt-4 p-3 rounded" style="background: var(--bg-secondary); border-left: 3px solid var(--warning);">
+        <div class="mt-4 p-3 rounded info-panel-warning">
             <strong>Permisos seleccionados: <span id="contador">0</span></strong>
         </div>
     </div>

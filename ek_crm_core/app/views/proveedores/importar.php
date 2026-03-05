@@ -14,8 +14,8 @@ require_once VIEWS_PATH . 'layouts/header.php';
         <h2 class="card-title"><i class="bi bi-1-circle"></i> 1. Descargar Plantilla</h2>
         <p class="text-muted">Utilice nuestra plantilla oficial para evitar errores de formato.</p>
 
-        <div class="alert alert-info" style="font-size: 0.9rem;">
-            <ul style="margin: 0; padding-left: 1rem;">
+        <div class="alert alert-info alert-text-sm">
+            <ul class="alert-list-compact">
                 <li>Formato <strong>.CSV</strong> (Delimitado por comas).</li>
                 <li>No modifique el orden de las columnas.</li>
                 <li>El <strong>RFC</strong> es obligatorio y único.</li>

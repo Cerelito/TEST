@@ -30,11 +30,10 @@ require_once VIEWS_PATH . 'layouts/header.php';
         <?php else: ?>
             <div class="timeline-container">
                 <?php foreach ($historial as $evento): ?>
-                    <div class="p-3 mb-3 rounded border"
-                        style="background: var(--bg-tertiary); border-left: 3px solid var(--primary) !important;">
+                    <div class="p-3 mb-3 rounded border historial-event">
                         <div class="d-flex justify-between align-center mb-1">
                             <span class="badge badge-primary"><?= e($evento['Accion']) ?></span>
-                            <small class="text-muted" style="font-size: 0.75rem;">
+                            <small class="text-muted text-xs">
                                 <i class="bi bi-calendar3"></i> <?= formatoFechaHora($evento['Fecha']) ?>
                             </small>
                         </div>
@@ -67,7 +66,7 @@ require_once VIEWS_PATH . 'layouts/header.php';
             <label class="form-label small fw-bold text-primary mb-2">Nuevo Documento</label>
             <div class="d-flex flex-column gap-2">
                 <div class="d-flex gap-2">
-                    <select name="TipoDocumento" class="form-control form-control-sm" style="flex: 1;">
+                    <select name="TipoDocumento" class="form-control form-control-sm select-flex">
                         <option value="OTRO">Otro Documento</option>
                         <option value="ESTADO_CUENTA">Estado de Cuenta</option>
                         <option value="CONTRATO">Contrato</option>
@@ -85,20 +84,20 @@ require_once VIEWS_PATH . 'layouts/header.php';
 
         <?php if (empty($adjuntos)): ?>
             <div class="text-center py-4 text-muted opacity-50">
-                <i class="bi bi-folder-x" style="font-size: 2rem;"></i>
+                <i class="bi bi-folder-x icon-lg"></i>
                 <p class="small mt-2">No hay documentos adicionales.</p>
             </div>
         <?php else: ?>
-            <div class="d-flex flex-column gap-2 custom-scroll" style="max-height: 500px; overflow-y: auto;">
+            <div class="d-flex flex-column gap-2 custom-scroll historial-scroll">
                 <?php foreach ($adjuntos as $adj): ?>
                     <div class="d-flex align-center justify-between p-2 rounded border bg-white hover-bg transition">
                         <div class="overflow-hidden d-flex align-center gap-2">
                             <i class="bi bi-file-earmark-pdf text-danger fs-5"></i>
-                            <div style="min-width: 0;">
+                            <div class="historial-file-info">
                                 <div class="fw-bold small text-truncate text-dark">
                                     <?= e($adj['NombreArchivo']) ?>
                                 </div>
-                                <div class="text-muted" style="font-size: 0.7rem;">
+                                <div class="text-muted historial-file-date">
                                     <span class="text-uppercase"><?= e($adj['TipoDocumento']) ?></span> •
                                     <?= formatoFecha($adj['FechaSubida']) ?>
                                 </div>

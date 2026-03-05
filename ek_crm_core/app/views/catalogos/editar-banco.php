@@ -26,7 +26,7 @@ require_once VIEWS_PATH . 'layouts/header.php';
             <i class="bi bi-info-circle"></i> Datos del Banco
         </h2>
 
-        <div class="grid-container" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;">
+        <div class="grid-container grid-auto-fit-250">
             <div class="form-group">
                 <label for="CLABE" class="form-label">CLABE <span class="text-danger">*</span></label>
                 <input type="text" id="CLABE" name="CLABE" class="form-control" required maxlength="10"

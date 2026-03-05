@@ -24,7 +24,7 @@ require_once VIEWS_PATH . 'layouts/header.php';
     <?php foreach ($perfiles as $perfil): ?>
         <div class="glass-panel">
             <div class="d-flex justify-between align-center mb-3">
-                <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--text-primary); margin: 0;">
+                <h3 class="perfil-card-title">
                     <i class="bi bi-award"></i> <?= e($perfil['nombre']) ?>
                 </h3>
                 <?php if (isset($perfil['total_usuarios']) && $perfil['total_usuarios'] > 0): ?>
@@ -35,19 +35,18 @@ require_once VIEWS_PATH . 'layouts/header.php';
             </div>
 
             <?php if (!empty($perfil['descripcion'])): ?>
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem; line-height: 1.5;">
+                <p class="perfil-description">
                     <?= e($perfil['descripcion']) ?>
                 </p>
             <?php endif; ?>
 
-            <div style="margin-bottom: 1rem; flex-grow: 1;">
-                <div
-                    style="font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;">
+            <div class="perfil-permissions-header">
+                <div class="perfil-permissions-label">
                     Permisos (<?= isset($perfil['permisos']) ? count($perfil['permisos']) : 0 ?>)
                 </div>
 
                 <?php if (!empty($perfil['permisos'])): ?>
-                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    <div class="perfil-permissions-list">
                         <?php
                         // Agrupar permisos por módulo
                         $permisos_agrupados = [];
@@ -62,29 +61,27 @@ require_once VIEWS_PATH . 'layouts/header.php';
                         ?>
 
                         <?php foreach ($permisos_agrupados as $modulo => $acciones): ?>
-                            <div
-                                style="background: var(--bg-secondary); padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.8rem; border: 1px solid var(--border-color);">
-                                <strong style="text-transform: capitalize; color: var(--primary);"><?= $modulo ?>:</strong>
-                                <span style="color: var(--text-muted);"><?= implode(', ', $acciones) ?></span>
+                            <div class="perfil-permission-tag">
+                                <strong class="perfil-module-name"><?= $modulo ?>:</strong>
+                                <span class="perfil-actions-text"><?= implode(', ', $acciones) ?></span>
                             </div>
                         <?php endforeach; ?>
                     </div>
                 <?php else: ?>
-                    <p style="color: var(--text-muted); font-size: 0.85rem; font-style: italic;">
+                    <p class="perfil-no-perms">
                         Sin permisos asignados
                     </p>
                 <?php endif; ?>
             </div>
 
-            <div
-                style="padding-top: 1rem; border-top: 1px solid var(--border-color); font-size: 0.8rem; color: var(--text-muted); margin-top: auto;">
+            <div class="perfil-card-footer">
                 Creado: <?= formatoFecha($perfil['created_at']) ?>
             </div>
 
             <div class="d-flex gap-2 mt-3">
                 <?php if (puedeEditar('perfiles')): ?>
                     <a href="<?= BASE_URL ?>perfiles/editar/<?= $perfil['id'] ?>" class="btn btn-sm btn-primary"
-                        style="flex: 1;">
+                        class="flex-1">
                         <i class="bi bi-pencil"></i> Editar
                     </a>
                 <?php endif; ?>
@@ -98,12 +95,12 @@ require_once VIEWS_PATH . 'layouts/header.php';
             </div>
 
             <?php if (($perfil['total_usuarios'] ?? 0) > 0): ?>
-                <div class="alert alert-info mt-2 mb-0" style="padding: 0.5rem; font-size: 0.8rem;">
+                <div class="alert alert-info mt-2 mb-0 alert-compact">
                     <i class="bi bi-info-circle"></i>
                     Tiene usuarios asignados
                 </div>
             <?php elseif (in_array($perfil['nombre'] ?? '', ['Administrador', 'Supervisor', 'Capturista'])): ?>
-                <div class="alert alert-warning mt-2 mb-0" style="padding: 0.5rem; font-size: 0.8rem;">
+                <div class="alert alert-warning mt-2 mb-0 alert-compact">
                     <i class="bi bi-shield-lock"></i>
                     Perfil protegido
                 </div>
@@ -117,7 +114,7 @@ require_once VIEWS_PATH . 'layouts/header.php';
         <i class="bi bi-key"></i> Permisos Disponibles en el Sistema
     </h3>
 
-    <div class="grid-container" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important;">
+    <div class="grid-container grid-auto-fill-220">
         <?php
         // Obtener todos los permisos y agruparlos
         $todos_permisos = [];
@@ -141,14 +138,13 @@ require_once VIEWS_PATH . 'layouts/header.php';
 
         <?php foreach ($todos_permisos as $modulo => $acciones): ?>
             <div>
-                <h4
-                    style="font-size: 0.95rem; font-weight: 600; color: var(--primary); margin-bottom: 0.5rem; text-transform: capitalize; border-bottom: 2px solid var(--border-color); padding-bottom: 0.25rem;">
+                <h4 class="perfil-permissions-module-title">
                     <i class="bi bi-folder"></i> <?= $modulo ?>
                 </h4>
-                <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; color: var(--text-secondary);">
+                <ul class="perfil-permissions-module-list">
                     <?php foreach ($acciones as $accion): ?>
-                        <li style="padding: 0.25rem 0; border-bottom: 1px dashed var(--border-color);">
-                            <i class="bi bi-chevron-right" style="font-size: 0.7rem; color: var(--text-muted);"></i>
+                        <li class="perfil-permissions-module-item">
+                            <i class="bi bi-chevron-right perfil-permissions-module-icon"></i>
                             <?= ucfirst($accion) ?>
                         </li>
                     <?php endforeach; ?>

@@ -20,7 +20,7 @@ require_once VIEWS_PATH . 'layouts/header.php';
     <?php endif; ?>
 </div>
 
-<div style="max-width: 800px; margin: 0 auto;">
+<div class="container-narrow">
     <div class="glass-panel">
 
         <?php if (usuarioActual()['debe_cambiar_password']): ?>
@@ -39,12 +39,11 @@ require_once VIEWS_PATH . 'layouts/header.php';
             <div class="form-group mb-4">
                 <label for="password_actual" class="form-label">Contraseña Actual <span
                         class="text-danger">*</span></label>
-                <div style="position: relative;">
+                <div class="input-password-wrapper">
                     <input type="password" id="password_actual" name="password_actual" class="form-control" required
                         autofocus placeholder="Ingrese su contraseña actual">
-                    <button type="button" class="btn btn-sm btn-glass toggle-password"
-                        onclick="togglePassword('password_actual')"
-                        style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); border: none;">
+                    <button type="button" class="btn btn-sm btn-glass toggle-password btn-toggle-password"
+                        onclick="togglePassword('password_actual')">
                         <i class="bi bi-eye"></i>
                     </button>
                 </div>
@@ -54,12 +53,11 @@ require_once VIEWS_PATH . 'layouts/header.php';
                 <div class="form-group">
                     <label for="password_nueva" class="form-label">Nueva Contraseña <span
                             class="text-danger">*</span></label>
-                    <div style="position: relative;">
+                    <div class="input-password-wrapper">
                         <input type="password" id="password_nueva" name="password_nueva" class="form-control" required
                             minlength="8" placeholder="Mínimo 8 caracteres">
-                        <button type="button" class="btn btn-sm btn-glass toggle-password"
-                            onclick="togglePassword('password_nueva')"
-                            style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); border: none;">
+                        <button type="button" class="btn btn-sm btn-glass toggle-password btn-toggle-password"
+                            onclick="togglePassword('password_nueva')">
                             <i class="bi bi-eye"></i>
                         </button>
                     </div>
@@ -68,21 +66,20 @@ require_once VIEWS_PATH . 'layouts/header.php';
                 <div class="form-group">
                     <label for="password_confirmar" class="form-label">Confirmar Nueva Contraseña <span
                             class="text-danger">*</span></label>
-                    <div style="position: relative;">
+                    <div class="input-password-wrapper">
                         <input type="password" id="password_confirmar" name="password_confirmar" class="form-control"
                             required minlength="8" placeholder="Repita la nueva contraseña">
-                        <button type="button" class="btn btn-sm btn-glass toggle-password"
-                            onclick="togglePassword('password_confirmar')"
-                            style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); border: none;">
+                        <button type="button" class="btn btn-sm btn-glass toggle-password btn-toggle-password"
+                            onclick="togglePassword('password_confirmar')">
                             <i class="bi bi-eye"></i>
                         </button>
                     </div>
                 </div>
             </div>
 
-            <div class="alert alert-info mb-4" style="font-size: 0.9rem;">
+            <div class="alert alert-info mb-4 alert-md-text">
                 <strong>Requisitos de seguridad:</strong>
-                <ul class="mb-0 mt-2" style="padding-left: 1.5rem;">
+                <ul class="mb-0 mt-2 requirements-list">
                     <li>Mínimo 8 caracteres de longitud</li>
                     <li>Se recomienda usar mayúsculas, minúsculas y números</li>
                     <li>No use información personal obvia (ej. su nombre o fecha de nacimiento)</li>
@@ -90,7 +87,7 @@ require_once VIEWS_PATH . 'layouts/header.php';
             </div>
 
             <div class="d-flex justify-end">
-                <button type="submit" class="btn btn-primary" id="btnCambiar" style="min-width: 200px;">
+                <button type="submit" class="btn btn-primary btn-min-w-200" id="btnCambiar">
                     <i class="bi bi-check-lg"></i> Cambiar Contraseña
                 </button>
             </div>

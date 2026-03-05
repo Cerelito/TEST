@@ -34,11 +34,11 @@ require_once VIEWS_PATH . 'layouts/header.php';
         <table class="glass-table">
             <thead>
                 <tr>
-                    <th style="width: 100px;">CLABE</th>
+                    <th class="col-w-100">CLABE</th>
                     <th>Nombre</th>
-                    <th style="width: 120px;">Estado</th>
+                    <th class="col-w-120">Estado</th>
                     <?php if (puedeHacer('catalogos.editar')): ?>
-                        <th style="width: 140px; text-align: right;">Acciones</th>
+                        <th class="col-w-140-right">Acciones</th>
                     <?php endif; ?>
                 </tr>
             </thead>
@@ -55,7 +55,7 @@ require_once VIEWS_PATH . 'layouts/header.php';
                             <?php endif; ?>
                         </td>
                         <?php if (puedeHacer('catalogos.editar')): ?>
-                            <td style="text-align: right;">
+                            <td class="text-right">
                                 <div class="d-flex gap-1 justify-end">
                                     <a href="<?= BASE_URL ?>catalogos/editarBanco/<?= $banco['Id'] ?? $banco['id'] ?? '' ?>"
                                         class="btn btn-sm btn-glass" title="Editar">
@@ -63,7 +63,7 @@ require_once VIEWS_PATH . 'layouts/header.php';
                                     </a>
                                     <form method="POST"
                                         action="<?= BASE_URL ?>catalogos/eliminarBanco/<?= $banco['Id'] ?? $banco['id'] ?? '' ?>"
-                                        style="display: inline;"
+                                        class="d-inline"
                                         id="formEliminarBanco<?= $banco['Id'] ?? $banco['id'] ?? '' ?>">
                                         <input type="hidden" name="csrf_token" value="<?= generarToken() ?>">
                                         <button type="button" class="btn btn-sm btn-danger" title="Eliminar"
@@ -96,14 +96,12 @@ require_once VIEWS_PATH . 'layouts/header.php';
         <?php endif; ?>
     </div>
 
-    <div class="scrollable-table" style="border: none; max-height: 500px;">
-        <div class="grid-container"
-            style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important; padding: 0.5rem;">
+    <div class="scrollable-table scrollable-no-border">
+        <div class="grid-container grid-auto-fill-280 grid-p-half">
             <?php foreach ($cias as $cia): ?>
-                <div class="glass-panel"
-                    style="background: var(--bg-secondary); padding: 1.25rem; margin-bottom: 0 !important; border: 1px solid var(--border-color);">
+                <div class="glass-panel catalog-cia-card">
                     <div class="d-flex justify-between align-center mb-2">
-                        <h3 style="font-size: 1rem; font-weight: 700; color: var(--text-primary); margin: 0;">
+                        <h3 class="catalog-cia-title">
                             <span class="text-muted mr-1">#<?= e($cia['Codigo'] ?? $cia['codigo'] ?? '') ?></span>
                             <?= e($cia['Nombre'] ?? $cia['nombre'] ?? '') ?>
                         </h3>
@@ -115,11 +113,11 @@ require_once VIEWS_PATH . 'layouts/header.php';
                     </div>
 
                     <?php if (!empty($cia['Descripcion'] ?? $cia['descripcion'] ?? '')): ?>
-                        <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0 0 1rem 0; line-height: 1.4;">
+                        <p class="catalog-cia-desc">
                             <?= e($cia['Descripcion'] ?? $cia['descripcion'] ?? '') ?>
                         </p>
                     <?php else: ?>
-                        <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0 0 1rem 0; font-style: italic;">Sin
+                        <p class="catalog-cia-desc-empty">Sin
                             descripción</p>
                     <?php endif; ?>
 
@@ -131,7 +129,7 @@ require_once VIEWS_PATH . 'layouts/header.php';
                             </a>
                             <form method="POST"
                                 action="<?= BASE_URL ?>catalogos/eliminarCia/<?= $cia['Id'] ?? $cia['id'] ?? '' ?>"
-                                style="width: 100%;" id="formEliminarCia<?= $cia['Id'] ?? $cia['id'] ?? '' ?>">
+                                class="w-100" id="formEliminarCia<?= $cia['Id'] ?? $cia['id'] ?? '' ?>">
                                 <input type="hidden" name="csrf_token" value="<?= generarToken() ?>">
                                 <button type="button" class="btn btn-sm btn-danger w-100" title="Eliminar"
                                     onclick="confirmarEliminacionCia(<?= $cia['Id'] ?? $cia['id'] ?? '' ?>, '<?= e($cia['Nombre'] ?? $cia['nombre'] ?? '') ?>')">
@@ -165,12 +163,12 @@ require_once VIEWS_PATH . 'layouts/header.php';
         <table class="glass-table">
             <thead>
                 <tr>
-                    <th style="width: 80px;">Clave</th>
+                    <th class="col-w-80">Clave</th>
                     <th>Descripción</th>
-                    <th style="width: 150px;">Tipo Persona</th>
-                    <th style="width: 100px;">Estado</th>
+                    <th class="col-w-150">Tipo Persona</th>
+                    <th class="col-w-100">Estado</th>
                     <?php if (puedeHacer('catalogos.editar')): ?>
-                        <th style="width: 140px; text-align: right;">Acciones</th>
+                        <th class="col-w-140-right">Acciones</th>
                     <?php endif; ?>
                 </tr>
             </thead>
@@ -198,7 +196,7 @@ require_once VIEWS_PATH . 'layouts/header.php';
                             <?php endif; ?>
                         </td>
                         <?php if (puedeHacer('catalogos.editar')): ?>
-                            <td style="text-align: right;">
+                            <td class="text-right">
                                 <div class="d-flex gap-1 justify-end">
                                     <a href="<?= BASE_URL ?>catalogos/editarRegimen/<?= $reg['Id'] ?? $reg['id'] ?? '' ?>"
                                         class="btn btn-sm btn-glass" title="Editar">
@@ -206,7 +204,7 @@ require_once VIEWS_PATH . 'layouts/header.php';
                                     </a>
                                     <form method="POST"
                                         action="<?= BASE_URL ?>catalogos/eliminarRegimen/<?= $reg['Id'] ?? $reg['id'] ?? '' ?>"
-                                        style="display: inline;" id="formEliminarRegimen<?= $reg['Id'] ?? $reg['id'] ?? '' ?>">
+                                        class="d-inline" id="formEliminarRegimen<?= $reg['Id'] ?? $reg['id'] ?? '' ?>">
                                         <input type="hidden" name="csrf_token" value="<?= generarToken() ?>">
                                         <button type="button" class="btn btn-sm btn-danger" title="Eliminar"
                                             onclick="confirmarEliminacionRegimen(<?= $reg['Id'] ?? $reg['id'] ?? '' ?>, '<?= e($reg['Descripcion'] ?? $reg['descripcion'] ?? '') ?>')">
@@ -223,24 +221,24 @@ require_once VIEWS_PATH . 'layouts/header.php';
     </div>
 </div>
 
-<div class="glass-panel" style="background: var(--bg-secondary);">
-    <h3 class="card-title" style="font-size: 1rem; color: var(--text-secondary);">
+<div class="glass-panel catalog-info-panel">
+    <h3 class="card-title catalog-info-title">
         <i class="bi bi-info-circle"></i> Información sobre Catálogos
     </h3>
 
-    <div style="font-size: 0.9rem; line-height: 1.6; color: var(--text-muted);">
+    <div class="catalog-info-text">
         <p class="mb-2">
             <strong>Catálogos Maestros:</strong> Estos catálogos son utilizados en todo el sistema para mantener
             la consistencia de los datos. Solo los administradores pueden modificarlos.
         </p>
 
-        <ul style="margin: 0 0 1rem 1.5rem; list-style-type: disc;">
+        <ul class="catalog-info-list">
             <li><strong>Bancos:</strong> Catálogo oficial de instituciones bancarias en México</li>
             <li><strong>Compañías:</strong> Empresas del grupo que pueden tener proveedores asignados</li>
             <li><strong>Regímenes Fiscales:</strong> Catálogo del SAT para la clasificación fiscal</li>
         </ul>
 
-        <div class="alert alert-info mb-0" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+        <div class="alert alert-info mb-0 catalog-info-alert">
             <i class="bi bi-exclamation-circle"></i>
             <strong>Nota:</strong> Los catálogos se actualizan automáticamente según las publicaciones oficiales del
             SAT.

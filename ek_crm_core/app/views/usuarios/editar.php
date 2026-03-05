@@ -50,7 +50,7 @@ require_once VIEWS_PATH . 'layouts/header.php';
             <div class="form-group">
                 <label for="username" class="form-label">Usuario</label>
                 <input type="text" id="username" class="form-control" value="<?= e($usuario['username']) ?>" disabled
-                    style="opacity: 0.7; background: var(--bg-tertiary);">
+                    class="input-disabled-look">
                 <small class="form-text text-muted">El nombre de usuario no se puede modificar</small>
             </div>
 
@@ -123,8 +123,8 @@ require_once VIEWS_PATH . 'layouts/header.php';
         </div>
 
         <?php if (!empty($usuario['ultimo_acceso'])): ?>
-            <div class="mt-3 p-3 rounded" style="background: var(--bg-secondary); border-left: 3px solid var(--primary);">
-                <div class="grid-3" style="font-size: 0.85rem;">
+            <div class="mt-3 p-3 rounded info-panel-highlight">
+                <div class="grid-3 text-sm">
                     <div>
                         <strong>Último acceso:</strong><br>
                         <?= formatoFechaHora($usuario['ultimo_acceso']) ?>

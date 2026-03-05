@@ -9,9 +9,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="<?= BASE_URL ?>public/css/themes.css?v=2.0.0">
-    <link rel="stylesheet" href="<?= BASE_URL ?>public/css/app.css?v=2.0.0">
-    <link rel="stylesheet" href="<?= BASE_URL ?>public/css/responsive.css?v=2.0.0">
+    <link rel="stylesheet" href="<?= BASE_URL ?>public/css/themes.css?v=2.2.0">
+    <link rel="stylesheet" href="<?= BASE_URL ?>public/css/app.css?v=2.2.0">
+    <link rel="stylesheet" href="<?= BASE_URL ?>public/css/responsive.css?v=2.2.0">
 </head>
 
 <body>
@@ -22,23 +22,21 @@
             if (saved === 'dark') document.body.classList.add('dark-mode');
         })();
     </script>
-    <button class="theme-toggle" aria-label="Cambiar tema"
-        style="position: fixed; top: 1rem; right: 1rem;">
+    <button class="theme-toggle theme-toggle-fixed" aria-label="Cambiar tema">
         <i class="bi bi-sun-fill theme-toggle-icon sun"></i>
         <i class="bi bi-moon-fill theme-toggle-icon moon"></i>
     </button>
 
     <div class="login-container">
         <div class="login-card">
-            <div style="text-align: center; margin-bottom: 2rem;">
-                <div
-                    style="width: 70px; height: 70px; background: rgba(13, 110, 253, 0.1); border-radius: 18px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; border: 1px solid rgba(13, 110, 253, 0.2);">
-                    <i class="bi bi-envelope-exclamation" style="font-size: 2.5rem; color: var(--primary);"></i>
+            <div class="auth-header">
+                <div class="auth-icon-box-sm">
+                    <i class="bi bi-envelope-exclamation auth-icon-lg"></i>
                 </div>
-                <h1 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-primary);">
+                <h1 class="auth-title-sm">
                     Recuperar Contraseña
                 </h1>
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">
+                <p class="auth-subtitle-sm">
                     Ingrese su email para recibir instrucciones
                 </p>
             </div>
@@ -57,8 +55,8 @@
                 </div>
             <?php endif; ?>
 
-            <div class="alert alert-info mb-4" style="font-size: 0.85rem; line-height: 1.5;">
-                <i class="bi bi-info-circle" style="font-size: 1.2rem;"></i>
+            <div class="alert alert-info mb-4 alert-sm-text">
+                <i class="bi bi-info-circle alert-icon-md"></i>
                 <div>
                     Ingrese el correo electrónico asociado a su cuenta. Si existe, recibirá un enlace para restablecer
                     su contraseña.
@@ -70,26 +68,22 @@
 
                 <div class="form-group mb-4">
                     <label for="email" class="form-label">Correo Electrónico</label>
-                    <div style="position: relative;">
+                    <div class="input-icon-wrapper">
                         <input type="email" id="email" name="email" class="form-control" required autofocus
-                            placeholder="usuario@ejemplo.com" style="padding-left: 2.5rem;">
-                        <i class="bi bi-envelope"
-                            style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                            placeholder="usuario@ejemplo.com" class="input-padded-left">
+                        <i class="bi bi-envelope input-icon-left"></i>
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary w-100 mb-4" id="btnEnviar" style="padding: 0.8rem;">
+                <button type="submit" class="btn btn-primary w-100 mb-4 btn-submit-md" id="btnEnviar">
                     <i class="bi bi-send"></i> Enviar Instrucciones
                 </button>
 
-                <div class="p-3 rounded mb-3"
-                    style="background: var(--bg-secondary); border: 1px solid var(--border-color);">
-                    <h3
-                        style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 0.5rem 0;">
+                <div class="p-3 rounded mb-3 security-note-box">
+                    <h3 class="security-note-title">
                         <i class="bi bi-shield-check"></i> Nota de Seguridad
                     </h3>
-                    <ul
-                        style="margin: 0; padding-left: 1.2rem; font-size: 0.8rem; color: var(--text-muted); line-height: 1.6;">
+                    <ul class="security-note-list">
                         <li>El enlace de recuperación expirará en 1 hora</li>
                         <li>Solo puede usarse una vez</li>
                         <li>Si no solicitó esto, ignore este mensaje</li>
@@ -97,17 +91,15 @@
                 </div>
 
                 <div class="text-center">
-                    <a href="<?= BASE_URL ?>login"
-                        style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">
+                    <a href="<?= BASE_URL ?>login" class="auth-back-link">
                         <i class="bi bi-arrow-left"></i> Volver al Login
                     </a>
                 </div>
             </form>
         </div>
 
-        <div class="text-center mt-4" style="color: var(--text-muted); font-size: 0.85rem;">
-            Desarrollado por <a href="https://www.apotemaone.com" target="_blank"
-                style="color: var(--primary); text-decoration: none; font-weight: 600;">Apotema One</a>
+        <div class="text-center mt-4 auth-footer-text">
+            Desarrollado por <a href="https://www.apotemaone.com" target="_blank" class="auth-footer-link">Apotema One</a>
         </div>
     </div>
 

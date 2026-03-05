@@ -26,7 +26,7 @@ require_once VIEWS_PATH . 'layouts/header.php';
             <i class="bi bi-info-circle"></i> Datos de la Compañía
         </h2>
 
-        <div class="grid-container" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;">
+        <div class="grid-container grid-auto-fit-250">
             <div class="form-group">
                 <label for="Codigo" class="form-label">Código <span class="text-danger">*</span></label>
                 <input type="number" id="Codigo" name="Codigo" class="form-control" required min="1" max="999"

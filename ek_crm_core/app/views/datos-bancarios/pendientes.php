@@ -20,7 +20,7 @@ require_once VIEWS_PATH . 'layouts/header.php';
 
 <?php if (empty($cuentasPendientes)): ?>
     <div class="glass-panel text-center p-5">
-        <i class="bi bi-check-circle text-success" style="font-size: 4rem;"></i>
+        <i class="bi bi-check-circle text-success icon-xxl"></i>
         <p class="text-muted mt-3 fs-5">
             ¡Excelente! No hay cuentas pendientes de aprobación.
         </p>
@@ -31,12 +31,12 @@ require_once VIEWS_PATH . 'layouts/header.php';
         <span><strong><?= count($cuentasPendientes) ?> cuenta(s)</strong> pendiente(s) de aprobación</span>
     </div>
 
-    <div class="grid-container" style="grid-template-columns: 1fr !important; gap: 1.5rem;">
+    <div class="grid-container grid-1col">
         <?php foreach ($cuentasPendientes as $cuenta): ?>
-            <div class="glass-panel" style="padding: 1.5rem; margin-bottom: 0 !important;">
+            <div class="glass-panel pendientes-card">
                 <div class="d-flex flex-column flex-md-row gap-4 align-items-start">
 
-                    <div style="flex: 1; width: 100%;">
+                    <div class="pendientes-info">
                         <div class="d-flex align-center gap-2 mb-3">
                             <h3 class="mb-0 fw-bold fs-5 text-primary">
                                 <?= e($cuenta['RazonSocial']) ?>
@@ -82,7 +82,7 @@ require_once VIEWS_PATH . 'layouts/header.php';
                         </div>
                     </div>
 
-                    <div class="d-flex flex-column gap-2" style="min-width: 260px; width: 100%; max-width: 300px;">
+                    <div class="d-flex flex-column gap-2 pendientes-actions">
                         <a href="<?= BASE_URL ?>datos-bancarios/editar/<?= $cuenta['Id'] ?>?aprobar=1"
                             class="btn btn-primary w-100">
                             <i class="bi bi-pencil-square"></i> Revisar y Capturar

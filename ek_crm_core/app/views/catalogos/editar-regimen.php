@@ -26,7 +26,7 @@ require_once VIEWS_PATH . 'layouts/header.php';
             <i class="bi bi-info-circle"></i> Datos del Régimen Fiscal
         </h2>
 
-        <div class="grid-container" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;">
+        <div class="grid-container grid-auto-fit-300">
             <div class="form-group">
                 <label for="Clave" class="form-label">Clave SAT <span class="text-danger">*</span></label>
                 <input type="text" id="Clave" name="Clave" class="form-control" required maxlength="10"

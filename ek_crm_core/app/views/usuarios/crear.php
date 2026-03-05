@@ -72,11 +72,10 @@ require_once VIEWS_PATH . 'layouts/header.php';
         <div class="grid-2 mt-3">
             <div class="form-group">
                 <label for="password" class="form-label">Contraseña <span class="text-danger">*</span></label>
-                <div style="position: relative;">
+                <div class="input-password-wrapper">
                     <input type="password" id="password" name="password" class="form-control" required minlength="8"
                         placeholder="Mínimo 8 caracteres">
-                    <button type="button" class="btn btn-sm btn-glass" onclick="togglePassword('password')"
-                        style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); border: none;">
+                    <button type="button" class="btn btn-sm btn-glass btn-toggle-password" onclick="togglePassword('password')">
                         <i class="bi bi-eye"></i>
                     </button>
                 </div>
@@ -85,11 +84,10 @@ require_once VIEWS_PATH . 'layouts/header.php';
             <div class="form-group">
                 <label for="confirm_password" class="form-label">Confirmar Contraseña <span
                         class="text-danger">*</span></label>
-                <div style="position: relative;">
+                <div class="input-password-wrapper">
                     <input type="password" id="confirm_password" name="confirm_password" class="form-control" required
                         minlength="8" placeholder="Repita la contraseña">
-                    <button type="button" class="btn btn-sm btn-glass" onclick="togglePassword('confirm_password')"
-                        style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); border: none;">
+                    <button type="button" class="btn btn-sm btn-glass btn-toggle-password" onclick="togglePassword('confirm_password')">
                         <i class="bi bi-eye"></i>
                     </button>
                 </div>

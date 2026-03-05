@@ -68,11 +68,11 @@ require_once VIEWS_PATH . 'layouts/header.php';
             <strong>Importante:</strong> Los cambios en los permisos afectarán a todos los usuarios con este perfil.
         </div>
 
-        <div class="grid-container" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;">
+        <div class="grid-container grid-auto-fit-280">
             <?php foreach ($permisos_agrupados as $moduloKey => $grupo): ?>
-                <div class="glass-panel" style="background: var(--bg-secondary); padding: 1.25rem; margin-bottom: 0 !important;">
+                <div class="glass-panel perfil-module-card">
                     <div class="d-flex justify-between align-center mb-3 pb-2 border-bottom">
-                        <h3 style="font-size: 1rem; font-weight: 600; color: var(--primary); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <h3 class="perfil-module-title">
                             <i class="bi <?= $grupo['info']['icono'] ?>"></i> 
                             <?= $grupo['info']['titulo'] ?>
                         </h3>
@@ -93,10 +93,10 @@ require_once VIEWS_PATH . 'layouts/header.php';
                                            data-modulo="<?= $moduloKey ?>" 
                                            <?= in_array($perm['id'], $permisos_asignados) ? 'checked' : '' ?>>
                                     
-                                    <label for="perm_<?= $perm['id'] ?>" class="form-check-label" style="font-size: 0.9rem;">
+                                    <label for="perm_<?= $perm['id'] ?>" class="form-check-label perfil-check-label">
                                         <strong><?= $perm['nombre'] ?></strong>
                                         <?php if (!empty($perm['descripcion'])): ?>
-                                            <br><span class="text-muted" style="font-size: 0.8rem; font-weight: normal;"><?= e($perm['descripcion']) ?></span>
+                                            <br><span class="text-muted perfil-check-desc"><?= e($perm['descripcion']) ?></span>
                                         <?php endif; ?>
                                     </label>
                                 </div>
@@ -109,16 +109,16 @@ require_once VIEWS_PATH . 'layouts/header.php';
             <?php endforeach; ?>
         </div>
 
-        <div class="mt-4 p-3 rounded" style="background: var(--bg-secondary); border-left: 3px solid var(--success);">
+        <div class="mt-4 p-3 rounded info-panel-success">
             <strong>Permisos seleccionados: <span id="contador">0</span></strong>
         </div>
     </div>
 
-    <div class="glass-panel mb-4" style="background: var(--bg-secondary);">
-        <h3 class="card-title" style="font-size: 1rem; color: var(--text-secondary);">
+    <div class="glass-panel mb-4 audit-panel">
+        <h3 class="card-title audit-title">
             <i class="bi bi-clock-history"></i> Información de Auditoría
         </h3>
-        <div class="grid-2" style="font-size: 0.875rem;">
+        <div class="grid-2 text-0875">
             <div>
                 <strong>Creado:</strong><br>
                 <?= formatoFechaHora($perfil['created_at']) ?>
