@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Permisos Compras Electrónicas</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --bg2: #1a1d27;
+    --bg3: #22263a;
+    --border: #2e3250;
+    --accent: #4f8ef7;
+    --accent2: #7c5cbf;
+    --green: #3ecf8e;
+    --yellow: #f5c842;
+    --orange: #f58642;
+    --red: #e05252;
+    --text: #e4e8f5;
+    --text2: #8b91b0;
+    --card: #1e2235;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; font-size: 13px; }
+
+  /* HEADER */
+  .header { background: linear-gradient(135deg, #1a1d27 0%, #0d1829 100%); border-bottom: 1px solid var(--border); padding: 18px 28px; display: flex; align-items: center; justify-content: space-between; }
+  .header h1 { font-size: 18px; font-weight: 700; color: #fff; }
+  .header h1 span { color: var(--accent); }
+  .header .subtitle { font-size: 11px; color: var(--text2); margin-top: 3px; }
+  .badge-total { background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+
+  /* FILTERS BAR */
+  .filters { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 12px 28px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .filters label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: .5px; }
+  .filters select, .filters input { background: var(--bg3); border: 1px solid var(--border); color: var(--text); padding: 6px 10px; border-radius: 6px; font-size: 12px; outline: none; cursor: pointer; }
+  .filters select:focus, .filters input:focus { border-color: var(--accent); }
+  .filters .btn { background: var(--accent); color: #fff; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; }
+  .filters .btn-outline { background: transparent; color: var(--text2); border: 1px solid var(--border); padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+  .filters .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* TABS */
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); background: var(--bg2); padding: 0 28px; }
+  .tab { padding: 12px 20px; cursor: pointer; font-size: 12px; font-weight: 600; color: var(--text2); border-bottom: 3px solid transparent; transition: all .2s; }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab:hover:not(.active) { color: var(--text); }
+
+  /* MAIN */
+  .main { padding: 20px 28px; }
+
+  /* KPI CARDS */
+  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 22px; }
+  .kpi { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .kpi .label { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 8px; }
+  .kpi .value { font-size: 26px; font-weight: 800; color: #fff; }
+  .kpi .sub { font-size: 10px; color: var(--text2); margin-top: 4px; }
+  .kpi.accent { border-color: var(--accent); }
+  .kpi.green { border-color: var(--green); }
+  .kpi.yellow { border-color: var(--yellow); }
+  .kpi.orange { border-color: var(--orange); }
+
+  /* TABLES */
+  .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .table-wrap .tbl-header { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .table-wrap .tbl-header h3 { font-size: 13px; font-weight: 700; }
+  .table-wrap .tbl-header .count { font-size: 11px; color: var(--text2); }
+  .scroll { overflow-x: auto; max-height: 520px; overflow-y: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th { background: var(--bg3); color: var(--text2); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; padding: 10px 12px; text-align: left; position: sticky; top: 0; z-index: 2; white-space: nowrap; border-bottom: 1px solid var(--border); }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+  tbody tr:hover { background: var(--bg3); }
+  tbody td { padding: 9px 12px; vertical-align: middle; }
+  .chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: 700; }
+  .chip-yes { background: rgba(62,207,142,.15); color: var(--green); }
+  .chip-no  { background: rgba(139,145,176,.08); color: #555; }
+  .tag-empresa { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+  .tag-cc { background: rgba(79,142,247,.15); color: var(--accent); font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+  .user-name { font-weight: 600; color: var(--text); }
+  .perfil-badge { font-size: 10px; color: var(--text2); }
+  .monto { font-size: 11px; color: var(--text2); }
+
+  /* CC GRID VIEW */
+  .cc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px; }
+  .cc-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .cc-card-header { padding: 12px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); }
+  .cc-code { font-size: 18px; font-weight: 800; color: var(--accent); min-width: 48px; }
+  .cc-desc { font-size: 12px; font-weight: 600; }
+  .cc-empresa { font-size: 10px; color: var(--text2); }
+  .cc-stats { display: flex; gap: 0; }
+  .cc-stat { flex: 1; padding: 10px 14px; text-align: center; border-right: 1px solid var(--border); }
+  .cc-stat:last-child { border-right: none; }
+  .cc-stat .n { font-size: 20px; font-weight: 800; }
+  .cc-stat .l { font-size: 9px; text-transform: uppercase; color: var(--text2); letter-spacing: .5px; margin-top: 2px; }
+  .cc-stat.elab .n { color: var(--green); }
+  .cc-stat.vobo .n { color: var(--yellow); }
+  .cc-stat.aut  .n { color: var(--orange); }
+  .cc-users { padding: 10px 14px; max-height: 180px; overflow-y: auto; }
+  .cc-users .row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,.04); font-size: 11px; }
+  .cc-users .row:last-child { border-bottom: none; }
+  .perm-dots { display: flex; gap: 5px; }
+  .dot { 
+    width: 10px; height: 10px; border-radius: 50%; 
+    transition: transform 0.1s;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .dot-e { background: var(--green); box-shadow: 0 0 5px rgba(62,207,142,0.3); }
+  .dot-v { background: var(--yellow); box-shadow: 0 0 5px rgba(245,200,66,0.3); }
+  .dot-a { background: var(--orange); box-shadow: 0 0 5px rgba(245,134,66,0.3); }
+  .dot-off { background: var(--bg3); border-color: var(--border); }
+
+  /* QUICK POPOVER */
+  .quick-popover {
+    position: fixed; z-index: 10001; background: var(--bg2); 
+    border: 1px solid var(--accent); border-radius: 8px;
+    padding: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    display: none; flex-direction: column; gap: 8px; min-width: 160px;
+    animation: fadeIn 0.15s ease-out;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+  .quick-popover-item {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 11px; padding: 6px 8px; border-radius: 6px; cursor: pointer;
+    transition: background 0.2s;
+  }
+  .quick-popover-item:hover { background: var(--bg3); }
+  .quick-popover-item span { font-weight: 700; }
+  
+  .row-clickable { cursor: pointer; transition: background 0.15s; position: relative; }
+  .row-clickable:hover { background: rgba(79,142,247,0.08) !important; }
+
+  /* USER VIEW */
+  .user-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px; }
+  .user-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; }
+  .user-card-header { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+  .avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: #fff; flex-shrink: 0; }
+  .user-card-header .info h4 { font-size: 12px; font-weight: 700; }
+  .user-card-header .info .p { font-size: 10px; color: var(--text2); }
+  .user-cc-list { padding: 10px 14px; max-height: 180px; overflow-y: auto; }
+  .user-cc-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,.04); font-size: 11px; }
+  .user-cc-row:last-child { border-bottom: none; }
+
+  /* MATRIX VIEW */
+  .matrix-wrap { overflow: auto; max-height: 600px; }
+  .matrix-table thead th { white-space: nowrap; }
+  .matrix-table td { text-align: center; }
+  .m-cell { display: flex; flex-direction: column; gap: 2px; align-items: center; padding: 2px; }
+  .m-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+  /* LEGEND */
+  .legend { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--text2); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  /* EMPRESA COLORS */
+  .ec-0  { background: #4f8ef7; }
+  .ec-1  { background: #7c5cbf; }
+  .ec-2  { background: #3ecf8e; }
+  .ec-3  { background: #f5c842; }
+  .ec-4  { background: #f58642; }
+  .ec-5  { background: #e05252; }
+  .ec-6  { background: #5cb8f5; }
+  .ec-7  { background: #cf3e9e; }
+  .ec-8  { background: #8ecf3e; }
+  .ec-9  { background: #f5425a; }
+  .ec-10 { background: #42d4f5; }
+
+  .hidden { display: none !important; }
+  .no-results { text-align: center; padding: 40px; color: var(--text2); font-size: 13px; }
+
+  /* SEARCH */
+  .search-box { position: relative; }
+  .search-box input { padding-left: 28px; width: 220px; }
+  .search-icon { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); color: var(--text2); font-size: 12px; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg2); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  /* ── MOBILE RESPONSIVE ─────────────────────────────────────────── */
+  @media (max-width: 768px) {
+    .header { padding: 12px 14px; flex-wrap: wrap; gap: 8px; }
+    .header h1 { font-size: 14px; }
+    .filters { padding: 10px 12px; gap: 8px; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
+    .filters label { display: none; }
+    .filters select, .filters input { font-size: 12px; padding: 5px 8px; min-width: 100px; }
+    .filters .btn, .filters .btn-outline { padding: 5px 10px; font-size: 11px; }
+    .filters .legend { display: none; }
+    .search-box input { width: 130px; }
+    .tabs { padding: 0 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; flex-shrink: 0; gap: 0; }
+    .tab { padding: 10px 12px; font-size: 11px; white-space: nowrap; }
+    .main { padding: 12px 10px; }
+    .kpi-row { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .kpi .value { font-size: 20px; }
+    #empresa-cards { grid-template-columns: 1fr !important; }
+    .cc-grid { grid-template-columns: 1fr !important; }
+    .user-grid { grid-template-columns: 1fr !important; }
+    .scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { min-width: 700px; }
+    .matrix-wrap { overflow: auto; }
+  }
+  @media (max-width: 480px) {
+    .header h1 { font-size: 12px; }
+    .badge-total { font-size: 10px; padding: 3px 7px; }
+    .kpi-row { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+    .kpi { padding: 10px; }
+    .kpi .value { font-size: 18px; }
+  }
+
+  /* ── EDIT MODE ──────────────────────────────────────────────────── */
+  .edit-btn { 
+    background: transparent; border: none; cursor: pointer; 
+    color: var(--text2); font-size: 11px; padding: 2px 5px;
+    border-radius: 4px; transition: all .15s;
+    opacity: 0.4;
+  }
+  tbody tr:hover .edit-btn { opacity: 1; }
+  .edit-btn:hover { background: var(--bg3); color: var(--accent); }
+  .editing td { background: rgba(79,142,247,.06) !important; }
+  .inline-input { 
+    background: var(--bg3); border: 1px solid var(--accent); 
+    color: var(--text); padding: 3px 6px; border-radius: 4px; 
+    font-size: 12px; width: 100%; outline: none;
+  }
+  .inline-check { width: 14px; height: 14px; cursor: pointer; accent-color: var(--accent); }
+  .save-btn {
+    background: var(--green); color: #000; border: none; 
+    padding: 3px 8px; border-radius: 4px; cursor: pointer; 
+    font-size: 10px; font-weight: 700; margin-left: 3px;
+  }
+  .cancel-btn {
+    background: var(--bg3); color: var(--text2); border: 1px solid var(--border); 
+    padding: 3px 8px; border-radius: 4px; cursor: pointer; 
+    font-size: 10px; margin-left: 2px;
+  }
+  .modified-indicator { 
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%; 
+    background: var(--yellow); margin-left: 4px; vertical-align: middle;
+  }
+  .toast {
+    position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+    background: var(--green); color: #000; padding: 10px 18px;
+    border-radius: 8px; font-size: 12px; font-weight: 700;
+    opacity: 0; transform: translateY(10px);
+    transition: all .3s; pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .reset-btn {
+    background: transparent; color: var(--red); border: 1px solid var(--red);
+    padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px;
+    transition: all .15s; margin-left: 4px;
+  }
+  .reset-btn:hover { background: var(--red); color: #fff; }
+  .db-badge {
+    font-size: 10px; color: var(--yellow); background: rgba(245,200,66,.1);
+    border: 1px solid rgba(245,200,66,.3); border-radius: 4px;
+    padding: 2px 6px; margin-left: 8px; cursor: default;
+  }
+
+  /* CONFIG TAB & MODALS */
+  .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 900px) { .config-grid { grid-template-columns: 1fr; } }
+  .config-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+  .config-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .config-header h3 { font-size: 15px; font-weight: 700; color: var(--accent); }
+  
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8); backdrop-filter: blur(4px);
+    display: none; align-items: center; justify-content: center; z-index: 10000;
+  }
+  .modal {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 12px; width: 100%; max-width: 400px; padding: 24px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  }
+  .modal h2 { font-size: 18px; margin-bottom: 20px; color: #fff; }
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 11px; color: var(--text2); margin-bottom: 6px; text-transform: uppercase; }
+  .form-group input, .form-group select {
+    width: 100%; background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text); padding: 10px; border-radius: 8px; outline: none;
+  }
+  .modal-btns { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>📋 Dashboard <span>Permisos</span> Compras Electrónicas</h1>
+    <div class="subtitle">ELAB / SOL · Visto Bueno · Autorización — todas las empresas del grupo</div>
+  </div>
+  <div class="badge-total" id="badge-total">920 registros</div>
+</div>
+
+<div class="filters">
+  <label>Empresa</label>
+  <select id="f-empresa">
+    <option value="">Todas las empresas</option>
+  </select>
+  <label>Permiso</label>
+  <select id="f-permiso">
+    <option value="">Cualquier permiso</option>
+    <option value="elab">ELAB / SOL</option>
+    <option value="vobo">Visto Bueno</option>
+    <option value="aut">Autorización</option>
+  </select>
+  <label>CC</label>
+  <select id="f-cc">
+    <option value="">Todos los CCs</option>
+  </select>
+  <div class="search-box">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="f-search" placeholder="Buscar usuario..." />
+  </div>
+  <button class="btn" onclick="applyFilters()">Filtrar</button>
+  <button class="btn-outline" onclick="clearFilters()">Limpiar</button>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>ELAB / SOL</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--yellow)"></div>Visto Bueno</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div>Autorización</div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('resumen')">📊 Resumen</div>
+  <div class="tab" onclick="switchTab('cc')">🏷️ Por Centro de Costos</div>
+  <div class="tab" onclick="switchTab('usuarios')">👤 Por Usuario</div>
+  <div class="tab" onclick="switchTab('detalle')">📋 Detalle</div>
+  <div class="tab" onclick="switchTab('config')">⚙️ Configuración</div>
+</div>
+
+<div class="main">
+
+  <!-- RESUMEN TAB -->
+  <div id="tab-resumen">
+    <div class="kpi-row" id="kpi-row"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px" id="empresa-cards"></div>
+  </div>
+
+  <!-- CC TAB -->
+  <div id="tab-cc" class="hidden">
+    <div class="cc-grid" id="cc-grid"></div>
+  </div>
+
+  <!-- USUARIOS TAB -->
+  <div id="tab-usuarios" class="hidden">
+    <div class="user-grid" id="user-grid"></div>
+  </div>
+
+  <!-- DETALLE TAB -->
+  <div id="tab-detalle" class="hidden">
+    <div class="table-wrap">
+      <div class="tbl-header">
+        <h3>Detalle de Permisos</h3>
+        <span class="count" id="detalle-count"></span>
+      </div>
+      <div class="scroll">
+        <table id="detalle-table">
+          <thead>
+            <tr>
+              <th>Empresa</th>
+              <th>ID</th>
+              <th>Usuario</th>
+              <th>Perfil</th>
+              <th>CC</th>
+              <th>Descripción</th>
+              <th>ELAB / SOL</th>
+              <th>Visto Bueno</th>
+              <th>Autorización</th>
+              <th>Monto Máx.</th>
+            </tr>
+          </thead>
+          <tbody id="detalle-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIG TAB -->
+  <div id="tab-config" class="hidden">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <!-- Empresas -->
+      <div class="table-wrap">
+        <div class="tbl-header">
+          <h3>Catálogo de Empresas</h3>
+          <button class="btn" style="font-size:11px;padding:4px 10px" onclick="openEmpresaModal()">+ Nueva</button>
+        </div>
+        <div class="scroll" style="max-height:400px">
+          <table>
+            <thead><tr><th>ID</th><th>Nombre</th><th>Acciones</th></tr></thead>
+            <tbody id="config-empresas-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <!-- Centros de Costo -->
+      <div class="table-wrap">
+        <div class="tbl-header">
+          <h3>Centros de Costo</h3>
+          <div style="display:flex;gap:8px">
+            <select id="config-cc-empresa-filter" onchange="loadConfigCCs()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:4px;font-size:11px"></select>
+            <button class="btn" style="font-size:11px;padding:4px 10px" onclick="openCCModal()">+ Nuevo</button>
+          </div>
+        </div>
+        <div class="scroll" style="max-height:400px">
+          <table>
+            <thead><tr><th>Código</th><th>Descripción</th><th>Acciones</th></tr></thead>
+            <tbody id="config-ccs-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let RAW_DATA = [];
+let dataLoaded = false;
+
+const API_URL = 'https://apotemaone.com/urbano/permisos/api.php';
+
+let EMPRESA_LIST = [];
+let CC_LIST = [];
+let EMPRESA_COLORS = {};
+
+function rebuildLists() {
+  EMPRESA_LIST = [...new Set(RAW_DATA.map(r=>r.empresa))].sort((a,b)=>{
+    const na=parseInt(a.match(/\d+/)?.[0]||'9999');
+    const nb=parseInt(b.match(/\d+/)?.[0]||'9999');
+    return na-nb;
+  });
+  CC_LIST = [...new Set(RAW_DATA.map(r=>r.cc))].sort();
+  EMPRESA_COLORS = {};
+  EMPRESA_LIST.forEach((e,i)=>EMPRESA_COLORS[e]=i);
+  const fEmp=document.getElementById('f-empresa');
+  fEmp.innerHTML='<option value="">Todas las empresas</option>';
+  EMPRESA_LIST.forEach(e=>{const o=document.createElement('option');o.value=e;o.textContent=e;fEmp.appendChild(o);});
+  const fCC=document.getElementById('f-cc');
+  fCC.innerHTML='<option value="">Todos los CCs</option>';
+  CC_LIST.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;fCC.appendChild(o);});
+}
+
+let currentData = [];
+let activeTab = 'resumen';
+
+async function loadData() {
+  showLoadingOverlay(true);
+  try {
+    const res = await fetch(API_URL+'?action=load');
+    const json = await res.json();
+    if (!json.ok) throw new Error(json.error);
+    RAW_DATA = json.data;
+    dataLoaded = true;
+    currentData = [...RAW_DATA];
+    rebuildLists();
+    document.getElementById('badge-total').textContent = RAW_DATA.length + ' registros';
+    renderAll();
+    showToast('Cargados ' + RAW_DATA.length + ' registros');
+  } catch(e) {
+    showToast('Error al cargar: ' + e.message, true);
+  } finally {
+    showLoadingOverlay(false);
+  }
+}
+
+function showLoadingOverlay(show) {
+  const el = document.getElementById('loading-overlay');
+  if (el) el.style.display = show ? 'flex' : 'none';
+}
+
+function switchTab(name) {
+  activeTab = name;
+  ['resumen','cc','usuarios','detalle','config'].forEach(t => {
+    const el = document.getElementById('tab-'+t);
+    if (el) el.classList.toggle('hidden', t!==name);
+  });
+  document.querySelectorAll('.tab').forEach((el) => {
+    const text = el.textContent.toLowerCase();
+    const match = (name === 'resumen' && text.includes('resumen')) ||
+                  (name === 'cc' && text.includes('centro')) ||
+                  (name === 'usuarios' && text.includes('usuario')) ||
+                  (name === 'detalle' && text.includes('detalle')) ||
+                  (name === 'config' && text.includes('config'));
+    el.classList.toggle('active', match);
+  });
+  if (name === 'config') loadConfigData();
+  else renderAll();
+}
+
+async function loadConfigData() {
+  await Promise.all([loadConfigEmpresas(), loadConfigCCs()]);
+}
+
+async function loadConfigEmpresas() {
+  try {
+    const res = await fetch(API_URL + '?action=get_empresas');
+    const json = await res.json();
+    if (json.ok) {
+      const body = document.getElementById('config-empresas-body');
+      body.innerHTML = json.data.map(e => `<tr>
+        <td>${e.id_empresa}</td>
+        <td>${e.nombre}</td>
+        <td><button class="edit-btn" onclick="openEmpresaModal(${e.id_empresa}, '${e.nombre}')">&#9998;</button></td>
+      </tr>`).join('');
+      
+      const filter = document.getElementById('config-cc-empresa-filter');
+      const currentVal = filter.value;
+      filter.innerHTML = '<option value="">Filtrar CC por Empresa...</option>' + 
+        json.data.map(e => `<option value="${e.id_empresa}">${e.nombre}</option>`).join('');
+      filter.value = currentVal;
+    }
+  } catch(e) { console.error(e); }
+}
+
+async function loadConfigCCs() {
+  const emp_id = document.getElementById('config-cc-empresa-filter').value;
+  try {
+    const res = await fetch(API_URL + `?action=get_ccs${emp_id ? '&id_empresa='+emp_id : ''}`);
+    const json = await res.json();
+    if (json.ok) {
+      document.getElementById('config-ccs-body').innerHTML = json.data.map(c => `<tr>
+        <td><span class="tag-cc">${c.codigo}</span></td>
+        <td>${c.descripcion}</td>
+        <td><button class="edit-btn" onclick="openCCModal(${c.id_cc}, '${c.codigo}', '${c.descripcion}', ${c.id_empresa})">&#9998;</button></td>
+      </tr>`).join('');
+    }
+  } catch(e) { console.error(e); }
+}
+
+function openEmpresaModal(id = '', nombre = '') {
+  document.getElementById('empresa-id').value = id;
+  document.getElementById('empresa-nombre').value = nombre;
+  document.getElementById('empresa-modal-title').textContent = id ? 'Editar Empresa' : 'Nueva Empresa';
+  document.getElementById('empresa-modal').style.display='flex';
+}
+function closeEmpresaModal() { document.getElementById('empresa-modal').style.display='none'; }
+
+async function saveEmpresa() {
+  const id = document.getElementById('empresa-id').value;
+  const nombre = document.getElementById('empresa-nombre').value.trim();
+  if (!nombre) return;
+  try {
+    const res = await fetch(API_URL + '?action=save_empresa', {
+      method: 'POST', body: JSON.stringify({id_empresa: id, nombre: nombre})
+    });
+    const json = await res.json();
+    if (json.ok) {
+      showToast('Empresa guardada');
+      closeEmpresaModal();
+      loadConfigEmpresas();
+      loadData(); // To refresh filter lists
+    }
+  } catch(e) { showToast('Error al guardar empresa', true); }
+}
+
+function openCCModal(id = '', codigo = '', desc = '', emp_id = '') {
+  document.getElementById('cc-id').value = id;
+  document.getElementById('cc-codigo').value = codigo;
+  document.getElementById('cc-desc-config').value = desc;
+  
+  // Populate empresa select in CC modal
+  fetch(API_URL + '?action=get_empresas').then(r => r.json()).then(json => {
+    if (json.ok) {
+        const sel = document.getElementById('cc-empresa-id');
+        sel.innerHTML = json.data.map(e => `<option value="${e.id_empresa}" ${e.id_empresa == emp_id ? 'selected' : ''}>${e.nombre}</option>`).join('');
+    }
+  });
+
+  document.getElementById('cc-modal-title').textContent = id ? 'Editar Centro de Costo' : 'Nuevo Centro de Costo';
+  document.getElementById('cc-modal').style.display='flex';
+}
+function closeCCModal() { document.getElementById('cc-modal').style.display='none'; }
+
+async function saveCC() {
+  const id = document.getElementById('cc-id').value;
+  const emp_id = document.getElementById('cc-empresa-id').value;
+  const codigo = document.getElementById('cc-codigo').value.trim().toUpperCase();
+  const desc = document.getElementById('cc-desc-config').value.trim();
+  if (!emp_id || !codigo) return;
+  try {
+    const res = await fetch(API_URL + '?action=save_cc', {
+      method: 'POST', body: JSON.stringify({id_cc: id, id_empresa: emp_id, codigo: codigo, descripcion: desc})
+    });
+    const json = await res.json();
+    if (json.ok) {
+      showToast('CC guardado');
+      closeCCModal();
+      loadConfigCCs();
+    }
+  } catch(e) { showToast('Error al guardar CC', true); }
+}
+
+// Auto-fill Logic
+async function autofillUser() {
+  const uid = document.getElementById('new-userid').value.trim();
+  if (uid.length < 1) return;
+  try {
+    const res = await fetch(API_URL + '?action=find_user&user_id=' + uid);
+    const json = await res.json();
+    if (json.ok && json.data) {
+      document.getElementById('new-usuario').value = json.data.nombre;
+      document.getElementById('new-perfil').value = json.data.perfil_defecto || '';
+      showToast('Usuario encontrado: ' + json.data.nombre);
+    }
+  } catch(e) {}
+}
+
+async function autofillCC() {
+  const cc = document.getElementById('new-cc').value.trim().toUpperCase();
+  const empresa_nombre = document.getElementById('new-empresa').value;
+  if (cc.length < 1) return;
+  
+  // Find id_empresa by name
+  let id_empresa = '';
+  try {
+    const res_emp = await fetch(API_URL + '?action=get_empresas');
+    const json_emp = await res_emp.json();
+    if (json_emp.ok) {
+        const emp = json_emp.data.find(e => e.nombre === empresa_nombre);
+        if (emp) id_empresa = emp.id_empresa;
+    }
+    
+    const res = await fetch(API_URL + `?action=find_cc&cc=${cc}${id_empresa ? '&id_empresa='+id_empresa : ''}`);
+    const json = await res.json();
+    if (json.ok && json.data) {
+      document.getElementById('new-desc').value = json.data.descripcion;
+      showToast('CC encontrado: ' + json.data.descripcion);
+    }
+  } catch(e) {}
+}
+
+function fmtMonto(v) {
+  if (!v||v===0) return '-';
+  if (v>=1e9) return '$'+(v/1e9).toFixed(1)+'B';
+  if (v>=1e6) return '$'+(v/1e6).toFixed(1)+'M';
+  if (v>=1e3) return '$'+(v/1e3).toFixed(0)+'K';
+  return '$'+v.toFixed(0);
+}
+function getInitials(name) {
+  return name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
+}
+function avatarColor(name) {
+  const colors=['#4f8ef7','#7c5cbf','#3ecf8e','#f5c842','#f58642','#e05252','#5cb8f5','#cf3e9e'];
+  let h=0; for(let c of name) h=(h*31+c.charCodeAt(0))%colors.length;
+  return colors[h];
+}
+
+function applyFilters() {
+  const emp=document.getElementById('f-empresa').value;
+  const perm=document.getElementById('f-permiso').value;
+  const cc=document.getElementById('f-cc').value;
+  const search=document.getElementById('f-search').value.toLowerCase().trim();
+  currentData = RAW_DATA.filter(r => {
+    if (emp && r.empresa!==emp) return false;
+    if (cc  && r.cc!==cc) return false;
+    if (search && !r.usuario.toLowerCase().includes(search)) return false;
+    if (perm==='elab' && !r.elab) return false;
+    if (perm==='vobo' && !r.vobo) return false;
+    if (perm==='aut'  && !r.aut)  return false;
+    return true;
+  });
+  document.getElementById('badge-total').textContent = currentData.length + ' registros';
+  renderAll();
+}
+function clearFilters() {
+  ['f-empresa','f-permiso','f-cc'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-search').value='';
+  currentData=[...RAW_DATA];
+  document.getElementById('badge-total').textContent=RAW_DATA.length+' registros';
+  renderAll();
+}
+
+function showToast(msg, isError=false) {
+  const t=document.getElementById('toast');
+  if (!t) return;
+  t.textContent=msg;
+  t.style.background=isError?'var(--red)':'var(--green)';
+  t.style.color=isError?'#fff':'#000';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+let editingRowEl=null;
+
+function startEdit(tr, rowData) {
+  if (editingRowEl) cancelEdit(editingRowEl);
+  editingRowEl=tr;
+  tr.classList.add('editing');
+  const cells=tr.querySelectorAll('td');
+  cells[3].innerHTML='<input class="inline-input" value="'+rowData.perfil+'" data-field="perfil" style="width:110px">';
+  cells[6].innerHTML='<input type="checkbox" class="inline-check" '+(rowData.elab?'checked':'')+' data-field="elab">';
+  cells[7].innerHTML='<input type="checkbox" class="inline-check" '+(rowData.vobo?'checked':'')+' data-field="vobo">';
+  cells[8].innerHTML='<input type="checkbox" class="inline-check" '+(rowData.aut?'checked':'')+' data-field="aut">';
+  cells[9].innerHTML='<input class="inline-input" value="'+rowData.monto+'" data-field="monto" style="width:90px" type="number">';
+  cells[10].innerHTML='<button class="save-btn" onclick="saveEdit(this)">&#10003; Guardar</button><button class="cancel-btn" onclick="cancelEdit(this.closest(\'tr\'))">&#10005;</button>';
+  tr._rowData=rowData;
+}
+
+async function saveEdit(btn) {
+  const tr=btn.closest('tr');
+  const rowData=tr._rowData;
+  tr.querySelectorAll('[data-field]').forEach(inp=>{
+    const field=inp.dataset.field;
+    let val=inp.type==='checkbox'?inp.checked:inp.value;
+    if (field==='monto') val=parseFloat(val)||0;
+    rowData[field]=val;
+  });
+  tr.classList.remove('editing');
+  editingRowEl=null;
+  tr._rowData=null;
+  btn.textContent='...'; btn.disabled=true;
+  try {
+    const res=await fetch(API_URL+'?action=save',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({id_row:rowData.id_row,perfil:rowData.perfil,elab:rowData.elab,vobo:rowData.vobo,aut:rowData.aut,monto:rowData.monto})
+    });
+    const json=await res.json();
+    if (!json.ok) throw new Error(json.error);
+    showToast('Guardado correctamente');
+  } catch(e) { showToast('Error: '+e.message,true); }
+  renderDetalle();
+}
+
+function cancelEdit(tr) {
+  tr.classList.remove('editing');
+  editingRowEl=null;
+  renderDetalle();
+}
+
+async function openAddModal() {
+  document.getElementById('add-modal').style.display='flex';
+  const sel=document.getElementById('new-empresa');
+  try {
+    const res = await fetch(API_URL + '?action=get_empresas');
+    const json = await res.json();
+    if (json.ok) {
+        sel.innerHTML = json.data.map(e => `<option value="${e.nombre}">${e.nombre}</option>`).join('');
+    } else {
+        sel.innerHTML = EMPRESA_LIST.map(e=>'<option value="'+e+'">'+e+'</option>').join('');
+    }
+  } catch(e) {
+    sel.innerHTML = EMPRESA_LIST.map(e=>'<option value="'+e+'">'+e+'</option>').join('');
+  }
+}
+function closeAddModal() { document.getElementById('add-modal').style.display='none'; }
+
+async function submitNewRow() {
+  const get=id=>document.getElementById(id).value.trim();
+  const newRow={
+    empresa:get('new-empresa'), id:get('new-userid'), usuario:get('new-usuario'),
+    perfil:get('new-perfil'), cc:get('new-cc').toUpperCase(), desc:get('new-desc'),
+    elab:document.getElementById('new-elab').checked,
+    vobo:document.getElementById('new-vobo').checked,
+    aut:document.getElementById('new-aut').checked,
+    monto:parseFloat(get('new-monto'))||0,
+  };
+  if (!newRow.empresa||!newRow.usuario||!newRow.cc){showToast('Empresa, Usuario y CC son obligatorios',true);return;}
+  try {
+    const res=await fetch(API_URL+'?action=save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(newRow)});
+    const json=await res.json();
+    if (!json.ok) throw new Error(json.error);
+    newRow.id_row=json.id_row;
+    RAW_DATA.push(newRow);
+    currentData=[...RAW_DATA];
+    rebuildLists();
+    closeAddModal();
+    switchTab('detalle');
+    showToast('Registro agregado');
+  } catch(e){showToast('Error: '+e.message,true);}
+}
+
+async function deleteRow(id_row, usuario, cc) {
+  if (!confirm('Eliminar permiso de '+usuario+' en CC '+cc+'?')) return;
+  try {
+    const res=await fetch(API_URL+'?action=delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id_row})});
+    const json=await res.json();
+    if (!json.ok) throw new Error(json.error);
+    RAW_DATA=RAW_DATA.filter(r=>r.id_row!==id_row);
+    currentData=currentData.filter(r=>r.id_row!==id_row);
+    renderDetalle();
+    showToast('Registro eliminado');
+  } catch(e){showToast('Error: '+e.message,true);}
+}
+
+function renderAll() {
+  if (!dataLoaded) return;
+  if (activeTab==='resumen') renderResumen();
+  else if (activeTab==='cc') renderCC();
+  else if (activeTab==='usuarios') renderUsers();
+  else if (activeTab==='detalle') renderDetalle();
+}
+
+function renderResumen() {
+  const kpi = {
+    total: RAW_DATA.length,
+    elab: RAW_DATA.filter(r=>r.elab).length,
+    vobo: RAW_DATA.filter(r=>r.vobo).length,
+    aut: RAW_DATA.filter(r=>r.aut).length,
+    monto: RAW_DATA.reduce((s,r)=>s+r.monto,0)
+  };
+  
+  document.getElementById('kpi-row').innerHTML = `
+    <div class="kpi accent">
+      <div class="label">Total Registros</div>
+      <div class="value">${kpi.total}</div>
+    </div>
+    <div class="kpi green">
+      <div class="label">ELAB / SOL</div>
+      <div class="value">${kpi.elab}</div>
+    </div>
+    <div class="kpi yellow">
+      <div class="label">Visto Bueno</div>
+      <div class="value">${kpi.vobo}</div>
+    </div>
+    <div class="kpi orange">
+      <div class="label">Autorización</div>
+      <div class="value">${kpi.aut}</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Monto Total</div>
+      <div class="value">${fmtMonto(kpi.monto)}</div>
+    </div>
+  `;
+
+  const emps = [...new Set(currentData.map(r=>r.empresa))].sort();
+  document.getElementById('empresa-cards').innerHTML = emps.map(e => {
+    const list = currentData.filter(r=>r.empresa===e);
+    const m = list.reduce((s,r)=>s+r.monto,0);
+    return `
+      <div class="table-wrap" style="padding:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <span style="font-weight:700;font-size:13px">${e}</span>
+          <span style="color:var(--accent);font-weight:800">${fmtMonto(m)}</span>
+        </div>
+        <div style="display:flex;gap:12px">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> ${list.filter(r=>r.elab).length}</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--yellow)"></div> ${list.filter(r=>r.vobo).length}</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div> ${list.filter(r=>r.aut).length}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function togglePermission(id_row, field, currentVal) {
+  const newVal = currentVal ? 0 : 1;
+  // Optimistic update
+  const row = RAW_DATA.find(r => r.id_row == id_row);
+  if (row) row[field] = newVal;
+  renderAll();
+
+  try {
+    const res = await fetch(API_URL + '?action=save', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ id_row: id_row, [field]: newVal })
+    });
+    const json = await res.json();
+    if (!json.ok) throw new Error(json.error);
+    showToast('Permiso actualizado');
+  } catch(e) {
+    if (row) row[field] = currentVal; // Rollback
+    renderAll();
+    showToast('Error: ' + e.message, true);
+  }
+}
+
+function renderCC() {
+  const ccs = [...new Set(currentData.map(r=>r.cc))].sort();
+  document.getElementById('cc-grid').innerHTML = ccs.map(c => {
+    const list = currentData.filter(r=>r.cc===c);
+    return `
+      <div class="cc-card">
+        <div class="cc-card-header">
+            <div class="cc-code">${c}</div>
+            <div style="flex:1;min-width:0">
+                <div class="cc-desc" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${list[0].desc}</div>
+                <div class="cc-empresa">${list[0].empresa}</div>
+            </div>
+        </div>
+        <div class="cc-stats">
+            <div class="cc-stat elab"><div class="n">${list.filter(r=>r.elab).length}</div><div class="l">ELAB / SOL</div></div>
+            <div class="cc-stat vobo"><div class="n">${list.filter(r=>r.vobo).length}</div><div class="l">Visto Bueno</div></div>
+            <div class="cc-stat aut"><div class="n">${list.filter(r=>r.aut).length}</div><div class="l">Autorización</div></div>
+        </div>
+        <div class="cc-users">
+            ${list.map(u => `
+                <div class="row row-clickable" onclick="openQuickEdit(event, ${u.id_row})">
+                    <div style="display:flex;flex-direction:column;min-width:0;flex:1">
+                        <span style="font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${u.usuario}</span>
+                        <span style="font-size:9px;color:var(--text2)">ID: ${u.id} | ${u.perfil}</span>
+                    </div>
+                    <div class="perm-dots">
+                        <div class="dot ${u.elab ? 'dot-e' : 'dot-off'}" title="ELAB / SOL"></div>
+                        <div class="dot ${u.vobo ? 'dot-v' : 'dot-off'}" title="Visto Bueno"></div>
+                        <div class="dot ${u.aut ? 'dot-a' : 'dot-off'}" title="Autorización"></div>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderUsers() {
+  const users = [...new Set(currentData.map(r=>r.id))].sort();
+  document.getElementById('user-grid').innerHTML = users.map(uid => {
+    const records = currentData.filter(u=>u.id===uid);
+    const r = records[0];
+    const initials = getInitials(r.usuario);
+    const color = avatarColor(r.usuario);
+    return `
+      <div class="user-card">
+        <div class="user-card-header">
+            <div class="avatar" style="background:${color}">${initials}</div>
+            <div class="info">
+                <h4>${r.usuario}</h4>
+                <div class="p">ID: ${uid} | ${r.perfil}</div>
+            </div>
+        </div>
+        <div class="user-cc-list">
+            ${records.map(rec => `
+                <div class="user-cc-row row-clickable" onclick="openQuickEdit(event, ${rec.id_row})">
+                    <div style="display:flex;flex-direction:column;min-width:0;flex:1">
+                        <div style="display:flex;align-items:center;gap:6px">
+                            <span class="tag-cc">${rec.cc}</span>
+                            <span style="font-size:9px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${rec.desc}</span>
+                        </div>
+                        <span style="font-size:8px;color:rgba(255,255,255,0.2)">${rec.empresa.split('-')[0]}</span>
+                    </div>
+                    <div class="perm-dots" style="margin-left:8px">
+                        <div class="dot ${rec.elab ? 'dot-e' : 'dot-off'}" title="ELAB / SOL"></div>
+                        <div class="dot ${rec.vobo ? 'dot-v' : 'dot-off'}" title="Visto Bueno"></div>
+                        <div class="dot ${rec.aut ? 'dot-a' : 'dot-off'}" title="Autorización"></div>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderDetalle() {
+  const d=currentData;
+  document.getElementById('detalle-count').textContent=d.length+' registros';
+  const chip=(v,yes,no)=>v?'<span class="chip chip-yes">&#10003; '+yes+'</span>':'<span class="chip chip-no">&#8212; '+no+'</span>';
+  document.getElementById('detalle-body').innerHTML=d.map((r,i)=>'<tr><td><span style="font-size:10px;font-weight:600;color:var(--text2)">'+r.empresa.split(' - ')[0]+'</span></td><td style="color:var(--text2)">'+r.id+'</td><td><span class="user-name">'+r.usuario+'</span></td><td><span class="perfil-badge">'+r.perfil+'</span></td><td><span class="tag-cc">'+r.cc+'</span></td><td style="color:var(--text2);font-size:11px">'+r.desc+'</td><td>'+chip(r.elab,'Si','No')+'</td><td>'+chip(r.vobo,'Si','No')+'</td><td>'+chip(r.aut,'Si','No')+'</td><td class="monto">'+fmtMonto(r.monto)+'</td><td style="white-space:nowrap"><button class="edit-btn" onclick="startEdit(this.closest(\'tr\'),currentData['+i+'])" title="Editar">&#9998;</button> <button class="edit-btn" onclick="deleteRow('+r.id_row+',\''+r.usuario.replace(/'/g,"\\'")+"','"+r.cc+'\')" title="Eliminar" style="color:var(--red)">&#128465;</button></td></tr>').join('');
+}
+
+// Init
+const tblHead=document.querySelector('#detalle-table thead tr');
+if (tblHead){const th=document.createElement('th');th.textContent='';tblHead.appendChild(th);}
+
+const detalleHeader=document.querySelector('#tab-detalle .tbl-header');
+if (detalleHeader){
+  const btn=document.createElement('button');
+  btn.className='btn';btn.textContent='+ Agregar';btn.onclick=openAddModal;
+  btn.style.cssText='font-size:11px;padding:5px 12px';
+  detalleHeader.appendChild(btn);
+}
+
+const headerDiv=document.querySelector('.header');
+if (headerDiv){
+  const controls=document.createElement('div');
+  controls.style.cssText='display:flex;align-items:center;gap:8px;flex-shrink:0';
+  controls.innerHTML='<button class="reset-btn" onclick="loadData()" title="Recargar">&#8635; Recargar</button>';
+  headerDiv.appendChild(controls);
+}
+
+const toastEl=document.createElement('div');toastEl.id='toast';toastEl.className='toast';
+document.body.appendChild(toastEl);
+
+const popoverEl=document.createElement('div');popoverEl.id='quick-popover';popoverEl.className='quick-popover';
+document.body.appendChild(popoverEl);
+
+document.addEventListener('click', e => {
+  if (!popoverEl.contains(e.target) && !e.target.closest('.row-clickable')) closeQuickEdit();
+});
+
+function openQuickEdit(e, id_row) {
+  e.stopPropagation();
+  const row = RAW_DATA.find(r => r.id_row == id_row);
+  if (!row) return;
+
+  const popover = document.getElementById('quick-popover');
+  popover.innerHTML = `
+    <div style="font-size:10px;color:var(--text2);margin-bottom:8px;padding:0 8px;font-weight:700;text-transform:uppercase">Permisos de ${row.usuario}</div>
+    <div class="quick-popover-item" onclick="togglePermission(${id_row}, 'elab', ${row.elab})">
+      <span>🛠️ ELAB / SOL</span>
+      <div class="dot ${row.elab ? 'dot-e' : 'dot-off'}"></div>
+    </div>
+    <div class="quick-popover-item" onclick="togglePermission(${id_row}, 'vobo', ${row.vobo})">
+      <span>👁️ Visto Bueno</span>
+      <div class="dot ${row.vobo ? 'dot-v' : 'dot-off'}"></div>
+    </div>
+    <div class="quick-popover-item" onclick="togglePermission(${id_row}, 'aut', ${row.aut})">
+      <span>✔️ Autorización</span>
+      <div class="dot ${row.aut ? 'dot-a' : 'dot-off'}"></div>
+    </div>
+  `;
+
+  // Position
+  const rect = e.currentTarget.getBoundingClientRect();
+  popover.style.top = (rect.bottom + 5) + 'px';
+  popover.style.left = rect.left + 'px';
+  
+  // Adjust if off screen
+  const popRect = popover.getBoundingClientRect();
+  if (rect.left + 180 > window.innerWidth) popover.style.left = (window.innerWidth - 190) + 'px';
+  if (rect.bottom + 150 > window.innerHeight) popover.style.top = (rect.top - 130) + 'px';
+
+  popover.style.display = 'flex';
+}
+
+function closeQuickEdit() {
+  document.getElementById('quick-popover').style.display = 'none';
+}
+
+document.getElementById('f-search').addEventListener('keydown',e=>{if(e.key==='Enter')applyFilters();});
+['f-empresa','f-permiso','f-cc'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('change',applyFilters);});
+
+loadData();
+
+</script>
+
+<div id="loading-overlay" style="display:none;position:fixed;inset:0;background:rgba(15,17,23,.85);z-index:9998;align-items:center;justify-content:center;flex-direction:column;gap:14px">
+  <div style="width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite"></div>
+  <div style="color:var(--text2);font-size:13px">Cargando datos...</div>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
+<!-- MODAL AGREGAR PERMISO -->
+<div id="add-modal" class="modal-overlay">
+  <div class="modal" style="max-width:500px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+      <h3>Agregar Permiso</h3>
+      <button onclick="closeAddModal()" style="background:none;border:none;color:var(--text2);font-size:18px;cursor:pointer">&#10005;</button>
+    </div>
+    <div style="display:grid;gap:10px">
+      <div class="form-group"><label>Empresa *</label>
+        <select id="new-empresa"></select></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="form-group"><label>ID Usuario</label>
+          <input id="new-userid" placeholder="ej: 136" onblur="autofillUser()"></div>
+        <div class="form-group"><label>CC *</label>
+          <input id="new-cc" placeholder="ej: P04" onblur="autofillCC()"></div>
+      </div>
+      <div class="form-group"><label>Usuario *</label>
+        <input id="new-usuario" placeholder="Nombre completo"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="form-group"><label>Perfil</label>
+          <input id="new-perfil" placeholder="ej: Comprador"></div>
+        <div class="form-group"><label>Monto max.</label>
+          <input id="new-monto" type="number" placeholder="0"></div>
+      </div>
+      <div class="form-group"><label>Descripcion CC</label>
+        <input id="new-desc" placeholder="ej: CONSTRUCCION"></div>
+      <div style="display:flex;gap:20px;padding:10px 0">
+        <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer"><input type="checkbox" id="new-elab" class="inline-check"> ELAB / SOL</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer"><input type="checkbox" id="new-vobo" class="inline-check"> Visto Bueno</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer"><input type="checkbox" id="new-aut" class="inline-check"> Autorizacion</label>
+      </div>
+      <button class="btn" onclick="submitNewRow()" style="width:100%;padding:10px;font-size:13px">&#10003; Guardar en base de datos</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EMPRESA -->
+<div id="empresa-modal" class="modal-overlay">
+  <div class="modal">
+    <h3 id="empresa-modal-title" style="margin-bottom:18px">Nueva Empresa</h3>
+    <input type="hidden" id="empresa-id">
+    <div class="form-group"><label>Nombre de la Empresa</label>
+      <input id="empresa-nombre" placeholder="ej: Empresa 15 - FIDEICOMISO"></div>
+    <div class="modal-btns">
+        <button class="btn" onclick="saveEmpresa()" style="flex:1">&#10003; Guardar</button>
+        <button class="btn-outline" onclick="closeEmpresaModal()" style="flex:1">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CC -->
+<div id="cc-modal" class="modal-overlay">
+  <div class="modal">
+    <h3 id="cc-modal-title" style="margin-bottom:18px">Nuevo CC</h3>
+    <input type="hidden" id="cc-id">
+    <div class="form-group"><label>Empresa</label>
+        <select id="cc-empresa-id"></select></div>
+    <div class="form-group"><label>Código CC</label>
+        <input id="cc-codigo" placeholder="ej: P04"></div>
+    <div class="form-group"><label>Descripción</label>
+        <input id="cc-desc-config" placeholder="ej: CONSTRUCCION"></div>
+    <div class="modal-btns">
+        <button class="btn" onclick="saveCC()" style="flex:1">&#10003; Guardar</button>
+        <button class="btn-outline" onclick="closeCCModal()" style="flex:1">Cancelar</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>
