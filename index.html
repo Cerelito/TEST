@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intranet - Sistema de Gestión de Calidad Ekuora</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 25%, #0d0d2b 50%, #1a1a3e 75%, #0a0a1a 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            overflow: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating orbs background */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            animation: floatOrb 20s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(100, 130, 255, 0.5), transparent);
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(160, 100, 255, 0.4), transparent);
+            bottom: -80px;
+            right: -80px;
+            animation-delay: -5s;
+        }
+
+        .orb-3 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(80, 200, 255, 0.3), transparent);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -10s;
+        }
+
+        @keyframes floatOrb {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -40px) scale(1.1); }
+            50% { transform: translate(-20px, 20px) scale(0.95); }
+            75% { transform: translate(40px, 30px) scale(1.05); }
+        }
+
+        /* Noise texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 40px;
+        }
+
+        /* Logo area */
+        .logo-area {
+            margin-bottom: 20px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, rgba(100, 140, 255, 0.2), rgba(160, 100, 255, 0.2));
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow:
+                0 8px 32px rgba(100, 130, 255, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { box-shadow: 0 8px 32px rgba(100, 130, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1); }
+            50% { box-shadow: 0 8px 48px rgba(100, 130, 255, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15); }
+        }
+
+        .logo-icon svg {
+            width: 40px;
+            height: 40px;
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.85);
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 8px;
+            animation: fadeInDown 1s ease-out 0.2s both;
+        }
+
+        .subtitle {
+            font-size: 42px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #ffffff 0%, #a0b4ff 50%, #c4a0ff 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+            animation: fadeInDown 1s ease-out 0.4s both;
+            line-height: 1.2;
+        }
+
+        .description {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.45);
+            font-weight: 300;
+            margin-bottom: 60px;
+            animation: fadeInDown 1s ease-out 0.6s both;
+        }
+
+        /* Buttons container */
+        .buttons {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 0.8s both;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Glass button */
+        .glass-btn {
+            position: relative;
+            width: 260px;
+            height: 180px;
+            border-radius: 28px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            overflow: hidden;
+
+            /* Glass morphism */
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.08) 0%,
+                rgba(255, 255, 255, 0.03) 50%,
+                rgba(255, 255, 255, 0.06) 100%
+            );
+            backdrop-filter: blur(40px) saturate(150%);
+            -webkit-backdrop-filter: blur(40px) saturate(150%);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow:
+                0 4px 24px rgba(0, 0, 0, 0.2),
+                0 1px 0 rgba(255, 255, 255, 0.06) inset,
+                0 -1px 0 rgba(0, 0, 0, 0.1) inset;
+        }
+
+        /* Liquid shimmer effect */
+        .glass-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(
+                circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(255, 255, 255, 0.08) 0%,
+                transparent 50%
+            );
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .glass-btn:hover::before {
+            opacity: 1;
+        }
+
+        /* Liquid border glow */
+        .glass-btn::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 28px;
+            padding: 1px;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.2),
+                rgba(255, 255, 255, 0.05),
+                rgba(255, 255, 255, 0.15)
+            );
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask-composite: exclude;
+            -webkit-mask-composite: xor;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .glass-btn:hover::after {
+            opacity: 1;
+        }
+
+        .glass-btn:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.3),
+                0 1px 0 rgba(255, 255, 255, 0.1) inset,
+                0 -1px 0 rgba(0, 0, 0, 0.1) inset;
+        }
+
+        .glass-btn:active {
+            transform: translateY(-4px) scale(0.98);
+            transition-duration: 0.15s;
+        }
+
+        /* Vista button accent */
+        .btn-vista {
+            --accent: rgba(80, 180, 255, 0.5);
+        }
+
+        .btn-vista:hover {
+            box-shadow:
+                0 20px 60px rgba(80, 180, 255, 0.15),
+                0 0 80px rgba(80, 180, 255, 0.08),
+                0 1px 0 rgba(255, 255, 255, 0.1) inset;
+        }
+
+        /* Admin button accent */
+        .btn-admin {
+            --accent: rgba(160, 100, 255, 0.5);
+        }
+
+        .btn-admin:hover {
+            box-shadow:
+                0 20px 60px rgba(160, 100, 255, 0.15),
+                0 0 80px rgba(160, 100, 255, 0.08),
+                0 1px 0 rgba(255, 255, 255, 0.1) inset;
+        }
+
+        /* Button icon */
+        .btn-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .btn-vista .btn-icon {
+            background: linear-gradient(135deg, rgba(80, 180, 255, 0.15), rgba(80, 180, 255, 0.05));
+            border: 1px solid rgba(80, 180, 255, 0.2);
+        }
+
+        .btn-admin .btn-icon {
+            background: linear-gradient(135deg, rgba(160, 100, 255, 0.15), rgba(160, 100, 255, 0.05));
+            border: 1px solid rgba(160, 100, 255, 0.2);
+        }
+
+        .glass-btn:hover .btn-icon {
+            transform: scale(1.1);
+        }
+
+        .btn-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .btn-vista .btn-icon svg {
+            stroke: rgba(120, 200, 255, 0.9);
+        }
+
+        .btn-admin .btn-icon svg {
+            stroke: rgba(180, 140, 255, 0.9);
+        }
+
+        /* Button text */
+        .btn-label {
+            font-size: 15px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.5px;
+        }
+
+        .btn-sublabel {
+            font-size: 12px;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: -10px;
+        }
+
+        /* Ripple effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(0);
+            animation: rippleEffect 0.6s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes rippleEffect {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.2);
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: fadeInUp 1s ease-out 1.2s both;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .subtitle {
+                font-size: 28px;
+            }
+
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .glass-btn {
+                width: 240px;
+                height: 160px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="container">
+        <div class="logo-area">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                    <path d="M2 17l10 5 10-5"/>
+                    <path d="M2 12l10 5 10-5"/>
+                </svg>
+            </div>
+        </div>
+
+        <p class="title">Intranet</p>
+        <h1 class="subtitle">Sistema de Gestión de Calidad</h1>
+        <p class="description">Ekuora</p>
+
+        <div class="buttons">
+            <a href="https://ekuora.com/vista" class="glass-btn btn-vista" id="btnVista">
+                <div class="btn-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                </div>
+                <span class="btn-label">Vista</span>
+                <span class="btn-sublabel">Acceso de consulta</span>
+            </a>
+
+            <a href="https://ekuora.com/admin" class="glass-btn btn-admin" id="btnAdmin">
+                <div class="btn-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                </div>
+                <span class="btn-label">Admin</span>
+                <span class="btn-sublabel">Panel de administración</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="footer">Ekuora &copy; 2026</div>
+
+    <script>
+        // Mouse tracking for liquid light effect
+        document.querySelectorAll('.glass-btn').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                btn.style.setProperty('--mouse-x', x + '%');
+                btn.style.setProperty('--mouse-y', y + '%');
+            });
+
+            // Ripple effect on click
+            btn.addEventListener('click', (e) => {
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                const rect = btn.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = e.clientX - rect.left - size / 2 + 'px';
+                ripple.style.top = e.clientY - rect.top - size / 2 + 'px';
+                btn.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Parallax orbs on mouse move
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 2;
+            const y = (e.clientY / window.innerHeight - 0.5) * 2;
+            document.querySelectorAll('.orb').forEach((orb, i) => {
+                const speed = (i + 1) * 8;
+                orb.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
