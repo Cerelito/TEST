@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Intranet - Sistema de Gestión de Calidad Ekuora</title>
+    <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -188,14 +189,10 @@
             100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        .logo-icon svg {
-            width: 42px;
-            height: 42px;
-            fill: none;
-            stroke: rgba(60, 60, 100, 0.7);
-            stroke-width: 1.5;
-            stroke-linecap: round;
-            stroke-linejoin: round;
+        .logo-icon img {
+            width: 54px;
+            height: 54px;
+            object-fit: contain;
             position: relative;
             z-index: 1;
         }
@@ -455,11 +452,7 @@
 
     <div class="container">
         <div class="logo-icon">
-            <svg viewBox="0 0 24 24">
-                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                <path d="M2 17l10 5 10-5"/>
-                <path d="M2 12l10 5 10-5"/>
-            </svg>
+            <img src="logo.png" alt="Ekuora Logo">
         </div>
 
         <p class="title">Intranet</p>
