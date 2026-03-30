@@ -1,0 +1,73 @@
+Options -Indexes
+Options -MultiViews
+
+# Enable the rewrite engine
+RewriteEngine On
+
+# ---------------------------------------------------------------------------
+# HTTPS redirect (uncomment in production)
+# ---------------------------------------------------------------------------
+# RewriteCond %{HTTPS} off
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# ---------------------------------------------------------------------------
+# Set the base directory if the app lives in a subdirectory.
+# Change /ek_accesos to / if this is deployed at the domain root.
+# ---------------------------------------------------------------------------
+RewriteBase /ek_accesos
+
+# ---------------------------------------------------------------------------
+# Security headers
+# ---------------------------------------------------------------------------
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Deny direct access to sensitive files and directories
+# ---------------------------------------------------------------------------
+
+# Block access to hidden files (e.g. .env, .git)
+RewriteRule (^|/)\. - [F,L]
+
+# Block access to config directory
+RewriteRule ^config/ - [F,L]
+
+# Block access to core directory
+RewriteRule ^core/ - [F,L]
+
+# Block access to helpers directory
+RewriteRule ^helpers/ - [F,L]
+
+# Block access to app directory
+RewriteRule ^app/ - [F,L]
+
+# Protect composer files
+RewriteRule ^composer\.(json|lock)$ - [F,L]
+
+# ---------------------------------------------------------------------------
+# Static assets – serve directly without rewriting
+# ---------------------------------------------------------------------------
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# ---------------------------------------------------------------------------
+# Front controller – route everything else through index.php
+# ---------------------------------------------------------------------------
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+
+# ---------------------------------------------------------------------------
+# PHP settings (if using mod_php)
+# ---------------------------------------------------------------------------
+<IfModule mod_php.c>
+    php_value session.cookie_httponly 1
+    php_value session.use_strict_mode 1
+    php_flag  display_errors          Off
+    php_flag  log_errors              On
+</IfModule>
