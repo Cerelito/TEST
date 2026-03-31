@@ -135,10 +135,10 @@ class UsuariosController extends Controller
         if ($empId) {
             $pdo = Database::getInstance();
             $pdo->prepare(
-                "INSERT INTO empleado_usuario (empleado_id, usuario_id)
+                "INSERT INTO usuario_empleado (usuario_id, empleado_id)
                  VALUES (?,?)
-                 ON DUPLICATE KEY UPDATE usuario_id = VALUES(usuario_id)"
-            )->execute([$empId, $userId]);
+                 ON DUPLICATE KEY UPDATE empleado_id = VALUES(empleado_id)"
+            )->execute([$userId, $empId]);
 
             if ($pnId) {
                 (new Empleado())->asignarProgramaNivel($empId, $pnId, currentUserId() ?? 0);

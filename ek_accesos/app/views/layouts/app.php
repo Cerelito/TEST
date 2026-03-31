@@ -418,7 +418,7 @@ $flash = getFlash();
             <div class="user-avatar"><?php echo htmlspecialchars($initials); ?></div>
             <div class="user-info">
                 <div class="user-name"><?php echo htmlspecialchars($user['nombre'] ?? 'Usuario'); ?></div>
-                <div class="user-role"><?php echo htmlspecialchars($user['tipo_usuario'] ?? ''); ?></div>
+                <div class="user-role"><?php echo htmlspecialchars($user['rol'] ?? ''); ?></div>
             </div>
         </div>
         <a href="<?php echo BASE_URL; ?>/logout" class="logout-btn">
@@ -455,24 +455,19 @@ $flash = getFlash();
 </header>
 
 <!-- Flash Messages -->
-<?php if ($flash): ?>
+<?php if (!empty($flash)): ?>
 <div class="flash-container" id="flashContainer">
-    <?php foreach ($flash as $type => $messages): ?>
-        <?php if (!is_array($messages)) $messages = [$messages]; ?>
-        <?php foreach ($messages as $msg): ?>
-        <div class="flash-message flash-<?php echo htmlspecialchars($type); ?>" onclick="this.remove()">
+    <?php foreach ($flash as $f): ?>
+        <?php $ftype = $f['type'] ?? 'info'; $fmsg = $f['message'] ?? ''; ?>
+        <div class="flash-message flash-<?php echo htmlspecialchars($ftype); ?>" onclick="this.remove()">
             <div class="flash-icon">
-                <?php
-                $icons = ['success'=>'✅','error'=>'❌','warning'=>'⚠️','info'=>'ℹ️'];
-                echo $icons[$type] ?? 'ℹ️';
-                ?>
+                <?php $icons = ['success'=>'✅','error'=>'❌','warning'=>'⚠️','info'=>'ℹ️']; echo $icons[$ftype] ?? 'ℹ️'; ?>
             </div>
             <div class="flash-text">
-                <div class="flash-title"><?php echo ucfirst($type); ?></div>
-                <div class="flash-body"><?php echo htmlspecialchars($msg); ?></div>
+                <div class="flash-title"><?php echo ucfirst($ftype); ?></div>
+                <div class="flash-body"><?php echo $fmsg; ?></div>
             </div>
         </div>
-        <?php endforeach; ?>
     <?php endforeach; ?>
 </div>
 <?php endif; ?>

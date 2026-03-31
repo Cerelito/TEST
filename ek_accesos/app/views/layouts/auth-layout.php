@@ -71,19 +71,17 @@ $flash = getFlash();
 <body>
 <div class="auth-bg">
     <div class="auth-content">
-        <?php if ($flash): ?>
-        <?php foreach ($flash as $type => $messages): ?>
-            <?php if (!is_array($messages)) $messages = [$messages]; ?>
-            <?php foreach ($messages as $msg): ?>
+        <?php if (!empty($flash)): ?>
+        <?php foreach ($flash as $f): ?>
+            <?php $ftype = $f['type'] ?? 'info'; $fmsg = $f['message'] ?? ''; ?>
             <div id="flashAlert" style="
                 max-width: 420px; margin: 0 auto 16px;
                 padding: 12px 16px; border-radius: 12px;
-                background: <?php echo $type === 'error' ? 'rgba(239,68,68,0.12)' : 'rgba(16,185,129,0.12)'; ?>;
-                border: 1px solid <?php echo $type === 'error' ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)'; ?>;
-                color: <?php echo $type === 'error' ? '#fca5a5' : '#6ee7b7'; ?>;
+                background: <?php echo $ftype === 'error' ? 'rgba(239,68,68,0.12)' : 'rgba(16,185,129,0.12)'; ?>;
+                border: 1px solid <?php echo $ftype === 'error' ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)'; ?>;
+                color: <?php echo $ftype === 'error' ? '#fca5a5' : '#6ee7b7'; ?>;
                 font-size: 13px; text-align: center;
-            "><?php echo htmlspecialchars($msg); ?></div>
-            <?php endforeach; ?>
+            "><?php echo htmlspecialchars($fmsg); ?></div>
         <?php endforeach; ?>
         <?php endif; ?>
         <?php echo $content ?? ''; ?>

@@ -275,28 +275,52 @@ function sendEmail(string $to, string $subject, string $body): bool
 // Audit Log
 // ─────────────────────────────────────────────────────────────────────────────
 
+/**
+ * Insert an action record into the audit log table.
+ */
 function logAction(string $accion, string $modulo, string $descripcion = ''): void
 {
     try {
-        $pdo = getDB();
-        $pdo->prepare("INSERT INTO logs_acceso (usuario_id, evento, descripcion, ip, created_at)
-                        VALUES (?, ?, ?, ?, NOW())")
-            ->execute([
-                currentUserId(),
-                $accion . '.' . $modulo,
-                $descripcion,
-                $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0',
-            ]);
+        $pdo    = Database::getInstance();
+        $evento = $modulo ? "{$accion}:{$modulo}" : $accion;
+        $pdo->prepare(
+            "INSERT INTO logs_acceso (usuario_id, evento, descripcion, ip, user_agent, created_at)
+             VALUES (?, ?, ?, ?, ?, NOW())"
+        )->execute([
+            currentUserId(),
+            $evento,
+            $descripcion,
+            $_SERVER['REMOTE_ADDR']     ?? '0.0.0.0',
+            $_SERVER['HTTP_USER_AGENT'] ?? '',
+        ]);
     } catch (\Throwable $e) {
         error_log('[EK Accesos] logAction failed: ' . $e->getMessage());
     }
 }
 
-function verifyCSRF(): void
-{
-    if (!verifyCSRFToken()) {
-        http_response_code(403);
-        die('Token de seguridad inválido. Por favor, recarga la página.');
+/**
+ * Verify CSRF token on the current POST request.
+ * Delegates to verifyCSRF() defined in helpers/csrf.php (loaded first).
+ * If csrf.php is not yet loaded, performs the check inline.
+ */
+if (!function_exists('verifyCSRF')) {
+    function verifyCSRF(bool $regenerate = false): bool
+    {
+        $submitted = $_POST[defined('CSRF_POST_KEY') ? CSRF_POST_KEY : '_csrf_token'] ?? '';
+        $stored    = $_SESSION[defined('CSRF_SESSION_KEY') ? CSRF_SESSION_KEY : '_csrf_token'] ?? '';
+
+        if (empty($submitted) || empty($stored) || !hash_equals($stored, $submitted)) {
+            http_response_code(403);
+            echo '<h1>403 — Solicitud inválida</h1>';
+            echo '<p>Token de seguridad inválido o expirado. Recarga la página e inténtalo de nuevo.</p>';
+            exit;
+        }
+
+        if ($regenerate) {
+            unset($_SESSION[defined('CSRF_SESSION_KEY') ? CSRF_SESSION_KEY : '_csrf_token']);
+        }
+
+        return true;
     }
 }
 
@@ -321,4 +345,61 @@ function isActive(string $path): string
     $base    = trim(parse_url(BASE_URL, PHP_URL_PATH) ?? '', '/');
     $current = ltrim(str_replace($base, '', '/' . $current), '/');
     return (strpos($current, $path) === 0) ? 'active' : '';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Role helper (proxy; auth.php may define this too — guard against re-declare)
+// ─────────────────────────────────────────────────────────────────────────────
+
+if (!function_exists('isRole')) {
+    /**
+     * Return true if the current user holds at least one of the given roles.
+     * superadmin and admin bypass all checks.
+     */
+    function isRole(string|array $roles): bool
+    {
+        if (!function_exists('isLoggedIn') || !isLoggedIn()) return false;
+        $roles       = is_array($roles) ? $roles : [$roles];
+        $currentRole = $_SESSION['user']['rol']
+                    ?? $_SESSION['user']['tipo_usuario']
+                    ?? '';
+        if (in_array($currentRole, ['superadmin', 'admin'], true)) return true;
+        return in_array($currentRole, $roles, true);
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Session login/logout stubs (primary definitions live in auth.php)
+// ─────────────────────────────────────────────────────────────────────────────
+
+if (!function_exists('loginUser')) {
+    /** Store an authenticated user in the session. */
+    function loginUser(array $user): void
+    {
+        session_regenerate_id(true);
+        $_SESSION['_last_regenerated'] = time();
+        $_SESSION['user']              = $user;
+    }
+}
+
+if (!function_exists('logoutUser')) {
+    /** Destroy the session and clear the cookie. */
+    function logoutUser(): void
+    {
+        $_SESSION = [];
+        if (ini_get('session.use_cookies')) {
+            $p = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000,
+                $p['path'], $p['domain'], $p['secure'], $p['httponly']);
+        }
+        session_destroy();
+    }
+}
+
+if (!function_exists('isLoggedIn')) {
+    /** Return true when an authenticated user is present in the session. */
+    function isLoggedIn(): bool
+    {
+        return !empty($_SESSION['user']['id']);
+    }
 }

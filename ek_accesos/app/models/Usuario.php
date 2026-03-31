@@ -23,7 +23,7 @@ class Usuario extends BaseModel
     public function findByToken(string $token): ?array
     {
         return $this->queryOne(
-            "SELECT * FROM usuarios WHERE token_sesion = ? AND deleted_at IS NULL LIMIT 1",
+            "SELECT * FROM usuarios WHERE token_recuperacion = ? AND deleted_at IS NULL LIMIT 1",
             [$token]
         );
     }
@@ -31,18 +31,18 @@ class Usuario extends BaseModel
     public function getAll(array $filters = []): array
     {
         $sql = "SELECT u.*,
-                       e.nombre_completo AS empleado_nombre,
+                       e.nombre AS empleado_nombre,
                        pn.nombre AS programa_nivel_nombre
                 FROM usuarios u
-                LEFT JOIN empleado_usuario eu ON eu.usuario_id = u.id
-                LEFT JOIN empleados e ON e.id = eu.empleado_id
-                LEFT JOIN empleado_programa_nivel epn ON epn.empleado_id = e.id AND epn.activo = 1
+                LEFT JOIN usuario_empleado ue ON ue.usuario_id = u.id
+                LEFT JOIN empleados e ON e.id = ue.empleado_id
+                LEFT JOIN empleado_programa_nivel epn ON epn.empleado_id = e.id
                 LEFT JOIN programa_nivel pn ON pn.id = epn.programa_nivel_id
                 WHERE u.deleted_at IS NULL";
         $params = [];
 
         if (!empty($filters['tipo'])) {
-            $sql .= " AND u.tipo_usuario = ?";
+            $sql .= " AND u.rol = ?";
             $params[] = $filters['tipo'];
         }
         if (!empty($filters['buscar'])) {

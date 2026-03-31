@@ -50,6 +50,7 @@ class Router
         // Centros de Costo
         'centros-costo'                 => ['CentrosCostoController', 'index'],
         'centros-costo/guardar'         => ['CentrosCostoController', 'guardar'],
+        'centros-costo/por-empresa'     => ['CentrosCostoController', 'porEmpresa'],
         // Organigrama
         'organigrama'                   => ['OrganigramaController',  'index'],
         'organigrama/data'              => ['OrganigramaController',  'data'],
@@ -58,6 +59,18 @@ class Router
         'usuarios/crear'                => ['UsuariosController',     'crear'],
         'usuarios/guardar'              => ['UsuariosController',     'guardar'],
     ];
+
+    // Dynamic routes (with ID param) resolved by the auto-resolver below.
+    // Examples that resolve automatically via the auto-resolver:
+    //   empleados/editar/5   → EmpleadosController::editar(5)
+    //   empleados/actualizar/5 → EmpleadosController::actualizar(5)
+    //   empleados/eliminar/5 → EmpleadosController::eliminar(5)
+    //   empleados/toggle-activo/5 → EmpleadosController::toggleActivo(5)
+    //   programa-nivel/editar/3 → ProgramaNivelController::editar(3)
+    //   usuarios/aprobar/2   → UsuariosController::aprobar(2)
+    //   requisitores/quitar/1 → RequisitorController::quitar(1)
+    //   compradores/quitar/1  → CompradorController::quitar(1)
+    //   centros-costo/eliminar/1 → CentrosCostoController::eliminar(1)
 
     /**
      * Resolve the current URL and dispatch to the appropriate controller/action.
@@ -72,13 +85,15 @@ class Router
         $routeKey1 = $segments[0] ?? '';
 
         if (isset($this->routes[$routeKey])) {
+            // Exact two-segment match (e.g. 'empleados/crear', 'programa-nivel/guardar')
             [$controllerName, $action] = $this->routes[$routeKey];
             $params = array_slice($segments, 2);
-        } elseif (isset($this->routes[$routeKey1])) {
+        } elseif (isset($this->routes[$routeKey1]) && count($segments) === 1) {
+            // Single-segment match only when no action segment is present (e.g. 'empleados', 'dashboard')
             [$controllerName, $action] = $this->routes[$routeKey1];
-            $params = array_slice($segments, 1);
+            $params = [];
         } else {
-            // Automatic resolution: segments[0]=controller, segments[1]=action
+            // Automatic resolution: segments[0]=controller, segments[1]=action, rest=params
             $controllerName = $this->toControllerName($segments[0] ?? 'dashboard');
             $action         = $this->toCamelCase($segments[1] ?? 'index');
             $params         = array_slice($segments, 2);
