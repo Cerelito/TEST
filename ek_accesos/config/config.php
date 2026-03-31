@@ -2,7 +2,7 @@
 define('APP_NAME', 'EK Accesos');
 define('APP_VERSION', '3.0');
 define('EK_CRYPT_KEY', 'ek_accesos_crypt_2024_change_me!!');
-define('BASE_URL', 'http://localhost/ek_accesos');
+define('BASE_URL', 'https://apotemaone.com/urbano/ekusers');
 define('ROOT_PATH', dirname(__DIR__));
 define('APP_PATH', ROOT_PATH . '/app');
 define('VIEWS_PATH', APP_PATH . '/views/');
