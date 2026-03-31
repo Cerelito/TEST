@@ -378,6 +378,7 @@ CREATE TABLE IF NOT EXISTS `empleado_cc` (
     `empleado_id` INT UNSIGNED NOT NULL,
     `cc_id`       INT UNSIGNED NOT NULL,
     `tipo`        ENUM('REQ','OC','AMBOS') NOT NULL DEFAULT 'AMBOS',
+    `tipo_insumo` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0=TODOS,1=MATERIALES,2=MANO DE OBRA,3=HERRAMIENTA Y EQUIPO,4=SUBCONTRATOS,5=INDIRECTOS,6=ADMINISTRATIVOS,7=TRAMITES Y PROYECTOS,8=BASICOS,9=COMERCIAL',
     `elab`        TINYINT(1)   NOT NULL DEFAULT 0 COMMENT 'Elaboración',
     `vobo`        TINYINT(1)   NOT NULL DEFAULT 0 COMMENT 'Visto Bueno',
     `aut`         TINYINT(1)   NOT NULL DEFAULT 0 COMMENT 'Autorización',
@@ -386,7 +387,7 @@ CREATE TABLE IF NOT EXISTS `empleado_cc` (
     `created_at`  TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
     `updated_at`  TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `idx_emp_cc_tipo` (`empleado_id`, `cc_id`, `tipo`),
+    UNIQUE KEY `idx_emp_cc_tipo_ins` (`empleado_id`, `cc_id`, `tipo`, `tipo_insumo`),
     KEY `idx_cc`  (`cc_id`),
     FOREIGN KEY (`empleado_id`) REFERENCES `empleados`(`id`)     ON DELETE CASCADE,
     FOREIGN KEY (`cc_id`)       REFERENCES `centros_costo`(`id`) ON DELETE CASCADE
@@ -478,3 +479,13 @@ CREATE TABLE IF NOT EXISTS `rate_limits` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+-- =====================================================================
+-- MIGRATION: agrega tipo_insumo a empleado_cc (ejecutar en DB existente)
+-- =====================================================================
+-- ALTER TABLE `empleado_cc`
+--     ADD COLUMN `tipo_insumo` TINYINT UNSIGNED NOT NULL DEFAULT 0
+--         COMMENT '0=TODOS,1=MATERIALES,2=MANO DE OBRA,3=HERRAMIENTA Y EQUIPO,4=SUBCONTRATOS,5=INDIRECTOS,6=ADMINISTRATIVOS,7=TRAMITES Y PROYECTOS,8=BASICOS,9=COMERCIAL'
+--         AFTER `tipo`,
+--     DROP INDEX `idx_emp_cc_tipo`,
+--     ADD UNIQUE KEY `idx_emp_cc_tipo_ins` (`empleado_id`, `cc_id`, `tipo`, `tipo_insumo`);

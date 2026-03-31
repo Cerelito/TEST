@@ -123,11 +123,12 @@ class EmpleadosController extends Controller
         $jefes    = $this->model->getAll(['activo' => '1']);
 
         $this->render('empleados/editar', [
-            'title'           => 'Editar: ' . htmlspecialchars($empleado['nombre']),
-            'empleado'        => $empleado,
-            'empresas'        => $empresas,
-            'programas_nivel' => $pn,
-            'jefes'           => $jefes,
+            'title'             => 'Editar: ' . htmlspecialchars($empleado['nombre']),
+            'empleado'          => $empleado,
+            'empresas'          => $empresas,
+            'programas_nivel'   => $pn,
+            'jefes'             => $jefes,
+            'centros_asignados' => $empleado['centros_costo'] ?? [],
         ]);
     }
 
@@ -221,6 +222,30 @@ class EmpleadosController extends Controller
             $this->json(['ok' => true]);
         }
         redirect('empleados');
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // buscar — AJAX: search employees by name for jefe selector
+    // ─────────────────────────────────────────────────────────────────────────
+
+    public function buscar(): void
+    {
+        $q = sanitize($_GET['q'] ?? '');
+        if (strlen($q) < 2) {
+            $this->json([]);
+        }
+
+        $rows = $this->model->query(
+            "SELECT e.id, e.nombre, emp.nombre AS empresa
+             FROM empleados e
+             LEFT JOIN empresas emp ON emp.id = e.empresa_id
+             WHERE e.deleted_at IS NULL AND e.activo = 1
+               AND e.nombre LIKE ?
+             ORDER BY e.nombre LIMIT 20",
+            ['%' . $q . '%']
+        );
+
+        $this->json($rows);
     }
 
     // ─────────────────────────────────────────────────────────────────────────

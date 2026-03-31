@@ -38,6 +38,7 @@ class Router
         'empleados'                     => ['EmpleadosController',    'index'],
         'empleados/crear'               => ['EmpleadosController',    'crear'],
         'empleados/guardar'             => ['EmpleadosController',    'guardar'],
+        'empleados/buscar'              => ['EmpleadosController',    'buscar'],
         // Programa Nivel
         'programa-nivel'                => ['ProgramaNivelController','index'],
         'programa-nivel/crear'          => ['ProgramaNivelController','crear'],

@@ -226,14 +226,14 @@ class Empleado extends BaseModel
             JOIN centros_costo cc  ON cc.id  = ecc.cc_id
             JOIN empresas      emp ON emp.id = cc.empresa_id
             WHERE ecc.empleado_id = ? AND ecc.activo = 1
-            ORDER BY emp.nombre, cc.codigo
+            ORDER BY emp.nombre, cc.codigo, ecc.tipo, ecc.tipo_insumo
         ", [$empleadoId]);
     }
 
     /**
      * Replace all CC assignments for an employee.
      * $ccs is an array of arrays, each with keys:
-     *   cc_id, tipo (REQ/OC/AMBOS), elab, vobo, aut, monto
+     *   cc_id, tipo (REQ/OC/AMBOS), tipo_insumo (0-9), elab, vobo, aut, monto
      */
     public function saveCentrosCosto(int $empleadoId, array $ccs): void
     {
@@ -249,10 +249,9 @@ class Empleado extends BaseModel
 
         $stmt = $this->pdo->prepare("
             INSERT INTO empleado_cc
-                (empleado_id, cc_id, tipo, elab, vobo, aut, monto, activo)
-            VALUES (?, ?, ?, ?, ?, ?, ?, 1)
+                (empleado_id, cc_id, tipo, tipo_insumo, elab, vobo, aut, monto, activo)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)
             ON DUPLICATE KEY UPDATE
-                tipo   = VALUES(tipo),
                 elab   = VALUES(elab),
                 vobo   = VALUES(vobo),
                 aut    = VALUES(aut),
@@ -266,12 +265,16 @@ class Empleado extends BaseModel
 
             $tipo = in_array($cc['tipo'] ?? '', ['REQ', 'OC', 'AMBOS'])
                 ? $cc['tipo']
-                : 'REQ';
+                : 'AMBOS';
+
+            $tipoInsumo = (int)($cc['tipo_insumo'] ?? 0);
+            if ($tipoInsumo < 0 || $tipoInsumo > 9) $tipoInsumo = 0;
 
             $stmt->execute([
                 $empleadoId,
                 $ccId,
                 $tipo,
+                $tipoInsumo,
                 isset($cc['elab']) ? (int)$cc['elab'] : 0,
                 isset($cc['vobo']) ? (int)$cc['vobo'] : 0,
                 isset($cc['aut'])  ? (int)$cc['aut']  : 0,

@@ -2,10 +2,89 @@
 $title = 'Editar Empleado';
 ob_start();
 
-$empleado         = $empleado         ?? [];
-$empresas         = $empresas         ?? [];
-$programas        = $programas        ?? [];
+$empleado          = $empleado          ?? [];
+$empresas          = $empresas          ?? [];
+$programas         = $programas         ?? [];
 $centros_asignados = $centros_asignados ?? [];
+
+$TIPOS_INSUMO = [
+    0 => '-- Todos los Tipos --',
+    1 => '1 - MATERIALES',
+    2 => '2 - MANO DE OBRA',
+    3 => '3 - HERRAMIENTA Y EQUIPO',
+    4 => '4 - SUBCONTRATOS',
+    5 => '5 - INDIRECTOS',
+    6 => '6 - ADMINISTRATIVOS',
+    7 => '7 - TRAMITES Y PROYECTOS',
+    8 => '8 - BASICOS',
+    9 => '9 - COMERCIAL',
+];
+
+if (!function_exists('ccTablaHTML')) {
+    function ccTablaHTML(array $empresas, array $filas = []): string {
+        $html  = '<div class="cc-table-wrap"><table class="cc-table" id="ccTable"><thead><tr>';
+        $html .= '<th>Empresa</th><th>Centro de Costo</th>';
+        $html .= '<th>Tipo Doc.</th>';
+        $html .= '<th style="min-width:160px;">Tipo Insumo</th>';
+        $html .= '<th title="Elaboración">Elab</th>';
+        $html .= '<th title="Visto Bueno">VoBo</th>';
+        $html .= '<th title="Autorización">Aut</th>';
+        $html .= '<th style="min-width:90px;">Monto Máx.</th>';
+        $html .= '<th></th>';
+        $html .= '</tr></thead><tbody id="ccBody">';
+        foreach ($filas as $idx => $cc) {
+            $html .= ccFilaHTML((int)$idx, $empresas, $cc);
+        }
+        $html .= '</tbody></table></div>';
+        return $html;
+    }
+}
+
+if (!function_exists('ccFilaHTML')) {
+    function ccFilaHTML(int $idx, array $empresas, array $cc = []): string {
+        global $TIPOS_INSUMO;
+        $empOpts = '<option value="">— Empresa —</option>';
+        foreach ($empresas as $e) {
+            $sel = ((string)($cc['empresa_id'] ?? '') === (string)$e['id']) ? ' selected' : '';
+            $empOpts .= '<option value="' . $e['id'] . '"' . $sel . '>' . htmlspecialchars($e['nombre']) . '</option>';
+        }
+        $insOpts = '';
+        foreach ($TIPOS_INSUMO as $val => $label) {
+            $sel = ((int)($cc['tipo_insumo'] ?? 0) === $val) ? ' selected' : '';
+            $insOpts .= '<option value="' . $val . '"' . $sel . '>' . htmlspecialchars($label) . '</option>';
+        }
+        $tipo = $cc['tipo'] ?? 'AMBOS';
+
+        $row  = '<tr id="ccRow_' . $idx . '">';
+        $row .= '<td>';
+        $row .= '<select name="centros[' . $idx . '][empresa_id]" class="cc-emp-sel" data-idx="' . $idx . '" onchange="loadCCsByEmpresa(this,' . $idx . ')">' . $empOpts . '</select>';
+        $row .= '</td>';
+        $row .= '<td>';
+        $row .= '<select name="centros[' . $idx . '][cc_id]" id="ccSel_' . $idx . '">';
+        $row .= '<option value="">— Selecciona CC —</option>';
+        if (!empty($cc['cc_id'])) {
+            $row .= '<option value="' . (int)$cc['cc_id'] . '" selected>' . htmlspecialchars(($cc['codigo'] ?? '') . ' – ' . ($cc['descripcion'] ?? '')) . '</option>';
+        }
+        $row .= '</select>';
+        $row .= '</td>';
+        $row .= '<td><div class="radio-group">';
+        foreach (['REQ' => 'REQ', 'OC' => 'OC', 'AMBOS' => 'Ambos'] as $v => $l) {
+            $chk = $tipo === $v ? ' checked' : '';
+            $row .= '<label><input type="radio" name="centros[' . $idx . '][tipo]" value="' . $v . '"' . $chk . '> ' . $l . '</label>';
+        }
+        $row .= '</div></td>';
+        $row .= '<td><select name="centros[' . $idx . '][tipo_insumo]">' . $insOpts . '</select></td>';
+        $row .= '<td style="text-align:center;"><input type="checkbox" name="centros[' . $idx . '][elab]" value="1"' . (!empty($cc['elab']) ? ' checked' : '') . ' style="width:16px;height:16px;cursor:pointer;"></td>';
+        $row .= '<td style="text-align:center;"><input type="checkbox" name="centros[' . $idx . '][vobo]" value="1"' . (!empty($cc['vobo']) ? ' checked' : '') . ' style="width:16px;height:16px;cursor:pointer;"></td>';
+        $row .= '<td style="text-align:center;"><input type="checkbox" name="centros[' . $idx . '][aut]"  value="1"' . (!empty($cc['aut'])  ? ' checked' : '') . ' style="width:16px;height:16px;cursor:pointer;"></td>';
+        $row .= '<td><input type="number" name="centros[' . $idx . '][monto]" value="' . htmlspecialchars($cc['monto'] ?? '') . '" placeholder="0.00" min="0" step="0.01" style="width:90px;"></td>';
+        $row .= '<td><button type="button" class="del-row-btn" onclick="removeCCRow(' . $idx . ')" title="Quitar">';
+        $row .= '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+        $row .= '</button></td>';
+        $row .= '</tr>';
+        return $row;
+    }
+}
 ?>
 <style>
     .page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; flex-wrap:wrap; gap:12px; }
@@ -153,61 +232,10 @@ $centros_asignados = $centros_asignados ?? [];
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
             Centros de Costo Asignados
         </div>
-        <p class="section-hint">Modifica los centros de costo del empleado. Las filas existentes se actualizarán; las nuevas se agregarán.</p>
+        <p class="section-hint">Por cada fila especifica el CC, el tipo de documento (REQ/OC/Ambos), el tipo de insumo y los permisos.</p>
 
-        <div class="cc-table-wrap">
-            <table class="cc-table" id="ccTable">
-                <thead>
-                    <tr>
-                        <th>Empresa</th>
-                        <th style="min-width:110px;">Código CC</th>
-                        <th style="min-width:180px;">Descripción</th>
-                        <th>Tipo Doc.</th>
-                        <th title="Elaborador">Elab</th>
-                        <th title="Visto Bueno">VoBo</th>
-                        <th title="Autorizador">Aut</th>
-                        <th style="min-width:90px;">Monto Máx.</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody id="ccBody">
-                    <?php foreach ($centros_asignados as $idx => $cc): ?>
-                    <tr id="ccRow_<?php echo $idx; ?>">
-                        <td>
-                            <select name="cc[<?php echo $idx; ?>][empresa_id]">
-                                <option value="">—</option>
-                                <?php foreach ($empresas as $emp): ?>
-                                <option value="<?php echo (int)$emp['id']; ?>"
-                                    <?php echo ($cc['empresa_id'] ?? '') == $emp['id'] ? 'selected' : ''; ?>>
-                                    <?php echo htmlspecialchars($emp['nombre']); ?>
-                                </option>
-                                <?php endforeach; ?>
-                            </select>
-                            <?php if (!empty($cc['id'])): ?>
-                            <input type="hidden" name="cc[<?php echo $idx; ?>][id]" value="<?php echo (int)$cc['id']; ?>">
-                            <?php endif; ?>
-                        </td>
-                        <td><input type="text" name="cc[<?php echo $idx; ?>][codigo]" value="<?php echo htmlspecialchars($cc['codigo'] ?? ''); ?>" placeholder="CC-001" maxlength="50"></td>
-                        <td><input type="text" name="cc[<?php echo $idx; ?>][descripcion]" value="<?php echo htmlspecialchars($cc['descripcion'] ?? ''); ?>" placeholder="Descripción..." maxlength="200"></td>
-                        <td>
-                            <div class="radio-group">
-                                <label><input type="radio" name="cc[<?php echo $idx; ?>][tipo]" value="REQ" <?php echo ($cc['tipo'] ?? '') === 'REQ' ? 'checked' : ''; ?>> REQ</label>
-                                <label><input type="radio" name="cc[<?php echo $idx; ?>][tipo]" value="OC"  <?php echo ($cc['tipo'] ?? '') === 'OC'  ? 'checked' : ''; ?>> OC</label>
-                                <label><input type="radio" name="cc[<?php echo $idx; ?>][tipo]" value="AMBOS" <?php echo (($cc['tipo'] ?? 'AMBOS') === 'AMBOS') ? 'checked' : ''; ?>> Ambos</label>
-                            </div>
-                        </td>
-                        <td style="text-align:center;"><input type="checkbox" name="cc[<?php echo $idx; ?>][elab]" value="1" style="width:16px;height:16px;cursor:pointer;" <?php echo !empty($cc['elab']) ? 'checked' : ''; ?>></td>
-                        <td style="text-align:center;"><input type="checkbox" name="cc[<?php echo $idx; ?>][vobo]" value="1" style="width:16px;height:16px;cursor:pointer;" <?php echo !empty($cc['vobo']) ? 'checked' : ''; ?>></td>
-                        <td style="text-align:center;"><input type="checkbox" name="cc[<?php echo $idx; ?>][aut]"  value="1" style="width:16px;height:16px;cursor:pointer;" <?php echo !empty($cc['aut'])  ? 'checked' : ''; ?>></td>
-                        <td><input type="number" name="cc[<?php echo $idx; ?>][monto]" value="<?php echo htmlspecialchars($cc['monto'] ?? ''); ?>" placeholder="0.00" min="0" step="0.01"></td>
-                        <td><button type="button" class="del-row-btn" onclick="removeCCRow(<?php echo $idx; ?>)" title="Eliminar fila">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                        </button></td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
+        <?php echo ccTablaHTML($empresas, $centros_asignados); ?>
+
         <button type="button" class="add-cc-btn" id="addCCRow">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Agregar Centro de Costo
@@ -225,31 +253,46 @@ $centros_asignados = $centros_asignados ?? [];
 
 <script>
 (function () {
+    var BASE_URL    = '<?php echo BASE_URL; ?>';
+    var TIPOS_INSUMO = <?php echo json_encode($TIPOS_INSUMO); ?>;
     var empresasData = <?php echo json_encode(array_map(function($e) { return ['id' => $e['id'], 'nombre' => $e['nombre']]; }, $empresas)); ?>;
     var ccRowIdx = <?php echo max(count($centros_asignados), 0); ?>;
 
-    function buildCCRow(idx) {
-        var empresaOpts = '<option value="">—</option>' + empresasData.map(function(e) {
-            return '<option value="' + e.id + '">' + e.nombre.replace(/</g,'&lt;') + '</option>';
+    function tipoInsumoOpts(selVal) {
+        return Object.keys(TIPOS_INSUMO).map(function(k) {
+            var sel = parseInt(k) === parseInt(selVal||0) ? ' selected' : '';
+            return '<option value="' + k + '"' + sel + '>' + TIPOS_INSUMO[k] + '</option>';
         }).join('');
+    }
 
-        return '<tr id="ccRow_' + idx + '">' +
-            '<td><select name="cc[' + idx + '][empresa_id]">' + empresaOpts + '</select></td>' +
-            '<td><input type="text" name="cc[' + idx + '][codigo]" placeholder="CC-001" maxlength="50"></td>' +
-            '<td><input type="text" name="cc[' + idx + '][descripcion]" placeholder="Descripción..." maxlength="200"></td>' +
+    function empOpts(selVal) {
+        var o = '<option value="">— Empresa —</option>';
+        empresasData.forEach(function(e) {
+            var sel = String(e.id) === String(selVal||'') ? ' selected' : '';
+            o += '<option value="' + e.id + '"' + sel + '>' + e.nombre.replace(/</g,'&lt;') + '</option>';
+        });
+        return o;
+    }
+
+    function addCCRow(idx) {
+        var row = '<tr id="ccRow_' + idx + '">' +
+            '<td><select name="centros['+idx+'][empresa_id]" class="cc-emp-sel" data-idx="'+idx+'" onchange="loadCCsByEmpresa(this,'+idx+')">' + empOpts() + '</select></td>' +
+            '<td><select name="centros['+idx+'][cc_id]" id="ccSel_'+idx+'"><option value="">— Selecciona CC —</option></select></td>' +
             '<td><div class="radio-group">' +
-                '<label><input type="radio" name="cc[' + idx + '][tipo]" value="REQ"> REQ</label>' +
-                '<label><input type="radio" name="cc[' + idx + '][tipo]" value="OC"> OC</label>' +
-                '<label><input type="radio" name="cc[' + idx + '][tipo]" value="AMBOS" checked> Ambos</label>' +
+                '<label><input type="radio" name="centros['+idx+'][tipo]" value="REQ"> REQ</label>' +
+                '<label><input type="radio" name="centros['+idx+'][tipo]" value="OC"> OC</label>' +
+                '<label><input type="radio" name="centros['+idx+'][tipo]" value="AMBOS" checked> Ambos</label>' +
             '</div></td>' +
-            '<td style="text-align:center;"><input type="checkbox" name="cc[' + idx + '][elab]" value="1" style="width:16px;height:16px;cursor:pointer;"></td>' +
-            '<td style="text-align:center;"><input type="checkbox" name="cc[' + idx + '][vobo]" value="1" style="width:16px;height:16px;cursor:pointer;"></td>' +
-            '<td style="text-align:center;"><input type="checkbox" name="cc[' + idx + '][aut]"  value="1" style="width:16px;height:16px;cursor:pointer;"></td>' +
-            '<td><input type="number" name="cc[' + idx + '][monto]" placeholder="0.00" min="0" step="0.01"></td>' +
-            '<td><button type="button" class="del-row-btn" onclick="removeCCRow(' + idx + ')" title="Eliminar fila">' +
+            '<td><select name="centros['+idx+'][tipo_insumo]">' + tipoInsumoOpts(0) + '</select></td>' +
+            '<td style="text-align:center;"><input type="checkbox" name="centros['+idx+'][elab]" value="1" style="width:16px;height:16px;cursor:pointer;"></td>' +
+            '<td style="text-align:center;"><input type="checkbox" name="centros['+idx+'][vobo]" value="1" style="width:16px;height:16px;cursor:pointer;"></td>' +
+            '<td style="text-align:center;"><input type="checkbox" name="centros['+idx+'][aut]"  value="1" style="width:16px;height:16px;cursor:pointer;"></td>' +
+            '<td><input type="number" name="centros['+idx+'][monto]" placeholder="0.00" min="0" step="0.01" style="width:90px;"></td>' +
+            '<td><button type="button" class="del-row-btn" onclick="removeCCRow('+idx+')" title="Quitar">' +
                 '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
             '</button></td>' +
         '</tr>';
+        document.getElementById('ccBody').insertAdjacentHTML('beforeend', row);
     }
 
     window.removeCCRow = function(idx) {
@@ -257,8 +300,26 @@ $centros_asignados = $centros_asignados ?? [];
         if (row) row.remove();
     };
 
+    window.loadCCsByEmpresa = function(sel, idx) {
+        var empresaId = sel.value;
+        var ccSel = document.getElementById('ccSel_' + idx);
+        if (!ccSel) return;
+        if (!empresaId) { ccSel.innerHTML = '<option value="">— Selecciona CC —</option>'; return; }
+        fetch(BASE_URL + '/centros-costo/por-empresa?empresa_id=' + empresaId)
+            .then(function(r) { return r.json(); })
+            .catch(function() { return {data:[]}; })
+            .then(function(resp) {
+                var list = resp.data || resp || [];
+                var opts = '<option value="">— Selecciona CC —</option>';
+                list.forEach(function(cc) {
+                    opts += '<option value="' + cc.id + '">' + cc.codigo + ' – ' + (cc.descripcion||'').substring(0,50) + '</option>';
+                });
+                ccSel.innerHTML = opts;
+            });
+    };
+
     document.getElementById('addCCRow').addEventListener('click', function () {
-        document.getElementById('ccBody').insertAdjacentHTML('beforeend', buildCCRow(ccRowIdx++));
+        addCCRow(ccRowIdx++);
     });
 
     // Jefe search
