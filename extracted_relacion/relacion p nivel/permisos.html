@@ -1,0 +1,2104 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Permisos Compras Electrónicas</title>
+  <style>
+    :root {
+      --bg: #0b0d14;
+      --bg2: #151822;
+      --bg3: #1e2235;
+      --border: #2a2e45;
+      --accent: #4f8ef7;
+      --accent-hover: #3a75d6;
+      --accent2: #7c5cbf;
+      --green: #3ecf8e;
+      --yellow: #f5c842;
+      --orange: #f58642;
+      --red: #e05252;
+      --text: #f0f2f8;
+      --text2: #9ba1ba;
+      --card: #151822;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.2px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ESTRUCTURA SUPERIOR FIJA */
+    .top-section {
+      flex-shrink: 0;
+      z-index: 10;
+      position: relative;
+      background: var(--bg);
+    }
+
+    /* HEADER PRINCIPAL */
+    .header {
+      background: linear-gradient(180deg, #151822 0%, #0b0d14 100%);
+      padding: 24px 32px 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo-icon {
+      background: rgba(79, 142, 247, 0.1);
+      color: var(--accent);
+      padding: 12px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(79, 142, 247, 0.2);
+    }
+
+    .header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header h1 span {
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .header .subtitle {
+      font-size: 12px;
+      color: var(--text2);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .badge-total {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text2);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+
+    .reset-btn {
+      background: rgba(79, 142, 247, 0.1);
+      color: var(--accent);
+      border: 1px solid rgba(79, 142, 247, 0.3);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all .2s;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .reset-btn:hover {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(79, 142, 247, 0.25);
+    }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+    }
+
+    .tab {
+      padding: 14px 16px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text2);
+      border-bottom: 2px solid transparent;
+      transition: all .2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: -1px;
+    }
+
+    .tab svg {
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .tab.active svg {
+      opacity: 1;
+    }
+
+    .tab:hover:not(.active) {
+      color: var(--text);
+    }
+
+    .tab:hover:not(.active) svg {
+      opacity: 1;
+    }
+
+    /* FILTERS BAR */
+    .filters {
+      background: rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 32px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filters label {
+      font-size: 10px;
+      color: var(--text2);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+      display: none;
+    }
+
+    .filters select,
+    .filters input {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .filters select:hover,
+    .filters input:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .filters select:focus,
+    .filters input:focus {
+      border-color: var(--accent);
+      background: rgba(21, 24, 34, 0.9);
+      box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.15);
+    }
+
+    .search-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-box input {
+      padding-left: 36px;
+      width: 260px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      color: var(--text2);
+      display: flex;
+    }
+
+    .filters .btn {
+      background: var(--text);
+      color: var(--bg);
+      border: none;
+      padding: 8px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+
+    .filters .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+    }
+
+    .filters .btn-outline {
+      background: transparent;
+      color: var(--text2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .filters .btn-outline:hover {
+      border-color: var(--text2);
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .legend {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-left: auto;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 6px 16px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text2);
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      box-shadow: 0 0 6px currentColor;
+    }
+
+    /* MAIN AREA CON SCROLL */
+    .main {
+      padding: 24px 32px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    /* KPI CARDS */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .kpi {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .kpi:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .kpi::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--border);
+      transition: background 0.3s;
+    }
+
+    .kpi.accent::before {
+      background: var(--accent);
+    }
+
+    .kpi.green::before {
+      background: var(--green);
+    }
+
+    .kpi.yellow::before {
+      background: var(--yellow);
+    }
+
+    .kpi.orange::before {
+      background: var(--orange);
+    }
+
+    .kpi .label {
+      font-size: 11px;
+      color: var(--text2);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .kpi .value {
+      font-size: 32px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -1px;
+    }
+
+    /* TABLES & CARDS */
+    .table-wrap {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .table-wrap .tbl-header {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.01);
+    }
+
+    .table-wrap .tbl-header h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .table-wrap .tbl-header .count {
+      font-size: 12px;
+      color: var(--text2);
+      font-weight: 500;
+      background: var(--bg3);
+      padding: 4px 10px;
+      border-radius: 12px;
+    }
+
+    .scroll {
+      overflow-x: auto;
+      max-height: 550px;
+      overflow-y: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      background: rgba(21, 24, 34, 0.95);
+      backdrop-filter: blur(5px);
+      color: var(--text2);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 14px 16px;
+      text-align: left;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      white-space: nowrap;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: all .2s;
+    }
+
+    tbody tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    tbody td {
+      padding: 12px 16px;
+      vertical-align: middle;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .chip-yes {
+      background: rgba(62, 207, 142, .15);
+      color: var(--green);
+      border: 1px solid rgba(62, 207, 142, .3);
+    }
+
+    .chip-no {
+      background: rgba(139, 145, 176, .1);
+      color: var(--text2);
+      border: 1px solid rgba(139, 145, 176, .2);
+    }
+
+    .tag-cc {
+      background: rgba(79, 142, 247, .15);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(79, 142, 247, .3);
+      letter-spacing: 0.5px;
+    }
+
+    .user-name {
+      font-weight: 600;
+      color: #fff;
+      font-size: 13px;
+    }
+
+    .perfil-badge {
+      font-size: 11px;
+      color: var(--text2);
+      background: var(--bg3);
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .monto {
+      font-size: 12px;
+      color: var(--green);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* GRIDS */
+    .cc-grid,
+    .user-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 20px;
+    }
+
+    .cc-card,
+    .user-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    }
+
+    .cc-card:hover,
+    .user-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+      border-color: rgba(79, 142, 247, 0.4);
+    }
+
+    .cc-card-header,
+    .user-card-header {
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, transparent 100%);
+    }
+
+    .cc-code {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--accent);
+      min-width: 48px;
+      text-shadow: 0 0 15px rgba(79, 142, 247, 0.3);
+    }
+
+    .cc-desc {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .cc-empresa {
+      font-size: 11px;
+      color: var(--text2);
+      font-weight: 500;
+    }
+
+    .cc-stats {
+      display: flex;
+      gap: 0;
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .cc-stat {
+      flex: 1;
+      padding: 12px 14px;
+      text-align: center;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cc-stat:last-child {
+      border-right: none;
+    }
+
+    .cc-stat .n {
+      font-size: 22px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .cc-stat .l {
+      font-size: 10px;
+      text-transform: uppercase;
+      color: var(--text2);
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    .cc-stat.elab .n {
+      color: var(--green);
+    }
+
+    .cc-stat.vobo .n {
+      color: var(--yellow);
+    }
+
+    .cc-stat.aut .n {
+      color: var(--orange);
+    }
+
+    .cc-users,
+    .user-cc-list {
+      padding: 12px 20px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .cc-users .row,
+    .user-cc-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px;
+      margin: 0 -10px;
+      border-radius: 8px;
+      font-size: 12px;
+      transition: background 0.15s;
+    }
+
+    .cc-users .row:not(:last-child),
+    .user-cc-row:not(:last-child) {
+      border-bottom: 1px solid rgba(255, 255, 255, .02);
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .user-card-header .info h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .user-card-header .info .p {
+      font-size: 11px;
+      color: var(--text2);
+      font-weight: 500;
+    }
+
+    /* DOTS & BOTON ELIMINAR */
+    .perm-action-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .perm-dots {
+      display: flex;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 4px 6px;
+      border-radius: 12px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+
+    .dot-e {
+      background: var(--green);
+      box-shadow: 0 0 8px rgba(62, 207, 142, 0.6);
+      border-color: #fff;
+    }
+
+    .dot-v {
+      background: var(--yellow);
+      box-shadow: 0 0 8px rgba(245, 200, 66, 0.6);
+      border-color: #fff;
+    }
+
+    .dot-a {
+      background: var(--orange);
+      box-shadow: 0 0 8px rgba(245, 134, 66, 0.6);
+      border-color: #fff;
+    }
+
+    .dot-off {
+      background: var(--bg);
+      border-color: var(--border);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .btn-delete-icon {
+      background: transparent;
+      border: none;
+      color: rgba(224, 82, 82, 0.4);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 6px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .row-clickable:hover .btn-delete-icon {
+      color: rgba(224, 82, 82, 0.8);
+    }
+
+    .btn-delete-icon:hover {
+      color: var(--red) !important;
+      background: rgba(224, 82, 82, 0.15);
+      transform: scale(1.1);
+    }
+
+    /* --- NUEVO QUICK POPOVER (GLASSMORPHISM & SWITCHES) --- */
+    .quick-popover {
+      position: fixed;
+      z-index: 10001;
+      background: rgba(21, 24, 34, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 250px;
+      animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .quick-popover-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text2);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      margin-bottom: 4px;
+    }
+
+    .quick-popover-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      transition: all 0.2s;
+    }
+
+    .quick-popover-item:hover {
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateY(-1px);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Toggle Switches para el Popover */
+    .toggle-switch {
+      position: relative;
+      width: 38px;
+      height: 22px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(0, 0, 0, 0.3);
+      transition: background 0.3s ease;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+    }
+
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      top: 1px;
+      left: 2px;
+      width: 18px;
+      height: 18px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .toggle-switch.on-elab {
+      background: var(--green);
+      border-color: transparent;
+    }
+
+    .toggle-switch.on-vobo {
+      background: var(--yellow);
+      border-color: transparent;
+    }
+
+    .toggle-switch.on-aut {
+      background: var(--orange);
+      border-color: transparent;
+    }
+
+    .toggle-switch.on::after {
+      transform: translateX(14px);
+    }
+
+    .row-clickable {
+      cursor: pointer;
+    }
+
+    .row-clickable:hover {
+      background: rgba(79, 142, 247, 0.08) !important;
+    }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 8px;
+      border: 2px solid var(--card);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text2);
+    }
+
+    /* BOTONES DE ACCIÓN EN TABLAS */
+    .edit-btn {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      color: var(--text);
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: all .2s;
+      opacity: 0.7;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    tbody tr:hover .edit-btn {
+      opacity: 1;
+    }
+
+    .edit-btn:hover {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(79, 142, 247, 0.3);
+    }
+
+    /* --- SISTEMA DE TOASTS MODERNOS (SVGs y Glow Effect) --- */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: rgba(21, 24, 34, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      padding: 16px 20px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 280px;
+      max-width: 360px;
+      transform: translateX(120%);
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      position: relative;
+      overflow: hidden;
+      pointer-events: auto;
+    }
+
+    .toast.show {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    /* Colores de éxito y error */
+    .toast.success {
+      border-color: rgba(62, 207, 142, 0.3);
+      box-shadow: 0 10px 30px rgba(62, 207, 142, 0.1), 0 15px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .toast.error {
+      border-color: rgba(224, 82, 82, 0.3);
+      box-shadow: 0 10px 30px rgba(224, 82, 82, 0.1), 0 15px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .toast-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .toast.success .toast-icon {
+      background: rgba(62, 207, 142, 0.15);
+      color: var(--green);
+    }
+
+    .toast.error .toast-icon {
+      background: rgba(224, 82, 82, 0.15);
+      color: var(--red);
+    }
+
+    .toast-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      width: 100%;
+      animation: progressToast 3.5s linear forwards;
+    }
+
+    .toast.success .toast-progress {
+      background: var(--green);
+    }
+
+    .toast.error .toast-progress {
+      background: var(--red);
+    }
+
+    @keyframes progressToast {
+      to {
+        width: 0%;
+      }
+    }
+
+    /* MODALS */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(11, 13, 20, 0.85);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      animation: fadeInModal 0.2s ease;
+    }
+
+    @keyframes fadeInModal {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    .modal {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 440px;
+      padding: 30px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal h3 {
+      font-size: 20px;
+      margin-bottom: 24px;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 11px;
+      color: var(--text2);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 12px 14px;
+      border-radius: 8px;
+      outline: none;
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(79, 142, 247, 0.2);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* RESPONSIVE MÓVIL */
+    @media (max-width: 768px) {
+      body {
+        height: auto;
+        overflow: visible;
+      }
+
+      .header {
+        padding: 16px 20px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .tabs {
+        padding: 0 20px;
+        overflow-x: auto;
+      }
+
+      .filters {
+        padding: 12px 20px;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .search-box input {
+        width: 100%;
+      }
+
+      .legend {
+        margin-left: 0;
+        justify-content: center;
+      }
+
+      .main {
+        padding: 20px;
+        overflow-y: visible;
+      }
+
+      .cc-grid,
+      .user-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="top-section">
+    <div class="header">
+      <div class="header-left">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="9"></rect>
+            <rect x="14" y="3" width="7" height="5"></rect>
+            <rect x="14" y="12" width="7" height="9"></rect>
+            <rect x="3" y="16" width="7" height="5"></rect>
+          </svg>
+        </div>
+        <div>
+          <h1>Dashboard <span>Permisos</span></h1>
+          <div class="subtitle">Gestión de Compras Electrónicas — ELAB/SOL · Visto Bueno · Autorización</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="badge-total" id="badge-total">-- registros</div>
+        <button class="reset-btn" onclick="loadData()" title="Sincronizar base de datos">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 2v6h-6"></path>
+            <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
+            <path d="M3 22v-6h6"></path>
+            <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
+          </svg>
+          Sincronizar
+        </button>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('resumen')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21.21 15.89A10 10 0 1 1 8 2.83M22 12A10 10 0 0 0 12 2v10z"></path>
+        </svg>
+        Resumen
+      </div>
+      <div class="tab" onclick="switchTab('cc')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+          <line x1="7" y1="7" x2="7.01" y2="7"></line>
+        </svg>
+        Por Centro de Costos
+      </div>
+      <div class="tab" onclick="switchTab('usuarios')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        Por Usuario
+      </div>
+      <div class="tab" onclick="switchTab('detalle')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="3" y1="15" x2="21" y2="15"></line>
+          <line x1="9" y1="9" x2="9" y2="21"></line>
+          <line x1="15" y1="9" x2="15" y2="21"></line>
+        </svg>
+        Detalle
+      </div>
+      <div class="tab" onclick="switchTab('config')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+          </path>
+        </svg>
+        Configuración
+      </div>
+    </div>
+
+    <div class="filters">
+      <select id="f-empresa">
+        <option value="">Todas las empresas</option>
+      </select>
+      <select id="f-permiso">
+        <option value="">Cualquier permiso</option>
+        <option value="elab">ELAB / SOL</option>
+        <option value="vobo">Visto Bueno</option>
+        <option value="aut">Autorización</option>
+      </select>
+      <select id="f-cc">
+        <option value="">Todos los CCs</option>
+      </select>
+      <div class="search-box">
+        <div class="search-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
+        <input type="text" id="f-search" placeholder="Buscar usuario o centro de costo..." />
+      </div>
+      <button class="btn" onclick="applyFilters()">Filtrar</button>
+      <button class="btn-outline" onclick="clearFilters()">Limpiar</button>
+
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--green)"></div> ELAB / SOL
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--yellow)"></div> Visto Bueno
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--orange)"></div> Autorización
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <div id="tab-resumen">
+      <div class="kpi-row" id="kpi-row"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px" id="empresa-cards"></div>
+    </div>
+
+    <div id="tab-cc" class="hidden">
+      <div class="cc-grid" id="cc-grid"></div>
+    </div>
+
+    <div id="tab-usuarios" class="hidden">
+      <div class="user-grid" id="user-grid"></div>
+    </div>
+
+    <div id="tab-detalle" class="hidden">
+      <div class="table-wrap">
+        <div class="tbl-header">
+          <h3>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            Detalle de Permisos
+          </h3>
+          <div style="display:flex; align-items:center; gap: 12px;">
+            <span class="count" id="detalle-count"></span>
+            <button class="btn" style="padding: 6px 14px; display:flex; align-items:center; gap:6px"
+              onclick="openAddModal()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Agregar
+            </button>
+          </div>
+        </div>
+        <div class="scroll">
+          <table id="detalle-table">
+            <thead>
+              <tr>
+                <th>Empresa</th>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Perfil</th>
+                <th>CC</th>
+                <th>Descripción</th>
+                <th>ELAB / SOL</th>
+                <th>Visto Bueno</th>
+                <th>Autorización</th>
+                <th>Monto Máx.</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="detalle-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-config" class="hidden">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div class="table-wrap">
+          <div class="tbl-header">
+            <h3>Catálogo de Empresas</h3>
+            <button class="btn" style="font-size:11px;padding:6px 12px;display:flex;align-items:center;gap:4px"
+              onclick="openEmpresaModal()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Nueva
+            </button>
+          </div>
+          <div class="scroll" style="max-height:400px">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="config-empresas-body"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <div class="tbl-header">
+            <h3>Centros de Costo</h3>
+            <div style="display:flex;gap:8px">
+              <select id="config-cc-empresa-filter" onchange="loadConfigCCs()"
+                style="background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);border-radius:6px;font-size:11px;padding:4px 8px;"></select>
+              <button class="btn" style="font-size:11px;padding:6px 12px;display:flex;align-items:center;gap:4px"
+                onclick="openCCModal()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Nuevo
+              </button>
+            </div>
+          </div>
+          <div class="scroll" style="max-height:400px">
+            <table>
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Descripción</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="config-ccs-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="toast-container" class="toast-container"></div>
+
+  <script>
+    let RAW_DATA = [];
+    let dataLoaded = false;
+
+    const API_URL = 'https://apotemaone.com/urbano/permisos/api.php';
+
+    let EMPRESA_LIST = [];
+    let CC_LIST = [];
+    let EMPRESA_COLORS = {};
+
+    // Iconos SVG reutilizables
+    const SVG_TRASH = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>`;
+    const SVG_EDIT = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>`;
+    const SVG_CHECK = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+    const SVG_X = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+
+    // Iconos para Toasts
+    const SVG_TOAST_SUCCESS = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`;
+    const SVG_TOAST_ERROR = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`;
+
+
+    function rebuildLists() {
+      EMPRESA_LIST = [...new Set(RAW_DATA.map(r => r.empresa))].sort((a, b) => {
+        const na = parseInt(a.match(/\d+/)?.[0] || '9999');
+        const nb = parseInt(b.match(/\d+/)?.[0] || '9999');
+        return na - nb;
+      });
+      CC_LIST = [...new Set(RAW_DATA.map(r => r.cc))].sort();
+      EMPRESA_COLORS = {};
+      EMPRESA_LIST.forEach((e, i) => EMPRESA_COLORS[e] = i);
+      const fEmp = document.getElementById('f-empresa');
+      fEmp.innerHTML = '<option value="">Todas las empresas</option>';
+      EMPRESA_LIST.forEach(e => { const o = document.createElement('option'); o.value = e; o.textContent = e; fEmp.appendChild(o); });
+      const fCC = document.getElementById('f-cc');
+      fCC.innerHTML = '<option value="">Todos los CCs</option>';
+      CC_LIST.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; fCC.appendChild(o); });
+    }
+
+    let currentData = [];
+    let activeTab = 'resumen';
+
+    async function loadData() {
+      showLoadingOverlay(true);
+      try {
+        const res = await fetch(API_URL + '?action=load');
+        const json = await res.json();
+        if (!json.ok) throw new Error(json.error);
+        RAW_DATA = json.data;
+        dataLoaded = true;
+        currentData = [...RAW_DATA];
+        rebuildLists();
+        document.getElementById('badge-total').textContent = RAW_DATA.length + ' registros';
+        renderAll();
+        showToast('Cargados ' + RAW_DATA.length + ' registros', false);
+      } catch (e) {
+        showToast('Error al cargar: ' + e.message, true);
+      } finally {
+        showLoadingOverlay(false);
+      }
+    }
+
+    function showLoadingOverlay(show) {
+      const el = document.getElementById('loading-overlay');
+      if (el) el.style.display = show ? 'flex' : 'none';
+    }
+
+    function switchTab(name) {
+      activeTab = name;
+      ['resumen', 'cc', 'usuarios', 'detalle', 'config'].forEach(t => {
+        const el = document.getElementById('tab-' + t);
+        if (el) el.classList.toggle('hidden', t !== name);
+      });
+      document.querySelectorAll('.tab').forEach((el) => {
+        const text = el.textContent.toLowerCase();
+        const match = (name === 'resumen' && text.includes('resumen')) ||
+          (name === 'cc' && text.includes('centro')) ||
+          (name === 'usuarios' && text.includes('usuario')) ||
+          (name === 'detalle' && text.includes('detalle')) ||
+          (name === 'config' && text.includes('config'));
+        el.classList.toggle('active', match);
+      });
+      if (name === 'config') loadConfigData();
+      else renderAll();
+    }
+
+    async function loadConfigData() {
+      await Promise.all([loadConfigEmpresas(), loadConfigCCs()]);
+    }
+
+    async function loadConfigEmpresas() {
+      try {
+        const res = await fetch(API_URL + '?action=get_empresas');
+        const json = await res.json();
+        if (json.ok) {
+          const body = document.getElementById('config-empresas-body');
+          body.innerHTML = json.data.map(e => `<tr>
+        <td>${e.id_empresa}</td>
+        <td>${e.nombre}</td>
+        <td><button class="edit-btn" onclick="openEmpresaModal(${e.id_empresa}, '${e.nombre}')">${SVG_EDIT} Editar</button></td>
+      </tr>`).join('');
+
+          const filter = document.getElementById('config-cc-empresa-filter');
+          const currentVal = filter.value;
+          filter.innerHTML = '<option value="">Filtrar CC por Empresa...</option>' +
+            json.data.map(e => `<option value="${e.id_empresa}">${e.nombre}</option>`).join('');
+          filter.value = currentVal;
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    async function loadConfigCCs() {
+      const emp_id = document.getElementById('config-cc-empresa-filter').value;
+      try {
+        const res = await fetch(API_URL + `?action=get_ccs${emp_id ? '&id_empresa=' + emp_id : ''}`);
+        const json = await res.json();
+        if (json.ok) {
+          document.getElementById('config-ccs-body').innerHTML = json.data.map(c => `<tr>
+        <td><span class="tag-cc">${c.codigo}</span></td>
+        <td>${c.descripcion}</td>
+        <td><button class="edit-btn" onclick="openCCModal(${c.id_cc}, '${c.codigo}', '${c.descripcion}', ${c.id_empresa})">${SVG_EDIT} Editar</button></td>
+      </tr>`).join('');
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    function openEmpresaModal(id = '', nombre = '') {
+      document.getElementById('empresa-id').value = id;
+      document.getElementById('empresa-nombre').value = nombre;
+      document.getElementById('empresa-modal-title').textContent = id ? 'Editar Empresa' : 'Nueva Empresa';
+      document.getElementById('empresa-modal').style.display = 'flex';
+    }
+    function closeEmpresaModal() { document.getElementById('empresa-modal').style.display = 'none'; }
+
+    async function saveEmpresa() {
+      const id = document.getElementById('empresa-id').value;
+      const nombre = document.getElementById('empresa-nombre').value.trim();
+      if (!nombre) return;
+      try {
+        const res = await fetch(API_URL + '?action=save_empresa', {
+          method: 'POST', body: JSON.stringify({ id_empresa: id, nombre: nombre })
+        });
+        const json = await res.json();
+        if (json.ok) {
+          showToast('Empresa guardada correctamente');
+          closeEmpresaModal();
+          loadConfigEmpresas();
+          loadData();
+        }
+      } catch (e) { showToast('Error al guardar empresa', true); }
+    }
+
+    function openCCModal(id = '', codigo = '', desc = '', emp_id = '') {
+      document.getElementById('cc-id').value = id;
+      document.getElementById('cc-codigo').value = codigo;
+      document.getElementById('cc-desc-config').value = desc;
+
+      fetch(API_URL + '?action=get_empresas').then(r => r.json()).then(json => {
+        if (json.ok) {
+          const sel = document.getElementById('cc-empresa-id');
+          sel.innerHTML = json.data.map(e => `<option value="${e.id_empresa}" ${e.id_empresa == emp_id ? 'selected' : ''}>${e.nombre}</option>`).join('');
+        }
+      });
+
+      document.getElementById('cc-modal-title').textContent = id ? 'Editar Centro de Costo' : 'Nuevo Centro de Costo';
+      document.getElementById('cc-modal').style.display = 'flex';
+    }
+    function closeCCModal() { document.getElementById('cc-modal').style.display = 'none'; }
+
+    async function saveCC() {
+      const id = document.getElementById('cc-id').value;
+      const emp_id = document.getElementById('cc-empresa-id').value;
+      const codigo = document.getElementById('cc-codigo').value.trim().toUpperCase();
+      const desc = document.getElementById('cc-desc-config').value.trim();
+      if (!emp_id || !codigo) return;
+      try {
+        const res = await fetch(API_URL + '?action=save_cc', {
+          method: 'POST', body: JSON.stringify({ id_cc: id, id_empresa: emp_id, codigo: codigo, descripcion: desc })
+        });
+        const json = await res.json();
+        if (json.ok) {
+          showToast('Centro de costo guardado');
+          closeCCModal();
+          loadConfigCCs();
+        }
+      } catch (e) { showToast('Error al guardar CC', true); }
+    }
+
+    async function autofillUser() {
+      const uid = document.getElementById('new-userid').value.trim();
+      if (uid.length < 1) return;
+      try {
+        const res = await fetch(API_URL + '?action=find_user&user_id=' + uid);
+        const json = await res.json();
+        if (json.ok && json.data) {
+          document.getElementById('new-usuario').value = json.data.nombre;
+          document.getElementById('new-perfil').value = json.data.perfil_defecto || '';
+          showToast('Usuario encontrado: ' + json.data.nombre);
+        }
+      } catch (e) { }
+    }
+
+
+    function fmtMonto(v) {
+      if (!v || v === 0) return '-';
+      if (v >= 1e9) return '$' + (v / 1e9).toFixed(1) + 'B';
+      if (v >= 1e6) return '$' + (v / 1e6).toFixed(1) + 'M';
+      if (v >= 1e3) return '$' + (v / 1e3).toFixed(0) + 'K';
+      return '$' + v.toFixed(0);
+    }
+    function getInitials(name) {
+      return name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+    }
+    function avatarColor(name) {
+      const colors = ['#4f8ef7', '#7c5cbf', '#3ecf8e', '#f5c842', '#f58642', '#e05252', '#5cb8f5', '#cf3e9e'];
+      let h = 0; for (let c of name) h = (h * 31 + c.charCodeAt(0)) % colors.length;
+      return colors[h];
+    }
+
+    function applyFilters() {
+      const emp = document.getElementById('f-empresa').value;
+      const perm = document.getElementById('f-permiso').value;
+      const cc = document.getElementById('f-cc').value;
+      const search = document.getElementById('f-search').value.toLowerCase().trim();
+      currentData = RAW_DATA.filter(r => {
+        if (emp && r.empresa !== emp) return false;
+        if (cc && r.cc !== cc) return false;
+        if (search && (!r.usuario.toLowerCase().includes(search) && !r.cc.toLowerCase().includes(search))) return false;
+        if (perm === 'elab' && !r.elab) return false;
+        if (perm === 'vobo' && !r.vobo) return false;
+        if (perm === 'aut' && !r.aut) return false;
+        return true;
+      });
+      document.getElementById('badge-total').textContent = currentData.length + ' registros';
+      renderAll();
+    }
+    function clearFilters() {
+      ['f-empresa', 'f-permiso', 'f-cc'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('f-search').value = '';
+      currentData = [...RAW_DATA];
+      document.getElementById('badge-total').textContent = RAW_DATA.length + ' registros';
+      renderAll();
+    }
+
+    function showToast(msg, isError = false) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+
+      toast.className = `toast ${isError ? 'error' : 'success'}`;
+      const icon = isError ? SVG_TOAST_ERROR : SVG_TOAST_SUCCESS;
+
+      toast.innerHTML = `
+    <div class="toast-icon">${icon}</div>
+    <span style="flex: 1; line-height: 1.4;">${msg}</span>
+    <div class="toast-progress"></div>
+  `;
+
+      container.appendChild(toast);
+      requestAnimationFrame(() => toast.classList.add('show'));
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400);
+      }, 3500);
+    }
+
+    let editingRowEl = null;
+
+    function startEdit(tr, rowData) {
+      if (editingRowEl) cancelEdit(editingRowEl);
+      editingRowEl = tr;
+      tr.classList.add('editing');
+      const cells = tr.querySelectorAll('td');
+      cells[3].innerHTML = '<input class="inline-input" value="' + rowData.perfil + '" data-field="perfil" style="width:110px">';
+      cells[6].innerHTML = '<input type="checkbox" class="inline-check" ' + (rowData.elab ? 'checked' : '') + ' data-field="elab">';
+      cells[7].innerHTML = '<input type="checkbox" class="inline-check" ' + (rowData.vobo ? 'checked' : '') + ' data-field="vobo">';
+      cells[8].innerHTML = '<input type="checkbox" class="inline-check" ' + (rowData.aut ? 'checked' : '') + ' data-field="aut">';
+      cells[9].innerHTML = '<input class="inline-input" value="' + rowData.monto + '" data-field="monto" style="width:90px" type="number">';
+      cells[10].innerHTML = '<button class="save-btn" onclick="saveEdit(this)" title="Guardar" style="background:var(--green); color:#000; border:none; padding:4px; border-radius:4px; margin-right:4px;">' + SVG_CHECK + '</button><button class="cancel-btn" onclick="cancelEdit(this.closest(\'tr\'))" title="Cancelar" style="background:var(--bg3); border:1px solid var(--border); color:var(--text2); padding:4px; border-radius:4px;">' + SVG_X + '</button>';
+      tr._rowData = rowData;
+    }
+
+    async function saveEdit(btn) {
+      const tr = btn.closest('tr');
+      const rowData = tr._rowData;
+      tr.querySelectorAll('[data-field]').forEach(inp => {
+        const field = inp.dataset.field;
+        let val = inp.type === 'checkbox' ? inp.checked : inp.value;
+        if (field === 'monto') val = parseFloat(val) || 0;
+        rowData[field] = val;
+      });
+      tr.classList.remove('editing');
+      editingRowEl = null;
+      tr._rowData = null;
+      btn.textContent = '...'; btn.disabled = true;
+      try {
+        const res = await fetch(API_URL + '?action=save', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id_row: rowData.id_row, perfil: rowData.perfil, elab: rowData.elab, vobo: rowData.vobo, aut: rowData.aut, monto: rowData.monto })
+        });
+        const json = await res.json();
+        if (!json.ok) throw new Error(json.error);
+        showToast('Guardado correctamente');
+      } catch (e) { showToast('Error: ' + e.message, true); }
+      renderDetalle();
+    }
+
+    function cancelEdit(tr) {
+      tr.classList.remove('editing');
+      editingRowEl = null;
+      renderDetalle();
+    }
+
+    async function openAddModal() {
+      document.getElementById('add-modal').style.display = 'flex';
+      const sel = document.getElementById('new-empresa');
+      try {
+        const res = await fetch(API_URL + '?action=get_empresas');
+        const json = await res.json();
+        if (json.ok) {
+          sel.innerHTML = json.data.map(e => `<option value="${e.nombre}" data-id="${e.id_empresa}">${e.nombre}</option>`).join('');
+          loadCCsForModal(); // Cargar los CCs de la primera empresa
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    let MODAL_CC_DATA = [];
+    async function loadCCsForModal() {
+      const selEmp = document.getElementById('new-empresa');
+      const opt = selEmp.options[selEmp.selectedIndex];
+      const id_empresa = opt ? opt.dataset.id : '';
+      if (!id_empresa) return;
+
+      try {
+        const res = await fetch(API_URL + '?action=get_ccs&id_empresa=' + id_empresa);
+        const json = await res.json();
+        if (json.ok) {
+          MODAL_CC_DATA = json.data;
+          const selCC = document.getElementById('new-cc');
+          selCC.innerHTML = '<option value="">Seleccionar CC...</option>' + 
+            json.data.map(c => `<option value="${c.codigo}">${c.codigo}</option>`).join('');
+          document.getElementById('new-desc').value = '';
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    function updateCCDescFromModal() {
+      const cc_cod = document.getElementById('new-cc').value;
+      const cc = MODAL_CC_DATA.find(c => c.codigo === cc_cod);
+      document.getElementById('new-desc').value = cc ? cc.descripcion : '';
+    }
+
+    function closeAddModal() { document.getElementById('add-modal').style.display = 'none'; }
+
+    async function submitNewRow() {
+      const get = id => document.getElementById(id).value.trim();
+      const newRow = {
+        empresa: get('new-empresa'), id: get('new-userid'), usuario: get('new-usuario'),
+        perfil: get('new-perfil'), cc: get('new-cc').toUpperCase(), desc: get('new-desc'),
+        elab: document.getElementById('new-elab').checked,
+        vobo: document.getElementById('new-vobo').checked,
+        aut: document.getElementById('new-aut').checked,
+        monto: parseFloat(get('new-monto')) || 0,
+      };
+      if (!newRow.empresa || !newRow.usuario || !newRow.cc) { showToast('Empresa, Usuario y CC son obligatorios', true); return; }
+      try {
+        const res = await fetch(API_URL + '?action=save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newRow) });
+        const json = await res.json();
+        if (!json.ok) throw new Error(json.error);
+        newRow.id_row = json.id_row;
+        RAW_DATA.push(newRow);
+        currentData = [...RAW_DATA];
+        rebuildLists();
+        closeAddModal();
+        switchTab('detalle');
+        showToast('Registro agregado exitosamente');
+      } catch (e) { showToast('Error: ' + e.message, true); }
+    }
+
+    async function deleteRow(id_row, usuario, cc) {
+      if (!confirm('Eliminar permiso de ' + usuario + ' en CC ' + cc + '?')) return;
+      try {
+        const res = await fetch(API_URL + '?action=delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id_row }) });
+        const json = await res.json();
+        if (!json.ok) throw new Error(json.error);
+        RAW_DATA = RAW_DATA.filter(r => r.id_row !== id_row);
+        currentData = currentData.filter(r => r.id_row !== id_row);
+        renderAll();
+        showToast('Registro eliminado correctamente');
+      } catch (e) { showToast('Error: ' + e.message, true); }
+    }
+
+    function renderAll() {
+      if (!dataLoaded) return;
+      if (activeTab === 'resumen') renderResumen();
+      else if (activeTab === 'cc') renderCC();
+      else if (activeTab === 'usuarios') renderUsers();
+      else if (activeTab === 'detalle') renderDetalle();
+    }
+
+    function renderResumen() {
+      const kpi = {
+        total: RAW_DATA.length,
+        elab: RAW_DATA.filter(r => r.elab).length,
+        vobo: RAW_DATA.filter(r => r.vobo).length,
+        aut: RAW_DATA.filter(r => r.aut).length,
+        monto: RAW_DATA.reduce((s, r) => s + r.monto, 0)
+      };
+
+      document.getElementById('kpi-row').innerHTML = `
+    <div class="kpi accent">
+      <div class="label">Total Registros</div>
+      <div class="value">${kpi.total}</div>
+    </div>
+    <div class="kpi green">
+      <div class="label">ELAB / SOL</div>
+      <div class="value">${kpi.elab}</div>
+    </div>
+    <div class="kpi yellow">
+      <div class="label">Visto Bueno</div>
+      <div class="value">${kpi.vobo}</div>
+    </div>
+    <div class="kpi orange">
+      <div class="label">Autorización</div>
+      <div class="value">${kpi.aut}</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Monto Total Max.</div>
+      <div class="value">${fmtMonto(kpi.monto)}</div>
+    </div>
+  `;
+
+      const emps = [...new Set(currentData.map(r => r.empresa))].sort();
+      document.getElementById('empresa-cards').innerHTML = emps.map(e => {
+        const list = currentData.filter(r => r.empresa === e);
+        const m = list.reduce((s, r) => s + r.monto, 0);
+        return `
+      <div class="table-wrap" style="padding:20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <span style="font-weight:700;font-size:14px">${e}</span>
+          <span style="color:var(--green);font-weight:800">${fmtMonto(m)}</span>
+        </div>
+        <div style="display:flex;gap:16px; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 8px;">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> ${list.filter(r => r.elab).length}</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--yellow)"></div> ${list.filter(r => r.vobo).length}</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div> ${list.filter(r => r.aut).length}</div>
+        </div>
+      </div>
+    `;
+      }).join('');
+    }
+
+    async function togglePermission(id_row, field, currentVal) {
+      const newVal = currentVal ? 0 : 1;
+      const row = RAW_DATA.find(r => r.id_row == id_row);
+      if (row) row[field] = newVal;
+
+      // Actualizar popover y UI inmediatamente (optimistic update)
+      renderAll();
+      const popover = document.getElementById('quick-popover');
+      if (popover.style.display === 'flex') {
+        // Re-renderizamos el popover para reflejar el cambio del switch
+        openQuickEdit({ stopPropagation: () => { } }, id_row, true);
+      }
+
+      try {
+        const res = await fetch(API_URL + '?action=save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id_row: id_row, [field]: newVal })
+        });
+        const json = await res.json();
+        if (!json.ok) throw new Error(json.error);
+        showToast('Permiso actualizado exitosamente');
+      } catch (e) {
+        if (row) row[field] = currentVal;
+        renderAll();
+        showToast('Error: ' + e.message, true);
+      }
+    }
+
+    function renderCC() {
+      const ccs = [...new Set(currentData.map(r => r.cc))].sort();
+      document.getElementById('cc-grid').innerHTML = ccs.map(c => {
+        const list = currentData.filter(r => r.cc === c);
+        return `
+      <div class="cc-card">
+        <div class="cc-card-header">
+            <div class="cc-code">${c}</div>
+            <div style="flex:1;min-width:0">
+                <div class="cc-desc" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${list[0].desc}</div>
+                <div class="cc-empresa">${list[0].empresa}</div>
+            </div>
+        </div>
+        <div class="cc-stats">
+            <div class="cc-stat elab"><div class="n">${list.filter(r => r.elab).length}</div><div class="l">ELAB / SOL</div></div>
+            <div class="cc-stat vobo"><div class="n">${list.filter(r => r.vobo).length}</div><div class="l">Visto Bueno</div></div>
+            <div class="cc-stat aut"><div class="n">${list.filter(r => r.aut).length}</div><div class="l">Autorización</div></div>
+        </div>
+        <div class="cc-users">
+            ${list.map(u => `
+                <div class="row row-clickable" onclick="openQuickEdit(event, ${u.id_row})">
+                    <div style="display:flex;flex-direction:column;min-width:0;flex:1">
+                        <span style="font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${u.usuario}</span>
+                        <span style="font-size:10px;color:var(--text2)">ID: ${u.id} | ${u.perfil}</span>
+                    </div>
+                    <div class="perm-action-group">
+                        <div class="perm-dots">
+                            <div class="dot ${u.elab ? 'dot-e' : 'dot-off'}"></div>
+                            <div class="dot ${u.vobo ? 'dot-v' : 'dot-off'}"></div>
+                            <div class="dot ${u.aut ? 'dot-a' : 'dot-off'}"></div>
+                        </div>
+                        <button class="btn-delete-icon" title="Quitar permiso" onclick="event.stopPropagation(); deleteRow(${u.id_row}, '${u.usuario.replace(/'/g, "\\'")}', '${c}')">${SVG_TRASH}</button>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+      </div>
+    `;
+      }).join('');
+    }
+
+    function renderUsers() {
+      const users = [...new Set(currentData.map(r => r.id))].sort();
+      document.getElementById('user-grid').innerHTML = users.map(uid => {
+        const records = currentData.filter(u => u.id === uid);
+        const r = records[0];
+        const initials = getInitials(r.usuario);
+        const color = avatarColor(r.usuario);
+        return `
+      <div class="user-card">
+        <div class="user-card-header">
+            <div class="avatar" style="background:${color}">${initials}</div>
+            <div class="info">
+                <h4>${r.usuario}</h4>
+                <div class="p">ID: ${uid} | ${r.perfil}</div>
+            </div>
+        </div>
+        <div class="user-cc-list">
+            ${records.map(rec => `
+                <div class="user-cc-row row-clickable" onclick="openQuickEdit(event, ${rec.id_row})">
+                    <div style="display:flex;flex-direction:column;min-width:0;flex:1">
+                        <div style="display:flex;align-items:center;gap:6px; margin-bottom: 2px;">
+                            <span class="tag-cc">${rec.cc}</span>
+                            <span style="font-size:10px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${rec.desc}</span>
+                        </div>
+                        <span style="font-size:9px;color:rgba(255,255,255,0.3)">${rec.empresa.split('-')[0]}</span>
+                    </div>
+                    <div class="perm-action-group" style="margin-left:8px">
+                        <div class="perm-dots">
+                            <div class="dot ${rec.elab ? 'dot-e' : 'dot-off'}"></div>
+                            <div class="dot ${rec.vobo ? 'dot-v' : 'dot-off'}"></div>
+                            <div class="dot ${rec.aut ? 'dot-a' : 'dot-off'}"></div>
+                        </div>
+                        <button class="btn-delete-icon" title="Quitar permiso" onclick="event.stopPropagation(); deleteRow(${rec.id_row}, '${r.usuario.replace(/'/g, "\\'")}', '${rec.cc}')">${SVG_TRASH}</button>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+      </div>
+    `;
+      }).join('');
+    }
+
+    function renderDetalle() {
+      const d = currentData;
+      document.getElementById('detalle-count').textContent = d.length + ' registros';
+      const chip = (v, yes, no) => v ? '<span class="chip chip-yes">✓ ' + yes + '</span>' : '<span class="chip chip-no">— ' + no + '</span>';
+      document.getElementById('detalle-body').innerHTML = d.map((r, i) => '<tr><td><span style="font-size:10px;font-weight:600;color:var(--text2)">' + r.empresa.split(' - ')[0] + '</span></td><td style="color:var(--text2);font-size:11px">' + r.id + '</td><td><span class="user-name">' + r.usuario + '</span></td><td><span class="perfil-badge">' + r.perfil + '</span></td><td><span class="tag-cc">' + r.cc + '</span></td><td style="color:var(--text2);font-size:11px">' + r.desc + '</td><td>' + chip(r.elab, 'Si', 'No') + '</td><td>' + chip(r.vobo, 'Si', 'No') + '</td><td>' + chip(r.aut, 'Si', 'No') + '</td><td class="monto">' + fmtMonto(r.monto) + '</td><td style="white-space:nowrap"><button class="edit-btn" onclick="startEdit(this.closest(\'tr\'),currentData[' + i + '])" title="Editar">' + SVG_EDIT + '</button> <button class="btn-delete-icon" onclick="deleteRow(' + r.id_row + ',\'' + r.usuario.replace(/'/g, "\\'") + "','" + r.cc + '\')" title="Eliminar" style="display:inline-flex; vertical-align:middle; margin-left:8px; padding:6px; border:1px solid rgba(224,82,82,0.3)">' + SVG_TRASH + '</button></td></tr>').join('');
+    }
+
+    const popoverEl = document.createElement('div'); popoverEl.id = 'quick-popover'; popoverEl.className = 'quick-popover';
+    document.body.appendChild(popoverEl);
+
+    document.addEventListener('click', e => {
+      if (!popoverEl.contains(e.target) && !e.target.closest('.row-clickable')) closeQuickEdit();
+    });
+
+    // isReRender se usa para no re-calcular posiciones cuando solo se actualiza el estado interno
+    function openQuickEdit(e, id_row, isReRender = false) {
+      if (!isReRender) e.stopPropagation();
+      const row = RAW_DATA.find(r => r.id_row == id_row);
+      if (!row) return;
+
+      const popover = document.getElementById('quick-popover');
+      popover.innerHTML = `
+    <div class="quick-popover-header">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+      Permisos de Acceso
+    </div>
+    <div style="font-size:13px; font-weight:700; color:#fff; margin-bottom: 8px; padding: 0 4px;">${row.usuario}</div>
+
+    <div class="quick-popover-item" onclick="togglePermission(${id_row}, 'elab', ${row.elab})">
+      <span style="display:flex; align-items:center; gap:8px; font-weight:600;"><div class="legend-dot" style="background:var(--green)"></div> ELAB / SOL</span>
+      <div class="toggle-switch ${row.elab ? 'on on-elab' : ''}"></div>
+    </div>
+    <div class="quick-popover-item" onclick="togglePermission(${id_row}, 'vobo', ${row.vobo})">
+      <span style="display:flex; align-items:center; gap:8px; font-weight:600;"><div class="legend-dot" style="background:var(--yellow)"></div> Visto Bueno</span>
+      <div class="toggle-switch ${row.vobo ? 'on on-vobo' : ''}"></div>
+    </div>
+    <div class="quick-popover-item" onclick="togglePermission(${id_row}, 'aut', ${row.aut})">
+      <span style="display:flex; align-items:center; gap:8px; font-weight:600;"><div class="legend-dot" style="background:var(--orange)"></div> Autorización</span>
+      <div class="toggle-switch ${row.aut ? 'on on-aut' : ''}"></div>
+    </div>
+  `;
+
+      if (!isReRender) {
+        const rect = e.currentTarget.getBoundingClientRect();
+        popover.style.top = (rect.bottom + 5) + 'px';
+        popover.style.left = rect.left + 'px';
+
+        const popRect = popover.getBoundingClientRect();
+        if (rect.left + 250 > window.innerWidth) popover.style.left = (window.innerWidth - 270) + 'px';
+        if (rect.bottom + 200 > window.innerHeight) popover.style.top = (rect.top - 200) + 'px';
+
+        popover.style.display = 'flex';
+      }
+    }
+
+    function closeQuickEdit() {
+      document.getElementById('quick-popover').style.display = 'none';
+    }
+
+    document.getElementById('f-search').addEventListener('keydown', e => { if (e.key === 'Enter') applyFilters(); });
+    ['f-empresa', 'f-permiso', 'f-cc'].forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('change', applyFilters); });
+
+    loadData();
+
+  </script>
+
+  <div id="loading-overlay"
+    style="display:none;position:fixed;inset:0;background:rgba(11,13,20,.9);z-index:9998;align-items:center;justify-content:center;flex-direction:column;gap:16px;backdrop-filter:blur(4px);">
+    <div
+      style="width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite">
+    </div>
+    <div style="color:var(--text);font-size:14px; font-weight: 600;">Sincronizando base de datos...</div>
+  </div>
+  <style>
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+  </style>
+
+  <div id="add-modal" class="modal-overlay">
+    <div class="modal" style="max-width:500px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+        <h3>Agregar Permiso</h3>
+        <button onclick="closeAddModal()"
+          style="background:none;border:none;color:var(--text2);font-size:18px;cursor:pointer;transition:color 0.2s;"
+          onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text2)'">&#10005;</button>
+      </div>
+      <div style="display:grid;gap:10px">
+        <div style="display:grid;gap:10px">
+          <div class="form-group"><label>Empresa *</label>
+            <select id="new-empresa" onchange="loadCCsForModal()"></select>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="form-group"><label>ID Usuario</label>
+              <input id="new-userid" placeholder="ej: 136" onblur="autofillUser()">
+            </div>
+            <div class="form-group"><label>CC *</label>
+              <select id="new-cc" onchange="updateCCDescFromModal()"></select>
+            </div>
+          </div>
+          <div class="form-group"><label>Usuario *</label>
+            <input id="new-usuario" placeholder="Nombre completo">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="form-group"><label>Perfil</label>
+              <input id="new-perfil" placeholder="ej: Comprador">
+            </div>
+            <div class="form-group"><label>Monto max.</label>
+              <input id="new-monto" type="number" placeholder="0">
+            </div>
+          </div>
+          <div class="form-group"><label>Descripcion CC</label>
+            <input id="new-desc" placeholder="Selecciona un CC" readonly style="background:rgba(255,255,255,0.05); color:var(--text2)">
+          </div>
+          <div
+            style="display:flex;gap:20px;padding:14px 0; background:rgba(0,0,0,0.2); border-radius:8px; justify-content:center; margin-bottom: 10px;">
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer; font-weight: 600;"><input
+                type="checkbox" id="new-elab" class="inline-check"> ELAB / SOL</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer; font-weight: 600;"><input
+                type="checkbox" id="new-vobo" class="inline-check"> Visto Bueno</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer; font-weight: 600;"><input
+                type="checkbox" id="new-aut" class="inline-check"> Autorizacion</label>
+          </div>
+          <button class="btn" onclick="submitNewRow()"
+            style="width:100%;padding:12px;font-size:13px; margin-top: 10px;">&#10003; Guardar en base de datos</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="empresa-modal" class="modal-overlay">
+    <div class="modal">
+      <h3 id="empresa-modal-title" style="margin-bottom:18px">Nueva Empresa</h3>
+      <input type="hidden" id="empresa-id">
+      <div class="form-group"><label>Nombre de la Empresa</label>
+        <input id="empresa-nombre" placeholder="ej: Empresa 15 - FIDEICOMISO">
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:24px">
+        <button class="btn-outline" onclick="closeEmpresaModal()" style="flex:1">Cancelar</button>
+        <button class="btn" onclick="saveEmpresa()" style="flex:1">&#10003; Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="cc-modal" class="modal-overlay">
+    <div class="modal">
+      <h3 id="cc-modal-title" style="margin-bottom:18px">Nuevo CC</h3>
+      <input type="hidden" id="cc-id">
+      <div class="form-group"><label>Empresa</label>
+        <select id="cc-empresa-id"></select>
+      </div>
+      <div class="form-group"><label>Código CC</label>
+        <input id="cc-codigo" placeholder="ej: P04">
+      </div>
+      <div class="form-group"><label>Descripción</label>
+        <input id="cc-desc-config" placeholder="ej: CONSTRUCCION">
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:24px">
+        <button class="btn-outline" onclick="closeCCModal()" style="flex:1">Cancelar</button>
+        <button class="btn" onclick="saveCC()" style="flex:1">&#10003; Guardar</button>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

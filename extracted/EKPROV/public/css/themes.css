@@ -1,0 +1,81 @@
+/* public/css/themes.css - Sistema de temas claro/oscuro */
+
+:root[data-theme="light"] {
+    /* Colores primarios */
+    --primary: #667eea;
+    --primary-dark: #5568d3;
+    --primary-light: #818cf8;
+
+    /* Colores de fondo */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-tertiary: #e9ecef;
+
+    /* Colores de texto */
+    --text-primary: #1a202c;
+    --text-secondary: #4a5568;
+    --text-muted: #718096;
+
+    /* Bordes */
+    --border-color: #e2e8f0;
+    --border-light: #edf2f7;
+
+    /* Glass effect */
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    /* Un poco más opaco para legibilidad */
+    --glass-border: rgba(255, 255, 255, 0.5);
+    --glass-shadow: rgba(31, 38, 135, 0.08);
+
+    /* Sidebar */
+    --sidebar-bg: rgba(255, 255, 255, 0.95);
+    --sidebar-hover: rgba(102, 126, 234, 0.08);
+    --sidebar-active: rgba(102, 126, 234, 0.15);
+
+    /* Estados */
+    --success: #48bb78;
+    --warning: #ed8936;
+    --danger: #f56565;
+    --info: #4299e1;
+}
+
+:root[data-theme="dark"] {
+    /* Colores primarios */
+    --primary: #818cf8;
+    --primary-dark: #6366f1;
+    --primary-light: #a5b4fc;
+
+    /* Colores de fondo */
+    --bg-primary: #1a202c;
+    --bg-secondary: #2d3748;
+    --bg-tertiary: #4a5568;
+
+    /* Colores de texto */
+    --text-primary: #f7fafc;
+    --text-secondary: #e2e8f0;
+    --text-muted: #a0aec0;
+
+    /* Bordes */
+    --border-color: #4a5568;
+    --border-light: #2d3748;
+
+    /* Glass effect */
+    --glass-bg: rgba(45, 55, 72, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: rgba(0, 0, 0, 0.3);
+
+    /* Sidebar */
+    --sidebar-bg: rgba(26, 32, 44, 0.98);
+    --sidebar-hover: rgba(129, 140, 248, 0.1);
+    --sidebar-active: rgba(129, 140, 248, 0.2);
+
+    /* Estados */
+    --success: #68d391;
+    --warning: #f6ad55;
+    --danger: #fc8181;
+    --info: #63b3ed;
+}
+
+/* Transiciones suaves entre temas */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}

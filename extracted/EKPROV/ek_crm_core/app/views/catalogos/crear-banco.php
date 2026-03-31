@@ -1,0 +1,67 @@
+<?php
+$pagina_actual = 'catalogos';
+$titulo = 'Nuevo Banco';
+require_once VIEWS_PATH . 'layouts/header.php';
+?>
+
+<div class="d-flex justify-between align-center mb-4">
+    <div>
+        <h1 class="section-title">
+            <i class="bi bi-bank"></i> Nuevo Banco
+        </h1>
+        <p class="section-subtitle">
+            Agregar un nuevo banco al catálogo
+        </p>
+    </div>
+    <a href="<?= BASE_URL ?>catalogos" class="btn btn-glass">
+        <i class="bi bi-arrow-left"></i> Volver
+    </a>
+</div>
+
+<form method="POST" action="<?= BASE_URL ?>catalogos/guardarBanco" id="formBanco">
+    <input type="hidden" name="csrf_token" value="<?= generarToken() ?>">
+
+    <div class="glass-panel mb-4">
+        <h2 class="card-title">
+            <i class="bi bi-info-circle"></i> Datos del Banco
+        </h2>
+
+        <div class="grid-container" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;">
+            <div class="form-group">
+                <label for="Clave" class="form-label">CLABE <span class="text-danger">*</span></label>
+                <input type="text" id="Clave" name="Clave" class="form-control" required maxlength="10"
+                    placeholder="Ej: 012" autofocus>
+                <small class="form-text">Código único del banco (3 dígitos)</small>
+            </div>
+
+            <div class="form-group">
+                <label for="Nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
+                <input type="text" id="Nombre" name="Nombre" class="form-control" required maxlength="100"
+                    placeholder="Ej: BBVA MEXICO">
+                <small class="form-text">Nombre completo del banco</small>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Estado</label>
+                <div class="form-check">
+                    <input type="checkbox" id="Activo" name="Activo" class="form-check-input" checked>
+                    <label for="Activo" class="form-check-label">
+                        Activo
+                    </label>
+                </div>
+                <small class="form-text">Los bancos inactivos no se mostrarán en los formularios</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2 justify-end mb-5">
+        <a href="<?= BASE_URL ?>catalogos" class="btn btn-glass">
+            <i class="bi bi-x-lg"></i> Cancelar
+        </a>
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-check-lg"></i> Guardar Banco
+        </button>
+    </div>
+</form>
+
+<?php require_once VIEWS_PATH . 'layouts/footer.php'; ?>
