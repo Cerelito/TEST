@@ -283,6 +283,10 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
     `password_hash`        VARCHAR(255) NOT NULL,
     `nombre`               VARCHAR(100) NOT NULL,
     `apellido`             VARCHAR(100) NULL,
+    `puesto`               VARCHAR(150) NULL,
+    `num_usuario_ek`       VARCHAR(20)  NULL COMMENT 'Número de usuario en ERP',
+    `password_ek`          VARCHAR(255) NULL COMMENT 'Contraseña ERP encriptada (10 chars)',
+    `pin_ek`               VARCHAR(255) NULL COMMENT 'PIN ERP encriptado (4 chars, solo admin)',
     `rol`                  ENUM('superadmin','admin','capturista','usuario') NOT NULL DEFAULT 'usuario',
     `activo`               TINYINT(1)   NOT NULL DEFAULT 1,
     `aprobado`             TINYINT(1)   NOT NULL DEFAULT 0 COMMENT '0=pendiente aprobación',
@@ -489,3 +493,12 @@ SET FOREIGN_KEY_CHECKS = 1;
 --         AFTER `tipo`,
 --     DROP INDEX `idx_emp_cc_tipo`,
 --     ADD UNIQUE KEY `idx_emp_cc_tipo_ins` (`empleado_id`, `cc_id`, `tipo`, `tipo_insumo`);
+
+-- =====================================================================
+-- MIGRATION: agrega campos ERP a usuarios (ejecutar en DB existente)
+-- =====================================================================
+-- ALTER TABLE `usuarios`
+--     ADD COLUMN `puesto`         VARCHAR(150) NULL AFTER `apellido`,
+--     ADD COLUMN `num_usuario_ek` VARCHAR(20)  NULL COMMENT 'Número de usuario en ERP' AFTER `puesto`,
+--     ADD COLUMN `password_ek`    VARCHAR(255) NULL COMMENT 'Contraseña ERP encriptada (10 chars)' AFTER `num_usuario_ek`,
+--     ADD COLUMN `pin_ek`         VARCHAR(255) NULL COMMENT 'PIN ERP encriptado (4 chars, solo admin)' AFTER `password_ek`;

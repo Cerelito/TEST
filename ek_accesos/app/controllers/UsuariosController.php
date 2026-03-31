@@ -68,13 +68,24 @@ class UsuariosController extends Controller
     {
         requireRole(['admin', 'capturista']);
 
-        $programas  = (new ProgramaNivel())->getSelectList();
-        $empleados  = (new Empleado())->getAll(['activo' => '1']);
+        $programas = (new ProgramaNivel())->getSelectList();
+        $empleados = (new Empleado())->getAll(['activo' => '1']);
+
+        $pdo = Database::getInstance();
+        $usuarios_con_pn = $pdo->query(
+            "SELECT u.id, u.nombre, u.apellido, pn.id AS pn_id, pn.nombre AS pn_nombre, pn.nivel
+             FROM usuarios u
+             JOIN usuario_programa_nivel upn ON upn.usuario_id = u.id
+             JOIN programa_nivel pn ON pn.id = upn.programa_nivel_id
+             WHERE u.deleted_at IS NULL AND u.activo = 1
+             ORDER BY u.nombre"
+        )->fetchAll(\PDO::FETCH_ASSOC);
 
         $this->render('usuarios/crear', [
-            'title'     => 'Nuevo Usuario',
-            'programas' => $programas,
-            'empleados' => $empleados,
+            'title'           => 'Nuevo Usuario',
+            'programas'       => $programas,
+            'empleados'       => $empleados,
+            'usuarios_con_pn' => $usuarios_con_pn,
         ]);
     }
 
@@ -88,15 +99,17 @@ class UsuariosController extends Controller
         requireRole(['admin', 'capturista']);
         verifyCSRF();
 
-        $nombre    = sanitize($_POST['nombre']    ?? '');
-        $apellido  = sanitize($_POST['apellido']  ?? '');
-        $email     = sanitize($_POST['email']     ?? '');
-        $username  = sanitize($_POST['username']  ?? '');
-        $password  = $_POST['password']           ?? '';
-        $rol       = in_array($_POST['rol'] ?? '', ['superadmin', 'admin', 'capturista', 'viewer'])
-                     ? $_POST['rol'] : 'viewer';
-        $pnId      = (int)($_POST['programa_nivel_id'] ?? 0);
-        $empId     = (int)($_POST['empleado_id']       ?? 0);
+        $nombre     = sanitize($_POST['nombre']    ?? '');
+        $apellido   = sanitize($_POST['apellido']  ?? '');
+        $puesto     = sanitize($_POST['puesto']    ?? '');
+        $email      = sanitize($_POST['email']     ?? '');
+        $username   = sanitize($_POST['username']  ?? '');
+        $password   = $_POST['password']           ?? '';
+        $rol        = in_array($_POST['rol'] ?? '', ['superadmin', 'admin', 'capturista', 'usuario'])
+                      ? $_POST['rol'] : 'usuario';
+        $pnId       = (int)($_POST['programa_nivel_id'] ?? 0);
+        $copiarPnDe = (int)($_POST['copiar_pn_de']      ?? 0);
+        $empId      = (int)($_POST['empleado_id']        ?? 0);
 
         // Validation
         if (!$nombre || !$email || !$username || !$password) {
@@ -119,21 +132,65 @@ class UsuariosController extends Controller
         $currentUser = currentUser();
         $esAdmin     = in_array($currentUser['rol'] ?? $currentUser['tipo_usuario'] ?? '', ['admin', 'superadmin']);
 
-        $userId = $this->model->createUser([
-            'nombre'            => $nombre,
-            'apellido'          => $apellido,
-            'email'             => $email,
-            'username'          => $username,
-            'password'          => $password,
-            'rol'               => $esAdmin ? $rol : 'viewer',
-            'activo'            => $esAdmin ? 1 : 0,
-            'aprobado'          => 0,          // always starts un-approved
-            'debe_cambiar_pwd'  => 0,
-        ]);
+        // If "copiar programa nivel" is selected and no explicit pn chosen, inherit from source
+        $pdo = Database::getInstance();
+        if ($copiarPnDe && !$pnId) {
+            $srcPn = $pdo->prepare(
+                "SELECT programa_nivel_id FROM usuario_programa_nivel WHERE usuario_id = ? LIMIT 1"
+            );
+            $srcPn->execute([$copiarPnDe]);
+            $pnId = (int)($srcPn->fetchColumn() ?: 0);
+        }
+
+        // Admin-only ERP credentials
+        $userData = [
+            'nombre'           => $nombre,
+            'apellido'         => $apellido,
+            'puesto'           => $puesto,
+            'email'            => $email,
+            'username'         => $username,
+            'password'         => $password,
+            'rol'              => $esAdmin ? $rol : 'usuario',
+            'activo'           => $esAdmin ? 1 : 0,
+            'aprobado'         => 0,
+            'debe_cambiar_pwd' => 0,
+        ];
+
+        if ($esAdmin) {
+            $numEk      = sanitize($_POST['num_usuario_ek'] ?? '');
+            $passwordEk = $_POST['password_ek'] ?? '';
+            $pinEk      = $_POST['pin_ek']      ?? '';
+
+            if ($numEk)      $userData['num_usuario_ek'] = $numEk;
+            if ($passwordEk) {
+                if (strlen($passwordEk) !== 10) {
+                    setFlash('error', 'La contraseña ERP debe tener exactamente 10 caracteres.');
+                    redirect('usuarios/crear');
+                }
+                $userData['password_ek'] = encryptEK($passwordEk);
+            }
+            if ($pinEk) {
+                if (strlen($pinEk) !== 4) {
+                    setFlash('error', 'El PIN ERP debe tener exactamente 4 caracteres.');
+                    redirect('usuarios/crear');
+                }
+                $userData['pin_ek'] = encryptEK($pinEk);
+            }
+        }
+
+        $userId = $this->model->createUser($userData);
+
+        // Assign programa nivel directly to user
+        if ($pnId) {
+            $pdo->prepare(
+                "INSERT INTO usuario_programa_nivel (usuario_id, programa_nivel_id, asignado_por)
+                 VALUES (?, ?, ?)
+                 ON DUPLICATE KEY UPDATE programa_nivel_id = VALUES(programa_nivel_id)"
+            )->execute([$userId, $pnId, currentUserId() ?? 0]);
+        }
 
         // Link employee if provided
         if ($empId) {
-            $pdo = Database::getInstance();
             $pdo->prepare(
                 "INSERT INTO usuario_empleado (usuario_id, empleado_id)
                  VALUES (?,?)
@@ -145,11 +202,16 @@ class UsuariosController extends Controller
             }
         }
 
-        // Send approval request to admin
-        $this->enviarEmailSolicitudAprobacion($userId, $nombre, $apellido, $email, $username, $pnId);
+        // Send approval request to admin (only if not admin creating)
+        if (!$esAdmin) {
+            $this->enviarEmailSolicitudAprobacion($userId, $nombre, $apellido, $email, $username, $pnId);
+        }
 
         logAction('crear', 'usuarios', "Usuario creado: $email (ID: $userId)");
-        setFlash('success', 'Usuario registrado. Se envió solicitud de aprobación al administrador.');
+        $msg = $esAdmin
+            ? 'Usuario creado exitosamente.'
+            : 'Usuario registrado. Se envió solicitud de aprobación al administrador.';
+        setFlash('success', $msg);
         redirect('usuarios');
     }
 
@@ -168,6 +230,22 @@ class UsuariosController extends Controller
         }
 
         $programas = (new ProgramaNivel())->getSelectList();
+
+        // Current programa nivel for this user
+        $pdo = Database::getInstance();
+        $upn = $pdo->prepare(
+            "SELECT programa_nivel_id FROM usuario_programa_nivel WHERE usuario_id = ? LIMIT 1"
+        );
+        $upn->execute([(int)$id]);
+        $usuario['programa_nivel_id'] = (int)($upn->fetchColumn() ?: 0);
+
+        // Decrypt ERP credentials for display (admin only)
+        if (!empty($usuario['password_ek'])) {
+            $usuario['password_ek_plain'] = decryptEK($usuario['password_ek']);
+        }
+        if (!empty($usuario['pin_ek'])) {
+            $usuario['pin_ek_plain'] = decryptEK($usuario['pin_ek']);
+        }
 
         $this->render('usuarios/editar', [
             'title'     => 'Editar: ' . htmlspecialchars($usuario['nombre']),
@@ -206,10 +284,11 @@ class UsuariosController extends Controller
         $data = [
             'nombre'   => sanitize($_POST['nombre']   ?? ''),
             'apellido' => sanitize($_POST['apellido'] ?? ''),
+            'puesto'   => sanitize($_POST['puesto']   ?? ''),
             'email'    => $email,
             'username' => $username,
-            'rol'      => in_array($_POST['rol'] ?? '', ['superadmin', 'admin', 'capturista', 'viewer'])
-                          ? $_POST['rol'] : 'viewer',
+            'rol'      => in_array($_POST['rol'] ?? '', ['superadmin', 'admin', 'capturista', 'usuario'])
+                          ? $_POST['rol'] : 'usuario',
             'activo'   => isset($_POST['activo']) ? 1 : 0,
         ];
 
@@ -228,6 +307,39 @@ class UsuariosController extends Controller
                 PASSWORD_BCRYPT,
                 ['cost' => 12]
             );
+        }
+
+        // ERP credentials (admin-only)
+        $numEk      = sanitize($_POST['num_usuario_ek'] ?? '');
+        $passwordEk = $_POST['password_ek'] ?? '';
+        $pinEk      = $_POST['pin_ek']      ?? '';
+
+        $data['num_usuario_ek'] = $numEk;
+
+        if ($passwordEk !== '') {
+            if (strlen($passwordEk) !== 10) {
+                setFlash('error', 'La contraseña ERP debe tener exactamente 10 caracteres.');
+                redirect('usuarios/editar/' . $id);
+            }
+            $data['password_ek'] = encryptEK($passwordEk);
+        }
+        if ($pinEk !== '') {
+            if (strlen($pinEk) !== 4) {
+                setFlash('error', 'El PIN ERP debe tener exactamente 4 caracteres.');
+                redirect('usuarios/editar/' . $id);
+            }
+            $data['pin_ek'] = encryptEK($pinEk);
+        }
+
+        // Update programa nivel assignment
+        $pnId = (int)($_POST['programa_nivel_id'] ?? 0);
+        $pdo  = Database::getInstance();
+        if ($pnId) {
+            $pdo->prepare(
+                "INSERT INTO usuario_programa_nivel (usuario_id, programa_nivel_id, asignado_por)
+                 VALUES (?, ?, ?)
+                 ON DUPLICATE KEY UPDATE programa_nivel_id = VALUES(programa_nivel_id)"
+            )->execute([(int)$id, $pnId, currentUserId() ?? 0]);
         }
 
         $this->model->update((int)$id, $data);

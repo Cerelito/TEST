@@ -29,11 +29,24 @@ class RequisitorController extends Controller
         );
         $empresas = $this->empleadoModel->getEmpresasList();
 
+        $pdo = Database::getInstance();
+        $empleados_disponibles = $pdo->query(
+            "SELECT DISTINCT e.id, e.nombre, emp.nombre AS empresa_nombre
+             FROM empleados e
+             LEFT JOIN empresas emp ON emp.id = e.empresa_id
+             INNER JOIN empleado_cc ecc ON ecc.empleado_id = e.id
+                 AND ecc.tipo IN ('REQ','AMBOS') AND ecc.activo = 1
+             WHERE e.deleted_at IS NULL AND e.activo = 1
+               AND e.id NOT IN (SELECT empleado_id FROM requisitores WHERE activo = 1)
+             ORDER BY e.nombre"
+        )->fetchAll(\PDO::FETCH_ASSOC);
+
         $this->render('requisitores/index', [
-            'title'        => 'Requisitores',
-            'requisitores' => $requisitores,
-            'empresas'     => $empresas,
-            'filters'      => $filters,
+            'title'                => 'Requisitores',
+            'requisitores'         => $requisitores,
+            'empresas'             => $empresas,
+            'filters'              => $filters,
+            'empleados_disponibles'=> $empleados_disponibles,
         ]);
     }
 

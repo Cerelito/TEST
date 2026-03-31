@@ -110,6 +110,33 @@ function generateToken(int $length = 32): string
     return bin2hex(random_bytes($length));
 }
 
+/**
+ * Encrypt a short string (ERP password/PIN) using AES-256-CBC.
+ * Returns a base64-encoded string safe for DB storage.
+ */
+function encryptEK(string $plain): string
+{
+    if ($plain === '') return '';
+    $key       = hash('sha256', defined('EK_CRYPT_KEY') ? EK_CRYPT_KEY : 'fallback', true);
+    $iv        = random_bytes(16);
+    $encrypted = openssl_encrypt($plain, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+    return base64_encode($iv . $encrypted);
+}
+
+/**
+ * Decrypt a string previously encrypted with encryptEK().
+ */
+function decryptEK(string $ciphertext): string
+{
+    if ($ciphertext === '') return '';
+    $key  = hash('sha256', defined('EK_CRYPT_KEY') ? EK_CRYPT_KEY : 'fallback', true);
+    $data = base64_decode($ciphertext, true);
+    if ($data === false || strlen($data) < 17) return '';
+    $iv  = substr($data, 0, 16);
+    $enc = substr($data, 16);
+    return openssl_decrypt($enc, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv) ?: '';
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Date & time
 // ─────────────────────────────────────────────────────────────────────────────
