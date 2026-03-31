@@ -393,6 +393,14 @@ $flash = getFlash();
             </span>
             Centros de Costo
         </a>
+        <?php if (isRole(['admin', 'superadmin'])): ?>
+        <a href="<?php echo BASE_URL; ?>/modulos-erp" class="nav-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/modulos-erp') !== false) ? 'active' : ''; ?>">
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            </span>
+            Módulos ERP
+        </a>
+        <?php endif; ?>
     </div>
 
     <div class="nav-section">
