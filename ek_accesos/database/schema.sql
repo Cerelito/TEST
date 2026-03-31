@@ -6,8 +6,8 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
-CREATE DATABASE IF NOT EXISTS `ek_accesos` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `ek_accesos`;
+CREATE DATABASE IF NOT EXISTS `controlekup` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `controlekup`;
 
 -- =====================================================================
 -- CATÁLOGOS BASE (migrados de erickedu_ekpermisos)

@@ -5,7 +5,7 @@
  */
 
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'ek_accesos');
+define('DB_NAME', 'controlekup');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_CHARSET', 'utf8mb4');
