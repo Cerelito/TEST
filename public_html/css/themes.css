@@ -1,0 +1,113 @@
+/* themes.css - Sistema de temas Ekuora */
+/* Paleta basada en Pantones: 144 C, 296 C, 5425 C, 7546 C */
+
+:root[data-theme="light"] {
+    /* Colores primarios Ekuora */
+    --primary: #7A97AB;          /* Pantone 5425 C - Azul grisáceo */
+    --primary-dark: #435563;      /* Pantone 7546 C - Azul gris oscuro */
+    --primary-light: #9BB5C7;     /* Variación clara */
+    --accent: #F18A00;            /* Pantone 144 C - Naranja */
+    --accent-dark: #D67800;
+    --dark: #051C2C;              /* Pantone 296 C - Azul marino */
+
+    /* Colores de fondo */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-tertiary: #e9ecef;
+    --bg-cream: #FDF8F3;          /* Fondo crema como youCopia */
+
+    /* Colores de texto */
+    --text-primary: #051C2C;
+    --text-secondary: #435563;
+    --text-muted: #7A97AB;
+    --text-light: #ffffff;
+
+    /* Bordes */
+    --border-color: #e2e8f0;
+    --border-light: #edf2f7;
+
+    /* Glass effect */
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(122, 151, 171, 0.18);
+    --glass-shadow: rgba(5, 28, 44, 0.1);
+
+    /* Navbar */
+    --navbar-bg: #7A97AB;
+    --navbar-text: #ffffff;
+    --navbar-hover: rgba(255, 255, 255, 0.1);
+
+    /* Sidebar */
+    --sidebar-bg: rgba(255, 255, 255, 0.95);
+    --sidebar-hover: rgba(122, 151, 171, 0.08);
+    --sidebar-active: rgba(122, 151, 171, 0.15);
+
+    /* Estados */
+    --success: #48bb78;
+    --warning: #F18A00;
+    --danger: #f56565;
+    --info: #7A97AB;
+
+    /* Sombras */
+    --shadow-sm: 0 1px 2px rgba(5, 28, 44, 0.05);
+    --shadow-md: 0 4px 6px rgba(5, 28, 44, 0.07);
+    --shadow-lg: 0 10px 25px rgba(5, 28, 44, 0.1);
+    --shadow-xl: 0 20px 40px rgba(5, 28, 44, 0.15);
+}
+
+:root[data-theme="dark"] {
+    /* Colores primarios Ekuora - Dark Mode */
+    --primary: #9BB5C7;
+    --primary-dark: #7A97AB;
+    --primary-light: #B8CCD9;
+    --accent: #F5A033;
+    --accent-dark: #F18A00;
+    --dark: #0A2535;
+
+    /* Colores de fondo */
+    --bg-primary: #0A1929;
+    --bg-secondary: #132F4C;
+    --bg-tertiary: #1E3A5F;
+    --bg-cream: #132F4C;
+
+    /* Colores de texto */
+    --text-primary: #E7EBF0;
+    --text-secondary: #B2BAC2;
+    --text-muted: #7A97AB;
+    --text-light: #ffffff;
+
+    /* Bordes */
+    --border-color: #1E3A5F;
+    --border-light: #132F4C;
+
+    /* Glass effect */
+    --glass-bg: rgba(19, 47, 76, 0.85);
+    --glass-border: rgba(155, 181, 199, 0.1);
+    --glass-shadow: rgba(0, 0, 0, 0.3);
+
+    /* Navbar */
+    --navbar-bg: #132F4C;
+    --navbar-text: #E7EBF0;
+    --navbar-hover: rgba(255, 255, 255, 0.1);
+
+    /* Sidebar */
+    --sidebar-bg: rgba(19, 47, 76, 0.95);
+    --sidebar-hover: rgba(155, 181, 199, 0.1);
+    --sidebar-active: rgba(155, 181, 199, 0.2);
+
+    /* Estados */
+    --success: #68d391;
+    --warning: #F5A033;
+    --danger: #fc8181;
+    --info: #9BB5C7;
+
+    /* Sombras */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.25);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.3);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Transiciones suaves entre temas */
+*, *::before, *::after {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
