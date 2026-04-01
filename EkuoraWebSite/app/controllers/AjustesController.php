@@ -57,38 +57,54 @@ class AjustesController
                 'footer_tiktok' => $_POST['footer_tiktok'] ?? ''
             ];
 
-            $uploadDir = UPLOADS_PATH . 'ajustes/'; // Use UPLOADS_PATH constant
+            $uploadDir = UPLOADS_PATH . 'ajustes/';
             if (!is_dir($uploadDir))
                 mkdir($uploadDir, 0755, true);
 
-            // Manejo de imagen promo
-            if (!empty($_FILES['promo_imagen']['name'])) {
-                $fileName = time() . '_promo_' . basename($_FILES['promo_imagen']['name']);
-                $targetFile = $uploadDir . $fileName;
+            $ext_permitidas = ['jpg', 'jpeg', 'png', 'webp', 'svg'];
+            $max_bytes      = 5 * 1024 * 1024; // 5 MB
 
-                if (move_uploaded_file($_FILES['promo_imagen']['tmp_name'], $targetFile)) {
-                    $datos['promo_imagen'] = 'uploads_privados/ajustes/' . $fileName;
+            // Helper local para subir una imagen de ajuste con validación
+            $subirAjuste = function($campo, $prefijo) use ($uploadDir, $ext_permitidas, $max_bytes) {
+                if (empty($_FILES[$campo]['name'])) return null;
+                $file = $_FILES[$campo];
+                if ($file['size'] > $max_bytes) {
+                    throw new Exception("La imagen '$campo' supera el tamaño máximo (5 MB)");
                 }
-            }
-
-            // Manejo de Logo Navbar
-            if (!empty($_FILES['logo_navbar']['name'])) {
-                $fileName = time() . '_logo_' . basename($_FILES['logo_navbar']['name']);
-                $targetFile = $uploadDir . $fileName;
-
-                if (move_uploaded_file($_FILES['logo_navbar']['tmp_name'], $targetFile)) {
-                    $datos['logo_navbar'] = 'uploads_privados/ajustes/' . $fileName;
+                $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+                if (!in_array($ext, $ext_permitidas)) {
+                    throw new Exception("Tipo de archivo no permitido para '$campo'");
                 }
-            }
-
-            // Manejo de Imagen About
-            if (!empty($_FILES['about_imagen']['name'])) {
-                $fileName = time() . '_about_' . basename($_FILES['about_imagen']['name']);
-                $targetFile = $uploadDir . $fileName;
-
-                if (move_uploaded_file($_FILES['about_imagen']['tmp_name'], $targetFile)) {
-                    $datos['about_imagen'] = 'uploads_privados/ajustes/' . $fileName;
+                $mime = mime_content_type($file['tmp_name']);
+                if (!str_starts_with($mime, 'image/')) {
+                    throw new Exception("El archivo '$campo' no es una imagen válida");
                 }
+                // Convertir a WebP si procede
+                if (in_array($ext, ['jpg', 'jpeg', 'png']) && function_exists('imagewebp')) {
+                    $nombre = time() . "_{$prefijo}.webp";
+                    $ruta   = $uploadDir . $nombre;
+                    $src = ($ext === 'png') ? imagecreatefrompng($file['tmp_name']) : imagecreatefromjpeg($file['tmp_name']);
+                    if ($src && imagewebp($src, $ruta, 82)) {
+                        imagedestroy($src);
+                        return 'uploads_privados/ajustes/' . $nombre;
+                    }
+                    if ($src) imagedestroy($src);
+                }
+                $nombre = time() . "_{$prefijo}." . $ext;
+                if (move_uploaded_file($file['tmp_name'], $uploadDir . $nombre)) {
+                    return 'uploads_privados/ajustes/' . $nombre;
+                }
+                return null;
+            };
+
+            try {
+                if ($r = $subirAjuste('promo_imagen',  'promo'))  $datos['promo_imagen']  = $r;
+                if ($r = $subirAjuste('logo_navbar',   'logo'))   $datos['logo_navbar']   = $r;
+                if ($r = $subirAjuste('about_imagen',  'about'))  $datos['about_imagen']  = $r;
+            } catch (Exception $e) {
+                setFlash('error', $e->getMessage());
+                header('Location: ' . BASE_URL . 'ajustes');
+                exit;
             }
 
             if ($this->ajusteModel->saveMultiple($datos)) {

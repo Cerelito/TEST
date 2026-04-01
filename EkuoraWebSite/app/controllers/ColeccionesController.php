@@ -161,6 +161,11 @@ class ColeccionesController
             mkdir($dir_uploads, 0755, true);
         }
 
+        // Validar tamaño máximo (3 MB)
+        if ($file['size'] > 3 * 1024 * 1024) {
+            throw new Exception('La imagen supera el tamaño máximo permitido (3 MB)');
+        }
+
         $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
         $permitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
 
@@ -168,8 +173,28 @@ class ColeccionesController
             throw new Exception('Tipo de archivo no permitido');
         }
 
+        // Verificar que sea imagen real
+        if ($extension !== 'svg') {
+            $mime = mime_content_type($file['tmp_name']);
+            if (!str_starts_with($mime, 'image/')) {
+                throw new Exception('El archivo no es una imagen válida');
+            }
+        }
+
+        // Convertir a WebP si procede
+        if (in_array($extension, ['jpg', 'jpeg', 'png']) && function_exists('imagewebp')) {
+            $nombre = uniqid($folder . '_') . '.webp';
+            $ruta   = $dir_uploads . $nombre;
+            $src = ($extension === 'png') ? imagecreatefrompng($file['tmp_name']) : imagecreatefromjpeg($file['tmp_name']);
+            if ($src && imagewebp($src, $ruta, 80)) {
+                imagedestroy($src);
+                return 'uploads_privados/' . $folder . '/' . $nombre;
+            }
+            if ($src) imagedestroy($src);
+        }
+
         $nombre = uniqid($folder . '_') . '.' . $extension;
-        $ruta = $dir_uploads . $nombre;
+        $ruta   = $dir_uploads . $nombre;
 
         if (move_uploaded_file($file['tmp_name'], $ruta)) {
             return 'uploads_privados/' . $folder . '/' . $nombre;
