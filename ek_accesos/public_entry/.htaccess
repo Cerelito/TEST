@@ -1,0 +1,39 @@
+Options -Indexes
+Options -MultiViews
+
+RewriteEngine On
+
+# ── HTTPS obligatorio ────────────────────────────────────────────────────────
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# ── Base (subcarpeta dentro de public_html) ──────────────────────────────────
+RewriteBase /urbano/ekusers
+
+# ── Cabeceras de seguridad ───────────────────────────────────────────────────
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options  "nosniff"
+    Header always set X-Frame-Options         "SAMEORIGIN"
+    Header always set X-XSS-Protection        "1; mode=block"
+    Header always set Referrer-Policy         "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy      "geolocation=(), microphone=(), camera=()"
+</IfModule>
+
+# ── Archivos estáticos (css, js, img) — servir directo ───────────────────────
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# ── Todo lo demás → index.php ────────────────────────────────────────────────
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+
+# ── PHP seguro ───────────────────────────────────────────────────────────────
+<IfModule mod_php.c>
+    php_value session.cookie_httponly  1
+    php_value session.cookie_secure    1
+    php_value session.use_strict_mode  1
+    php_flag  display_errors           Off
+    php_flag  log_errors               On
+</IfModule>

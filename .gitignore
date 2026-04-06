@@ -1,0 +1,16 @@
+# Environment files — never commit these
+.env
+*.env
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Uploads
+uploads/
+uploads_privados/
