@@ -1,63 +1,148 @@
 <?php
-// app/helpers/ratelimit.php - Rate limiting basado en sesión
+// app/helpers/ratelimit.php - Rate Limiting para prevenir ataques
 
 /**
- * Verificar si se ha superado el límite de intentos.
- * Retorna true si todavía está permitido, false si se bloqueó.
+ * Verificar rate limit
  *
- * @param string $accion      Nombre del action (ej. 'login', 'recuperacion')
- * @param int    $max         Máximo de intentos permitidos
- * @param int    $minutos     Ventana de tiempo en minutos
- * @param string $identificador  Username, email u otro discriminador
+ * @param string $accion Nombre de la acción (ej: 'login', 'registro')
+ * @param int $max_intentos Número máximo de intentos permitidos
+ * @param int $ventana_minutos Ventana de tiempo en minutos
+ * @param string $identificador Identificador único (default: IP)
+ * @return bool true si está dentro del límite, false si excedió
  */
-function verificarRateLimit($accion, $max, $minutos, $identificador = '')
-{
-    iniciarSesion();
+function verificarRateLimit($accion, $max_intentos = 5, $ventana_minutos = 15, $identificador = null) {
+    try {
+        $database = new Database();
+        $db = $database->getConnection();
 
-    $key      = 'rl_' . $accion . '_' . md5($identificador);
-    $key_time = 'rl_t_' . $accion . '_' . md5($identificador);
-    $ventana  = $minutos * 60;
-    $ahora    = time();
+        $identificador = $identificador ?? getClientIP();
 
-    // Reiniciar contador si la ventana de tiempo ya pasó
-    if (!isset($_SESSION[$key_time]) || ($ahora - $_SESSION[$key_time]) >= $ventana) {
-        $_SESSION[$key]      = 0;
-        $_SESSION[$key_time] = $ahora;
+        // Limpiar registros antiguos
+        $stmt = $db->prepare("
+            DELETE FROM rate_limits
+            WHERE accion = :accion
+            AND identificador = :identificador
+            AND created_at < DATE_SUB(NOW(), INTERVAL :minutos MINUTE)
+        ");
+        $stmt->execute([
+            ':accion' => $accion,
+            ':identificador' => $identificador,
+            ':minutos' => $ventana_minutos
+        ]);
+
+        // Contar intentos recientes
+        $stmt = $db->prepare("
+            SELECT COUNT(*) as total
+            FROM rate_limits
+            WHERE accion = :accion
+            AND identificador = :identificador
+        ");
+        $stmt->execute([
+            ':accion' => $accion,
+            ':identificador' => $identificador
+        ]);
+
+        $row = $stmt->fetch();
+        $total_intentos = $row['total'] ?? 0;
+
+        if ($total_intentos >= $max_intentos) {
+            logSeguridad('rate_limit_excedido', "Rate limit excedido para acción: $accion", null, 'warning');
+            return false;
+        }
+
+        // Registrar intento
+        registrarIntento($accion, $identificador);
+
+        return true;
+
+    } catch (Exception $e) {
+        error_log("Error en rate limit: " . $e->getMessage());
+        return true; // En caso de error, permitir la acción
     }
-
-    $_SESSION[$key]++;
-
-    return $_SESSION[$key] <= $max;
 }
 
 /**
- * Segundos restantes del bloqueo activo
+ * Registrar intento de acción
  */
-function tiempoBloqueoRestante($accion, $minutos, $identificador = '')
-{
-    iniciarSesion();
+function registrarIntento($accion, $identificador = null) {
+    try {
+        $database = new Database();
+        $db = $database->getConnection();
 
-    $key_time = 'rl_t_' . $accion . '_' . md5($identificador);
+        $identificador = $identificador ?? getClientIP();
 
-    if (!isset($_SESSION[$key_time])) {
+        $stmt = $db->prepare("
+            INSERT INTO rate_limits (identificador, accion, ip)
+            VALUES (:identificador, :accion, :ip)
+        ");
+
+        $stmt->execute([
+            ':identificador' => $identificador,
+            ':accion' => $accion,
+            ':ip' => getClientIP()
+        ]);
+
+    } catch (Exception $e) {
+        error_log("Error al registrar intento: " . $e->getMessage());
+    }
+}
+
+/**
+ * Limpiar rate limits de un identificador
+ */
+function limpiarRateLimit($accion, $identificador = null) {
+    try {
+        $database = new Database();
+        $db = $database->getConnection();
+
+        $identificador = $identificador ?? getClientIP();
+
+        $stmt = $db->prepare("
+            DELETE FROM rate_limits
+            WHERE accion = :accion
+            AND identificador = :identificador
+        ");
+
+        $stmt->execute([
+            ':accion' => $accion,
+            ':identificador' => $identificador
+        ]);
+
+    } catch (Exception $e) {
+        error_log("Error al limpiar rate limit: " . $e->getMessage());
+    }
+}
+
+/**
+ * Obtener tiempo restante de bloqueo
+ */
+function tiempoBloqueoRestante($accion, $ventana_minutos = 15, $identificador = null) {
+    try {
+        $database = new Database();
+        $db = $database->getConnection();
+
+        $identificador = $identificador ?? getClientIP();
+
+        $stmt = $db->prepare("
+            SELECT TIMESTAMPDIFF(SECOND, NOW(), DATE_ADD(MIN(created_at), INTERVAL :minutos MINUTE)) as segundos
+            FROM rate_limits
+            WHERE accion = :accion
+            AND identificador = :identificador
+        ");
+
+        $stmt->execute([
+            ':accion' => $accion,
+            ':identificador' => $identificador,
+            ':minutos' => $ventana_minutos
+        ]);
+
+        $row = $stmt->fetch();
+        $segundos = $row['segundos'] ?? 0;
+
+        return max(0, $segundos);
+
+    } catch (Exception $e) {
+        error_log("Error al obtener tiempo de bloqueo: " . $e->getMessage());
         return 0;
     }
-
-    $ventana  = $minutos * 60;
-    $elapsed  = time() - $_SESSION[$key_time];
-
-    return max(0, $ventana - $elapsed);
-}
-
-/**
- * Limpiar rate limit (tras acción exitosa)
- */
-function limpiarRateLimit($accion, $identificador = '')
-{
-    iniciarSesion();
-
-    $key      = 'rl_' . $accion . '_' . md5($identificador);
-    $key_time = 'rl_t_' . $accion . '_' . md5($identificador);
-
-    unset($_SESSION[$key], $_SESSION[$key_time]);
 }

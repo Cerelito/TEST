@@ -1,38 +1,98 @@
 <?php
-// app/helpers/session.php - Gestión de sesiones
+// app/helpers/session.php - Manejo de sesiones y mensajes flash
 
 /**
  * Iniciar sesión si no está activa
  */
-function iniciarSesion()
-{
+function iniciarSesion() {
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
 }
 
 /**
- * Regenerar ID de sesión (anti-fixation)
+ * Establecer mensaje flash
  */
-function regenerarSesion()
-{
-    session_regenerate_id(true);
+function setFlash($tipo, $mensaje) {
+    iniciarSesion();
+    $_SESSION['flash'][$tipo] = $mensaje;
 }
 
 /**
- * Destruir sesión completamente
+ * Obtener mensaje flash (y eliminarlo)
  */
-function destruirSesion()
-{
+function getFlash($tipo) {
+    iniciarSesion();
+
+    if (isset($_SESSION['flash'][$tipo])) {
+        $mensaje = $_SESSION['flash'][$tipo];
+        unset($_SESSION['flash'][$tipo]);
+        return $mensaje;
+    }
+
+    return null;
+}
+
+/**
+ * Verificar si hay mensaje flash
+ */
+function hasFlash($tipo) {
+    iniciarSesion();
+    return isset($_SESSION['flash'][$tipo]);
+}
+
+/**
+ * Limpiar todos los mensajes flash
+ */
+function clearFlashes() {
+    iniciarSesion();
+    unset($_SESSION['flash']);
+}
+
+/**
+ * Establecer variable de sesión
+ */
+function setSession($key, $value) {
+    iniciarSesion();
+    $_SESSION[$key] = $value;
+}
+
+/**
+ * Obtener variable de sesión
+ */
+function getSession($key, $default = null) {
+    iniciarSesion();
+    return $_SESSION[$key] ?? $default;
+}
+
+/**
+ * Verificar si existe variable de sesión
+ */
+function hasSession($key) {
+    iniciarSesion();
+    return isset($_SESSION[$key]);
+}
+
+/**
+ * Eliminar variable de sesión
+ */
+function deleteSession($key) {
+    iniciarSesion();
+    unset($_SESSION[$key]);
+}
+
+/**
+ * Destruir sesión completa
+ */
+function destruirSesion() {
     iniciarSesion();
     $_SESSION = [];
 
-    if (ini_get('session.use_cookies')) {
+    if (ini_get("session.use_cookies")) {
         $params = session_get_cookie_params();
-        setcookie(
-            session_name(), '', time() - 42000,
-            $params['path'], $params['domain'],
-            $params['secure'], $params['httponly']
+        setcookie(session_name(), '', time() - 42000,
+            $params["path"], $params["domain"],
+            $params["secure"], $params["httponly"]
         );
     }
 
@@ -40,33 +100,9 @@ function destruirSesion()
 }
 
 /**
- * Guardar mensaje flash (persiste solo hasta la siguiente lectura)
+ * Regenerar ID de sesión (seguridad)
  */
-function setFlash($tipo, $mensaje)
-{
+function regenerarSesion() {
     iniciarSesion();
-    $_SESSION['flash'][$tipo] = $mensaje;
-}
-
-/**
- * Obtener y borrar mensaje flash
- */
-function getFlash($tipo)
-{
-    iniciarSesion();
-    if (isset($_SESSION['flash'][$tipo])) {
-        $msg = $_SESSION['flash'][$tipo];
-        unset($_SESSION['flash'][$tipo]);
-        return $msg;
-    }
-    return null;
-}
-
-/**
- * ¿Existe un mensaje flash?
- */
-function hasFlash($tipo)
-{
-    iniciarSesion();
-    return isset($_SESSION['flash'][$tipo]);
+    session_regenerate_id(true);
 }

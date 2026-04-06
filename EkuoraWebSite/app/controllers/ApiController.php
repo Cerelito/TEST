@@ -11,7 +11,7 @@ class ApiController
 
     public function __construct()
     {
-        // Constructor vacío ya que se eliminó el dependiente CatalogoModel
+        requireAuth();
     }
 
     /**
