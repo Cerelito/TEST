@@ -21,21 +21,30 @@ class TaskController
         $filters = [
             'proyecto_id' => Sanitizer::int($_GET['proyecto_id'] ?? 0) ?: null,
             'estatus_id'  => Sanitizer::int($_GET['estatus_id']  ?? 0) ?: null,
-            'asignado_a'  => Sanitizer::int($_GET['asignado_a']  ?? 0) ?: null,
             'busqueda'    => Sanitizer::string($_GET['busqueda'] ?? ''),
         ];
+
+        // Colaborador solo puede filtrar entre sus propias tareas
+        if ($this->auth->isColaborador()) {
+            $filters['asignado_a'] = $this->auth->userId();
+        } else {
+            // Admin y Director pueden filtrar por cualquier usuario
+            $filters['asignado_a'] = Sanitizer::int($_GET['asignado_a'] ?? 0) ?: null;
+        }
 
         $auth      = $this->auth;
         $taskList  = $this->tasks->filter($filters);
         $proyectos = $this->projects->listForSelect();
         $statuses  = $this->tasks->statuses();
+        // Para el filtro de usuario (solo admin y director lo ven)
+        $usuarios  = $this->auth->canSeeAllTasks() ? (new UserModel())->listForSelect() : [];
         $flash     = Router::flash();
         include ROOT_PATH . 'views/tasks/index.php';
     }
 
     public function create(?string $param = null): void
     {
-        $this->auth->requireRole(['admin', 'gestor']);
+        $this->auth->requireRole(['admin', 'director', 'colaborador']);
         $error = null;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -102,7 +111,8 @@ class TaskController
         $task = $this->tasks->find((int)$id);
         if (!$task) { http_response_code(404); die('Tarea no encontrada.'); }
 
-        if (!$this->auth->isGestor() && $task['asignado_a'] !== $this->auth->userId()) {
+        // Colaborador solo puede editar tareas asignadas a él mismo
+        if ($this->auth->isColaborador() && $task['asignado_a'] !== $this->auth->userId()) {
             http_response_code(403); die('Sin permiso.');
         }
 
@@ -185,7 +195,7 @@ class TaskController
 
     public function delete(?string $id = null): void
     {
-        $this->auth->requireRole(['admin', 'gestor']);
+        $this->auth->requireRole(['admin', 'director', 'colaborador']);
         if (!$this->auth->validateCsrf()) Router::redirect('tasks');
         $this->tasks->delete((int)$id);
         Router::redirectWithFlash('tasks', 'Tarea eliminada.');

@@ -69,7 +69,11 @@ ob_start();
             <td class="og-muted"><?= htmlspecialchars($u['email']) ?></td>
             <td>
               <?php
-                $rolColors = ['Administrador'=>'#6366f1','Gestor'=>'#0ea5e9','Usuario'=>'#94a3b8'];
+                $rolColors = [
+                  'Administrador' => '#6366f1',
+                  'Director'      => '#0ea5e9',
+                  'Colaborador'   => '#10b981',
+              ];
                 $rc = $rolColors[$u['rol']] ?? '#94a3b8';
               ?>
               <span class="og-badge" style="background:<?= $rc ?>22;color:<?= $rc ?>;border:1px solid <?= $rc ?>44">

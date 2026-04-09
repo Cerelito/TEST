@@ -11,10 +11,18 @@ CREATE TABLE IF NOT EXISTS `roles` (
   UNIQUE KEY `uq_roles_slug` (`slug`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- ══════════════════════════════════════════════════════════════════
+--  ROLES DEL SISTEMA
+--  admin      → Acceso total (catálogos, usuarios, configuración)
+--  director   → Ve tareas de TODOS los usuarios en el dashboard,
+--               gestiona proyectos y tareas. Sin acceso a catálogos.
+--  colaborador→ Ve solo sus propias tareas en el dashboard,
+--               gestiona proyectos y tareas. Sin acceso a catálogos.
+-- ══════════════════════════════════════════════════════════════════
 INSERT INTO `roles` (`nombre`, `slug`, `descripcion`) VALUES
-  ('Administrador', 'admin',   'Acceso total al sistema'),
-  ('Gestor',        'gestor',  'Crea y asigna tareas, gestiona proyectos'),
-  ('Usuario',       'usuario', 'Ve y actualiza sus propias tareas');
+  ('Administrador', 'admin',       'Acceso total: catálogos, usuarios y configuración'),
+  ('Director',      'director',    'Ve pendientes de todos los usuarios, gestiona proyectos y tareas'),
+  ('Colaborador',   'colaborador', 'Ve y gestiona sus propias tareas y proyectos');
 
 CREATE TABLE IF NOT EXISTS `users` (
   `id`           INT UNSIGNED     NOT NULL AUTO_INCREMENT,

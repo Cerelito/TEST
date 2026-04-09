@@ -13,7 +13,6 @@ class Auth
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_name(SESSION_NAME);
-            // Configuración mínima compatible con cPanel/shared hosting
             ini_set('session.cookie_path', '/');
             ini_set('session.cookie_secure', '0');
             ini_set('session.cookie_httponly', '1');
@@ -87,12 +86,66 @@ class Auth
         }
     }
 
-    public function userId(): ?int   { return $_SESSION['user_id']    ?? null; }
+    public function userId(): ?int    { return $_SESSION['user_id']    ?? null; }
     public function userName(): string { return $_SESSION['user_name']  ?? ''; }
     public function userEmail(): string { return $_SESSION['user_email'] ?? ''; }
-    public function rol(): string    { return $_SESSION['rol']         ?? ''; }
-    public function isAdmin(): bool  { return $this->rol() === 'admin'; }
-    public function isGestor(): bool { return in_array($this->rol(), ['admin', 'gestor'], true); }
+    public function rol(): string     { return $_SESSION['rol']         ?? ''; }
+
+    // ── Comprobadores de rol ──────────────────────────────
+
+    /** Acceso total: catálogos, usuarios, configuración */
+    public function isAdmin(): bool
+    {
+        return $this->rol() === 'admin';
+    }
+
+    /**
+     * Director: ve tareas de TODOS los usuarios en el dashboard.
+     * Gestiona proyectos y tareas. Sin acceso a catálogos.
+     */
+    public function isDirector(): bool
+    {
+        return $this->rol() === 'director';
+    }
+
+    /**
+     * Colaborador: ve solo sus propias tareas en el dashboard.
+     * Gestiona proyectos y tareas. Sin acceso a catálogos.
+     */
+    public function isColaborador(): bool
+    {
+        return $this->rol() === 'colaborador';
+    }
+
+    /**
+     * Puede gestionar (crear/editar/eliminar) proyectos y tareas.
+     * TRUE para admin, director y colaborador.
+     * Reemplaza el antiguo isGestor().
+     */
+    public function canManage(): bool
+    {
+        return in_array($this->rol(), ['admin', 'director', 'colaborador'], true);
+    }
+
+    /**
+     * Puede ver tareas de todos los usuarios (dashboard global + filtro de usuario).
+     * TRUE para admin y director.
+     */
+    public function canSeeAllTasks(): bool
+    {
+        return in_array($this->rol(), ['admin', 'director'], true);
+    }
+
+    /**
+     * @deprecated Usar canManage() para nuevos desarrollos.
+     *             Mantenido para compatibilidad con vistas existentes.
+     */
+    public function isGestor(): bool
+    {
+        return $this->canManage();
+    }
+
+    // ── CSRF ─────────────────────────────────────────────
 
     public function csrfToken(): string
     {

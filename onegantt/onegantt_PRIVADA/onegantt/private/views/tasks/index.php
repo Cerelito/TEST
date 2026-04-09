@@ -4,8 +4,13 @@ ob_start();
 ?>
 <div class="og-page">
   <div class="og-page__header">
-    <h1 class="og-page__title">Tareas</h1>
-    <?php if ($auth->isGestor()): ?>
+    <div>
+      <h1 class="og-page__title">Tareas</h1>
+      <?php if ($auth->isColaborador()): ?>
+      <p class="og-page__sub">Mostrando tus tareas asignadas</p>
+      <?php endif; ?>
+    </div>
+    <?php if ($auth->canManage()): ?>
     <a href="<?= Router::url('tasks/create') ?>" class="og-btn">
       <?= ogIcon('plus', 16) ?> Nueva tarea
     </a>
@@ -15,6 +20,7 @@ ob_start();
   <!-- Filtros -->
   <form method="GET" action="<?= Router::url('tasks') ?>" class="og-filters">
     <input type="hidden" name="route" value="tasks">
+
     <select name="proyecto_id" onchange="this.form.submit()">
       <option value="">Todos los proyectos</option>
       <?php foreach ($proyectos as $p): ?>
@@ -23,6 +29,7 @@ ob_start();
       </option>
       <?php endforeach; ?>
     </select>
+
     <select name="estatus_id" onchange="this.form.submit()">
       <option value="">Todos los estatus</option>
       <?php foreach ($statuses as $s): ?>
@@ -31,6 +38,18 @@ ob_start();
       </option>
       <?php endforeach; ?>
     </select>
+
+    <?php if ($auth->canSeeAllTasks() && !empty($usuarios)): ?>
+    <select name="asignado_a" onchange="this.form.submit()">
+      <option value="">Todos los usuarios</option>
+      <?php foreach ($usuarios as $u): ?>
+      <option value="<?= $u['id'] ?>" <?= ($_GET['asignado_a'] ?? '') == $u['id'] ? 'selected' : '' ?>>
+        <?= htmlspecialchars($u['nombre']) ?>
+      </option>
+      <?php endforeach; ?>
+    </select>
+    <?php endif; ?>
+
     <input type="text" name="busqueda" placeholder="Buscar tarea..."
            value="<?= htmlspecialchars($_GET['busqueda'] ?? '') ?>">
     <button type="submit" class="og-btn og-btn--sm">Filtrar</button>
@@ -45,7 +64,7 @@ ob_start();
       <thead>
         <tr>
           <th>Estatus</th>
-          <th>Título</th>
+          <th>T&iacute;tulo</th>
           <th>Proyecto</th>
           <th>Asignado a</th>
           <th>Vence</th>
@@ -61,7 +80,8 @@ ob_start();
         ?>
         <tr class="<?= $overdue ? 'og-row--danger' : ($soon ? 'og-row--warn' : '') ?>">
           <td>
-            <span class="og-badge" style="background:<?= htmlspecialchars($t['estatus_color']) ?>22;color:<?= htmlspecialchars($t['estatus_color']) ?>">
+            <span class="og-badge" style="background:<?= htmlspecialchars($t['estatus_color']) ?>22;color:<?= htmlspecialchars($t['estatus_color']) ?>;border:1px solid <?= htmlspecialchars($t['estatus_color']) ?>44">
+              <span style="width:6px;height:6px;border-radius:50%;background:<?= htmlspecialchars($t['estatus_color']) ?>;display:inline-block;flex-shrink:0"></span>
               <?= htmlspecialchars($t['estatus_nombre']) ?>
             </span>
           </td>
@@ -91,13 +111,19 @@ ob_start();
             <div class="og-progress">
               <div class="og-progress__bar" style="width:<?= $t['progreso'] ?>%"></div>
             </div>
-            <small><?= $t['progreso'] ?>%</small>
+            <small class="og-muted"><?= $t['progreso'] ?>%</small>
           </td>
           <td class="og-actions">
+            <?php
+              // Colaborador: solo puede editar sus propias tareas
+              $canEdit = !$auth->isColaborador() || $t['asignado_a'] == $auth->userId();
+            ?>
+            <?php if ($canEdit): ?>
             <a href="<?= Router::url('tasks/edit', $t['id']) ?>" class="og-icon-btn" title="Editar">
               <?= ogIcon('edit', 15) ?>
             </a>
-            <?php if ($auth->isGestor()): ?>
+            <?php endif; ?>
+            <?php if ($auth->canManage()): ?>
             <form method="POST" action="<?= Router::url('tasks/delete', $t['id']) ?>"
                   onsubmit="return confirm('¿Eliminar esta tarea?')" style="display:inline">
               <?= $auth->csrfField() ?>

@@ -21,7 +21,7 @@ class ProjectController
 
     public function create(?string $param = null): void
     {
-        $this->auth->requireRole(['admin', 'gestor']);
+        $this->auth->requireRole(['admin', 'director', 'colaborador']);
         $error = null;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -51,7 +51,7 @@ class ProjectController
 
     public function edit(?string $id = null): void
     {
-        $this->auth->requireRole(['admin', 'gestor']);
+        $this->auth->requireRole(['admin', 'director', 'colaborador']);
         $project = $this->model->find((int)$id);
         if (!$project) { http_response_code(404); die('Proyecto no encontrado.'); }
         $error = null;
