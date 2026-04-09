@@ -1,0 +1,21 @@
+[08-Apr-2026 14:44:01 America/Mexico_City] PHP Warning:  require_once(/home1/erickedu/Controladores-Apotema/onegantt/config/app.php): Failed to open stream: No such file or directory in /home1/erickedu/public_html/urbano/onegantt/public/index.php on line 5
+[08-Apr-2026 14:44:01 America/Mexico_City] PHP Fatal error:  Uncaught Error: Failed opening required '/home1/erickedu/Controladores-Apotema/onegantt/config/app.php' (include_path='.:/opt/cpanel/ea-php83/root/usr/share/pear') in /home1/erickedu/public_html/urbano/onegantt/public/index.php:5
+Stack trace:
+#0 {main}
+  thrown in /home1/erickedu/public_html/urbano/onegantt/public/index.php on line 5
+[08-Apr-2026 14:58:22 America/Mexico_City] PHP Warning:  Constant ROOT_PATH already defined in /home1/erickedu/Controladores-Apotema/onegantt/config/app.php on line 5
+[08-Apr-2026 14:58:22 America/Mexico_City] [OneGantt] DB: SQLSTATE[HY000] [1044] Access denied for user 'erickedu_cerelitogantt'@'localhost' to database 'erickedu_onegeantt'
+[08-Apr-2026 15:01:19 America/Mexico_City] PHP Warning:  Constant ROOT_PATH already defined in /home1/erickedu/Controladores-Apotema/onegantt/config/app.php on line 5
+[08-Apr-2026 15:01:19 America/Mexico_City] [OneGantt] DB: SQLSTATE[HY000] [1044] Access denied for user 'erickedu_cerelitogantt'@'localhost' to database 'erickedu_onegeantt'
+[08-Apr-2026 15:40:21 America/Mexico_City] PHP Warning:  Constant ROOT_PATH already defined in /home1/erickedu/Controladores-Apotema/onegantt/config/app.php on line 5
+[08-Apr-2026 15:40:21 America/Mexico_City] [OneGantt] DB: SQLSTATE[HY000] [1044] Access denied for user 'erickedu_cerelitogantt'@'localhost' to database 'erickedu_onegeantt'
+[08-Apr-2026 15:40:25 America/Mexico_City] PHP Warning:  Constant ROOT_PATH already defined in /home1/erickedu/Controladores-Apotema/onegantt/config/app.php on line 5
+[08-Apr-2026 15:40:25 America/Mexico_City] [OneGantt] DB: SQLSTATE[HY000] [1044] Access denied for user 'erickedu_cerelitogantt'@'localhost' to database 'erickedu_onegeantt'
+[08-Apr-2026 16:13:35 America/Mexico_City] PHP Warning:  Constant ROOT_PATH already defined in /home1/erickedu/Controladores-Apotema/onegantt/config/app.php on line 5
+[08-Apr-2026 16:13:35 America/Mexico_City] [OneGantt] DB: SQLSTATE[HY000] [1044] Access denied for user 'erickedu_cerelitogantt'@'localhost' to database 'erickedu_onegeantt'
+[08-Apr-2026 16:13:39 America/Mexico_City] PHP Warning:  Constant ROOT_PATH already defined in /home1/erickedu/Controladores-Apotema/onegantt/config/app.php on line 5
+[08-Apr-2026 16:13:39 America/Mexico_City] [OneGantt] DB: SQLSTATE[HY000] [1044] Access denied for user 'erickedu_cerelitogantt'@'localhost' to database 'erickedu_onegeantt'
+[08-Apr-2026 16:20:20 America/Mexico_City] PHP Warning:  Constant ROOT_PATH already defined in /home1/erickedu/Controladores-Apotema/onegantt/config/app.php on line 5
+[08-Apr-2026 16:20:20 America/Mexico_City] [OneGantt] DB: SQLSTATE[HY000] [1044] Access denied for user 'erickedu_cerelitogantt'@'localhost' to database 'erickedu_onegeantt'
+[08-Apr-2026 16:23:07 America/Mexico_City] PHP Warning:  Constant ROOT_PATH already defined in /home1/erickedu/Controladores-Apotema/onegantt/config/app.php on line 5
+[08-Apr-2026 16:23:07 America/Mexico_City] [OneGantt] DB: SQLSTATE[HY000] [1044] Access denied for user 'erickedu_cerelitogantt'@'localhost' to database 'erickedu_onegeantt'

@@ -1,0 +1,10 @@
+Options +FollowSymLinks
+RewriteEngine On
+
+# Redirigir la raíz a public/
+RewriteRule ^$ public/index.php [L]
+
+# Redirigir todo lo que no empiece con "public/" hacia public/
+# preservando query strings ([QSA]) y sin crear bucles
+RewriteCond %{REQUEST_URI} !^/urbano/onegantt/public/
+RewriteRule ^((?!public/).*)$ public/$1 [QSA,L]
