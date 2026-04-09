@@ -47,11 +47,11 @@ class DashboardController
              GROUP BY p.id ORDER BY p.nombre LIMIT 6'
         );
 
-        // ── DIRECTOR: tareas pendientes por usuario ────────
+        // ── ADMIN + DIRECTOR: tareas pendientes por usuario ──
         // Agrupa todas las tareas activas mostrando quién tiene qué pendiente.
         $tareasPorUsuario = [];
 
-        if ($this->auth->isDirector()) {
+        if ($this->auth->canSeeAllTasks()) {
             $rows = $this->db->fetchAll(
                 'SELECT u.id AS uid, u.nombre AS unombre,
                         t.id, t.titulo, t.fecha_fin, t.progreso,
@@ -77,10 +77,10 @@ class DashboardController
             }
         }
 
-        // ── ADMIN / COLABORADOR: solo sus propias tareas ───
+        // ── COLABORADOR: solo sus propias tareas ───────────
         $misTareas = [];
 
-        if (!$this->auth->isDirector()) {
+        if (!$this->auth->canSeeAllTasks()) {
             $misTareas = $this->db->fetchAll(
                 'SELECT t.id, t.titulo, t.fecha_fin, t.progreso,
                         s.nombre AS estatus, s.color AS estatus_color,

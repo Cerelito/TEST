@@ -85,16 +85,17 @@ $flash = Router::flash();
 
   <!-- Contenido principal -->
   <main class="og-main">
-    <?php if ($flash): ?>
-    <div class="og-flash og-flash--<?= $flash['type'] ?>">
-      <?= htmlspecialchars($flash['msg']) ?>
-      <button onclick="this.parentElement.remove()" class="og-flash__close">&times;</button>
-    </div>
-    <?php endif; ?>
-
     <?= $content ?? '' ?>
   </main>
 </div>
+
+<!-- Toast container (rendered by JS) -->
+<div class="og-toasts" id="og-toasts"></div>
+
+<?php if ($flash): ?>
+<script>window.__ogFlash = <?= json_encode(['msg' => $flash['msg'], 'type' => $flash['type']]) ?>;</script>
+<?php endif; ?>
+
 <script src="<?= BASE_URL ?>/assets/js/app.js"></script>
 </body>
 </html>

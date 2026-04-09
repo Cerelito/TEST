@@ -24,11 +24,9 @@ class TaskController
             'busqueda'    => Sanitizer::string($_GET['busqueda'] ?? ''),
         ];
 
-        // Colaborador solo puede filtrar entre sus propias tareas
         if ($this->auth->isColaborador()) {
             $filters['asignado_a'] = $this->auth->userId();
         } else {
-            // Admin y Director pueden filtrar por cualquier usuario
             $filters['asignado_a'] = Sanitizer::int($_GET['asignado_a'] ?? 0) ?: null;
         }
 
@@ -36,7 +34,6 @@ class TaskController
         $taskList  = $this->tasks->filter($filters);
         $proyectos = $this->projects->listForSelect();
         $statuses  = $this->tasks->statuses();
-        // Para el filtro de usuario (solo admin y director lo ven)
         $usuarios  = $this->auth->canSeeAllTasks() ? (new UserModel())->listForSelect() : [];
         $flash     = Router::flash();
         include ROOT_PATH . 'views/tasks/index.php';
@@ -60,13 +57,15 @@ class TaskController
                 if ($v->fails()) {
                     $error = $v->firstError();
                 } else {
+                    $asignadoId = Sanitizer::int($_POST['asignado_a'] ?? 0) ?: null;
+
                     $taskId = $this->tasks->create([
                         'titulo'       => Sanitizer::post('titulo'),
                         'descripcion'  => Sanitizer::post('descripcion'),
                         'proyecto_id'  => Sanitizer::post('proyecto_id', 'int'),
                         'padre_id'     => Sanitizer::int($_POST['padre_id'] ?? 0) ?: null,
                         'estatus_id'   => Sanitizer::post('estatus_id', 'int') ?: 1,
-                        'asignado_a'   => Sanitizer::int($_POST['asignado_a'] ?? 0) ?: null,
+                        'asignado_a'   => $asignadoId,
                         'fecha_inicio' => Sanitizer::post('fecha_inicio') ?: null,
                         'fecha_fin'    => Sanitizer::post('fecha_fin') ?: null,
                         'prioridad'    => Sanitizer::post('prioridad', 'int') ?: 2,
@@ -78,15 +77,19 @@ class TaskController
                     // Adjuntos
                     if (!empty($_FILES['adjuntos']['name'][0])) {
                         foreach ($_FILES['adjuntos']['name'] as $i => $name) {
-                            $file = [
+                            $this->attachments->upload((int)$taskId, $this->auth->userId(), [
                                 'name'     => $name,
                                 'type'     => $_FILES['adjuntos']['type'][$i],
                                 'tmp_name' => $_FILES['adjuntos']['tmp_name'][$i],
                                 'error'    => $_FILES['adjuntos']['error'][$i],
                                 'size'     => $_FILES['adjuntos']['size'][$i],
-                            ];
-                            $this->attachments->upload((int)$taskId, $this->auth->userId(), $file);
+                            ]);
                         }
+                    }
+
+                    // Notificar al asignado si existe y es distinto al creador
+                    if ($asignadoId && $asignadoId !== $this->auth->userId()) {
+                        $this->notifyAssignment((int)$taskId, $asignadoId);
                     }
 
                     Router::redirectWithFlash('tasks', 'Tarea creada correctamente.');
@@ -111,7 +114,6 @@ class TaskController
         $task = $this->tasks->find((int)$id);
         if (!$task) { http_response_code(404); die('Tarea no encontrada.'); }
 
-        // Colaborador solo puede editar tareas asignadas a él mismo
         if ($this->auth->isColaborador() && $task['asignado_a'] !== $this->auth->userId()) {
             http_response_code(403); die('Sin permiso.');
         }
@@ -128,28 +130,30 @@ class TaskController
                 if ($v->fails()) {
                     $error = $v->firstError();
                 } else {
+                    $asignadoAntes  = (int)($task['asignado_a'] ?? 0);
+                    $asignadoNuevo  = Sanitizer::int($_POST['asignado_a'] ?? 0) ?: null;
+
                     // Nota nueva
                     $nota = Sanitizer::post('nota_nueva');
                     if (!empty($nota)) {
                         $this->tasks->addNote((int)$id, $this->auth->userId(), $nota);
                     }
 
-                    // Adjuntos nuevos
+                    // Adjuntos
                     if (!empty($_FILES['adjuntos']['name'][0])) {
                         foreach ($_FILES['adjuntos']['name'] as $i => $name) {
-                            $file = [
+                            $this->attachments->upload((int)$id, $this->auth->userId(), [
                                 'name'     => $name,
                                 'type'     => $_FILES['adjuntos']['type'][$i],
                                 'tmp_name' => $_FILES['adjuntos']['tmp_name'][$i],
                                 'error'    => $_FILES['adjuntos']['error'][$i],
                                 'size'     => $_FILES['adjuntos']['size'][$i],
-                            ];
-                            $this->attachments->upload((int)$id, $this->auth->userId(), $file);
+                            ]);
                         }
                     }
 
-                    // Dependencias (solo si el formulario las envía)
-                    if (array_key_exists('depende_de', $_POST) || isset($_POST['depende_de'])) {
+                    // Dependencias
+                    if (array_key_exists('depende_de', $_POST)) {
                         $this->syncDependencies((int)$id, $_POST['depende_de'] ?? []);
                     }
 
@@ -159,12 +163,21 @@ class TaskController
                         'proyecto_id'  => Sanitizer::post('proyecto_id', 'int'),
                         'padre_id'     => Sanitizer::int($_POST['padre_id'] ?? 0) ?: null,
                         'estatus_id'   => Sanitizer::post('estatus_id', 'int'),
-                        'asignado_a'   => Sanitizer::int($_POST['asignado_a'] ?? 0) ?: null,
+                        'asignado_a'   => $asignadoNuevo,
                         'fecha_inicio' => Sanitizer::post('fecha_inicio') ?: null,
                         'fecha_fin'    => Sanitizer::post('fecha_fin') ?: null,
                         'prioridad'    => Sanitizer::post('prioridad', 'int'),
                         'progreso'     => Sanitizer::post('progreso', 'int'),
                     ]);
+
+                    // Enviar correo si el asignado cambió a alguien distinto del editor
+                    $cambioAsignado = $asignadoNuevo
+                        && $asignadoNuevo !== $asignadoAntes
+                        && $asignadoNuevo !== $this->auth->userId();
+
+                    if ($cambioAsignado) {
+                        $this->notifyAssignment((int)$id, (int)$asignadoNuevo);
+                    }
 
                     Router::redirectWithFlash('tasks/edit', (int)$id, 'Tarea actualizada.');
                 }
@@ -203,19 +216,37 @@ class TaskController
 
     // ── Helpers ───────────────────────────────────────────
 
+    /**
+     * Envía el correo de asignación al colaborador en background.
+     * Usa error_log en lugar de lanzar excepción para no bloquear el flujo.
+     */
+    private function notifyAssignment(int $taskId, int $userId): void
+    {
+        try {
+            $task    = $this->tasks->find($taskId);
+            $userMdl = new UserModel();
+            $usuario = $userMdl->find($userId);
+            $asignador = [
+                'nombre' => $this->auth->userName(),
+                'email'  => $this->auth->userEmail(),
+            ];
+
+            if ($task && $usuario && !empty($usuario['email'])) {
+                (new Mailer())->sendTaskAssigned($usuario, $task, $asignador);
+            }
+        } catch (Exception $e) {
+            error_log("[OneGantt][TaskController] notifyAssignment: " . $e->getMessage());
+        }
+    }
+
     private function syncDependencies(int $tareaId, array $rawIds): void
     {
-        // IDs nuevos (filtrar vacíos y asegurar int)
-        $newIds = array_filter(array_map('intval', $rawIds), fn($i) => $i > 0 && $i !== $tareaId);
-
-        // IDs actuales en BD
+        $newIds  = array_filter(array_map('intval', $rawIds), fn($i) => $i > 0 && $i !== $tareaId);
         $current = array_column($this->tasks->dependencies($tareaId), 'id');
 
-        // Agregar los que faltan
         foreach (array_diff($newIds, $current) as $depId) {
             $this->tasks->addDependency($tareaId, $depId);
         }
-        // Eliminar los que ya no están
         foreach (array_diff($current, $newIds) as $depId) {
             $this->tasks->removeDependency($tareaId, $depId);
         }

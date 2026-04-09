@@ -20,9 +20,9 @@ ob_start();
           <?php endif; ?>
         ">
           <?php if ($auth->isAdmin()): ?>
-            <?= ogIcon('settings', 11) ?> Administrador
+            <?= ogIcon('settings', 11) ?> Admin &mdash; vista global
           <?php elseif ($auth->isDirector()): ?>
-            <?= ogIcon('users', 11) ?> Director
+            <?= ogIcon('users', 11) ?> Director &mdash; vista global
           <?php else: ?>
             <?= ogIcon('user', 11) ?> Colaborador
           <?php endif; ?>
@@ -68,7 +68,7 @@ ob_start();
   <!-- ════════════════════════════════════════════════════════
        VISTA DIRECTOR: Pendientes por usuario
        ════════════════════════════════════════════════════════ -->
-  <?php if ($auth->isDirector()): ?>
+  <?php if ($auth->canSeeAllTasks()): ?>
 
   <div class="og-two-col">
 
