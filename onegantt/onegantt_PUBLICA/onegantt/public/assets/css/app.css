@@ -124,6 +124,45 @@ a:hover{color:#fff}
 /* ── Flash (legacy hidden — toasts replace this) ─────────── */
 .og-flash{ display:none!important }
 
+/* ── Confirm Modal ───────────────────────────────────────── */
+.og-confirm-overlay{
+  position:fixed;inset:0;z-index:10000;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(6,13,31,.72);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  opacity:0;transition:opacity .22s cubic-bezier(.4,0,.2,1);
+}
+.og-confirm-overlay--active{opacity:1}
+.og-confirm{
+  background:rgba(11,21,48,.96);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:var(--radius);
+  box-shadow:0 24px 64px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.08);
+  padding:28px 28px 22px;
+  max-width:360px;width:90%;text-align:center;
+  transform:scale(.9) translateY(12px);
+  transition:transform .28s cubic-bezier(.34,1.56,.64,1),opacity .22s;
+  opacity:0;
+}
+.og-confirm-overlay--active .og-confirm{transform:scale(1) translateY(0);opacity:1}
+.og-confirm__icon{
+  width:52px;height:52px;border-radius:50%;
+  background:rgba(245,158,11,.12);color:var(--amber);
+  border:1px solid rgba(245,158,11,.22);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 16px;
+}
+.og-confirm__msg{font-size:14px;color:var(--text);line-height:1.6;margin-bottom:22px}
+.og-confirm__btns{display:flex;gap:10px;justify-content:center}
+.og-btn--destructive{
+  background:linear-gradient(135deg,var(--rose),#c026d3)!important;
+  box-shadow:0 4px 14px rgba(244,63,94,.35)!important;
+}
+.og-btn--destructive:hover{
+  box-shadow:0 6px 20px rgba(244,63,94,.50)!important;
+  transform:translateY(-1px);
+}
+
 /* ── Toast notification system ──────────────────────────── */
 .og-toasts{
   position:fixed;bottom:24px;right:24px;

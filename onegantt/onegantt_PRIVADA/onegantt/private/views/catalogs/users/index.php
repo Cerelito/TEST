@@ -95,11 +95,11 @@ ob_start();
                 <?= ogIcon('edit', 15) ?>
               </a>
               <form method="POST" action="<?= Router::url('catalogs/users/toggle', $u['id']) ?>"
+                    data-confirm="¿<?= $u['activo'] ? 'Desactivar' : 'Activar' ?> al usuario <?= htmlspecialchars($u['nombre']) ?>?"
                     style="display:inline">
                 <?= $csrfField ?>
                 <button type="submit" class="og-icon-btn <?= $u['activo'] ? 'og-icon-btn--danger' : '' ?>"
-                        title="<?= $u['activo'] ? 'Desactivar' : 'Activar' ?>"
-                        onclick="return confirm('¿<?= $u['activo'] ? 'Desactivar' : 'Activar' ?> al usuario <?= htmlspecialchars($u['nombre']) ?>?')">
+                        title="<?= $u['activo'] ? 'Desactivar' : 'Activar' ?>">
                   <?= $u['activo'] ? ogIcon('alert', 15) : ogIcon('check-sq', 15) ?>
                 </button>
               </form>

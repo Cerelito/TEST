@@ -42,8 +42,26 @@ $flash = Router::flash();
           ['icon' => 'gantt',    'label' => 'Gantt',     'route' => 'tasks/gantt'],
           ['icon' => 'file',     'label' => 'Reportes',  'route' => 'reports'],
         ];
+
+        $navCat = $auth->isAdmin() ? [
+          ['icon' => 'tag',    'label' => 'Estatus',   'route' => 'catalogs/statuses'],
+          ['icon' => 'users',  'label' => 'Usuarios',  'route' => 'catalogs/users'],
+          ['icon' => 'shield', 'label' => 'Perfiles',  'route' => 'catalogs/roles'],
+          ['icon' => 'folder', 'label' => 'Proyectos', 'route' => 'catalogs/projects'],
+        ] : [];
+
+        // Best-match: activa el ítem con el prefijo de ruta más largo que coincida
+        $activeRoute = '';
+        foreach (array_merge($navMain, $navCat) as $_item) {
+          if ($cur === $_item['route'] || str_starts_with($cur, $_item['route'] . '/')) {
+            if (strlen($_item['route']) > strlen($activeRoute)) {
+              $activeRoute = $_item['route'];
+            }
+          }
+        }
+
         foreach ($navMain as $item):
-          $active = str_starts_with($cur, $item['route']) ? ' og-nav__item--active' : '';
+          $active = ($item['route'] === $activeRoute) ? ' og-nav__item--active' : '';
       ?>
       <a href="<?= Router::url($item['route']) ?>" class="og-nav__item<?= $active ?>">
         <?= ogIcon($item['icon']) ?>
@@ -53,13 +71,8 @@ $flash = Router::flash();
 
       <?php if ($auth->isAdmin()): ?>
       <div class="og-nav__section">Cat&aacute;logos</div>
-      <?php
-        $navCat = [
-          ['icon' => 'tag',   'label' => 'Estatus',  'route' => 'catalogs/statuses'],
-          ['icon' => 'users', 'label' => 'Usuarios', 'route' => 'catalogs/users'],
-        ];
-        foreach ($navCat as $item):
-          $active = str_starts_with($cur, $item['route']) ? ' og-nav__item--active' : '';
+      <?php foreach ($navCat as $item):
+          $active = ($item['route'] === $activeRoute) ? ' og-nav__item--active' : '';
       ?>
       <a href="<?= Router::url($item['route']) ?>" class="og-nav__item og-nav__item--sub<?= $active ?>">
         <?= ogIcon($item['icon'], 16) ?>

@@ -53,7 +53,8 @@ ob_start();
             <?php endif; ?>
             <?php if ($auth->isAdmin()): ?>
             <form method="POST" action="<?= Router::url('projects/delete', $p['id']) ?>"
-                  onsubmit="return confirm('¿Desactivar proyecto?')" style="display:inline">
+                  data-confirm="¿Desactivar el proyecto «<?= htmlspecialchars($p['nombre']) ?>»?"
+                  style="display:inline">
               <?= $auth->csrfField() ?>
               <button type="submit" class="og-icon-btn og-icon-btn--danger" title="Desactivar">
                 <?= ogIcon('trash', 15) ?>

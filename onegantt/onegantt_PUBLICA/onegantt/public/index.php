@@ -59,6 +59,14 @@ $routeMap = [
     'catalogs/users/create'     => ['CatalogController',  'userCreate'],
     'catalogs/users/edit'       => ['CatalogController',  'userEdit'],
     'catalogs/users/toggle'     => ['CatalogController',  'userToggle'],
+
+    'catalogs/roles'            => ['CatalogController',  'roles'],
+    'catalogs/roles/edit'       => ['CatalogController',  'roleEdit'],
+
+    'catalogs/projects'         => ['ProjectController',  'index'],
+    'catalogs/projects/create'  => ['ProjectController',  'create'],
+    'catalogs/projects/edit'    => ['ProjectController',  'edit'],
+    'catalogs/projects/delete'  => ['ProjectController',  'delete'],
 ];
 
 // Construir clave: soporta hasta 3 segmentos (catalogs/statuses/edit)

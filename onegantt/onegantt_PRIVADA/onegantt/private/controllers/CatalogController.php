@@ -244,4 +244,49 @@ class CatalogController
         $msg = $nuevoEstado ? 'Usuario activado.' : 'Usuario desactivado.';
         Router::redirectWithFlash('catalogs/users', $msg);
     }
+
+    // ══════════════════════════════════════════════════════
+    //  PERFILES / ROLES
+    // ══════════════════════════════════════════════════════
+
+    public function roles(?string $param = null): void
+    {
+        $this->auth->requireRole(['admin']);
+        $auth      = $this->auth;
+        $roles     = $this->db->fetchAll('SELECT * FROM roles ORDER BY id');
+        $csrfField = $this->auth->csrfField();
+        include ROOT_PATH . 'views/catalogs/roles/index.php';
+    }
+
+    public function roleEdit(?string $id = null): void
+    {
+        $this->auth->requireRole(['admin']);
+        $role = $this->db->fetchOne('SELECT * FROM roles WHERE id = :id', [':id' => (int)$id]);
+        if (!$role) { http_response_code(404); die('Perfil no encontrado.'); }
+
+        $error = null;
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!$this->auth->validateCsrf()) {
+                $error = 'Token inválido.';
+            } else {
+                $nombre      = trim(Sanitizer::post('nombre'));
+                $descripcion = trim(Sanitizer::post('descripcion'));
+
+                if (empty($nombre)) {
+                    $error = 'El nombre del perfil es obligatorio.';
+                } else {
+                    $this->db->execute(
+                        'UPDATE roles SET nombre = :n, descripcion = :d WHERE id = :id',
+                        [':n' => $nombre, ':d' => $descripcion, ':id' => (int)$id]
+                    );
+                    Router::redirectWithFlash('catalogs/roles', 'Perfil actualizado correctamente.');
+                }
+            }
+        }
+
+        $auth      = $this->auth;
+        $csrfField = $this->auth->csrfField();
+        include ROOT_PATH . 'views/catalogs/roles/form.php';
+    }
 }
