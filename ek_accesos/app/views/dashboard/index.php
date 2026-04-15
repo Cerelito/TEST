@@ -315,8 +315,8 @@ $ccDist    = $ccDist    ?? [];
                     <tr>
                         <th>Empleado</th>
                         <th>Empresa</th>
-                        <th>Programa</th>
-                        <th>Tipo</th>
+                        <th>Programa Nivel</th>
+                        <th>Estado</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -343,12 +343,22 @@ $ccDist    = $ccDist    ?? [];
                                 </div>
                             </div>
                         </td>
-                        <td><span class="badge badge-blue"><?php echo htmlspecialchars($emp['empresa'] ?? '-'); ?></span></td>
-                        <td><span class="badge badge-indigo"><?php echo htmlspecialchars($emp['programa_nivel'] ?? '-'); ?></span></td>
                         <td>
-                            <span class="badge <?php echo ($emp['tipo'] ?? '') === 'interno' ? 'badge-green' : 'badge-yellow'; ?>">
-                                <?php echo htmlspecialchars(ucfirst($emp['tipo'] ?? '-')); ?>
-                            </span>
+                            <?php if(!empty($emp['empresa_nombre'])): ?>
+                            <span class="badge badge-blue"><?php echo htmlspecialchars($emp['empresa_nombre']); ?></span>
+                            <?php else: ?><span style="color:#475569;font-size:12px;">—</span><?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if(!empty($emp['programa_nivel_nombre'])): ?>
+                            <span class="badge badge-indigo"><?php echo htmlspecialchars($emp['programa_nivel_nombre']); ?></span>
+                            <?php else: ?><span style="color:#475569;font-size:12px;">—</span><?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if(!empty($emp['aprobado'])): ?>
+                            <span class="badge badge-green">● Activo</span>
+                            <?php else: ?>
+                            <span class="badge badge-yellow">⏳ Pendiente</span>
+                            <?php endif; ?>
                         </td>
                     </tr>
                     <?php endforeach; ?>

@@ -327,12 +327,27 @@ $flash = getFlash();
             to   { opacity: 0; pointer-events: none; }
         }
         /* Responsive */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 99;
+        }
         @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+            .sidebar { transform: translateX(-100%); transition: transform 0.28s cubic-bezier(0.4,0,0.2,1); }
             .sidebar.open { transform: translateX(0); }
+            .sidebar.open ~ .sidebar-overlay { display: block; }
             .page-wrapper { margin-left: 0; }
             .topbar { left: 0; }
             .hamburger { display: flex; }
+            .main-content { padding: 20px 16px; }
+        }
+        @media (max-width: 480px) {
+            .main-content { padding: 16px 12px; }
+            .topbar { padding: 0 16px; }
         }
     </style>
 </head>
@@ -380,18 +395,18 @@ $flash = getFlash();
     </div>
 
     <div class="nav-section">
-        <div class="nav-section-label">Configuración</div>
-        <a href="<?php echo BASE_URL; ?>/programa-nivel" class="nav-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/programa-nivel') !== false) ? 'active' : ''; ?>">
-            <span class="nav-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            </span>
-            Programa Nivel
-        </a>
+        <div class="nav-section-label">Catálogos</div>
         <a href="<?php echo BASE_URL; ?>/centros-costo" class="nav-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/centros-costo') !== false) ? 'active' : ''; ?>">
             <span class="nav-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
             </span>
             Centros de Costo
+        </a>
+        <a href="<?php echo BASE_URL; ?>/programa-nivel" class="nav-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/programa-nivel') !== false) ? 'active' : ''; ?>">
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </span>
+            Programas Nivel
         </a>
         <?php if (isRole(['admin', 'superadmin'])): ?>
         <a href="<?php echo BASE_URL; ?>/modulos-erp" class="nav-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/modulos-erp') !== false) ? 'active' : ''; ?>">
@@ -435,6 +450,9 @@ $flash = getFlash();
         </a>
     </div>
 </nav>
+
+<!-- Sidebar overlay (mobile) -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 <!-- Topbar -->
 <header class="topbar">
@@ -493,14 +511,16 @@ $flash = getFlash();
     // Hamburger menu
     var ham = document.getElementById('hamburgerBtn');
     var sidebar = document.getElementById('sidebar');
+    var overlay = document.getElementById('sidebarOverlay');
+    function closeSidebar() { if(sidebar) sidebar.classList.remove('open'); }
     if (ham && sidebar) {
-        ham.addEventListener('click', function() {
-            sidebar.classList.toggle('open');
-        });
-        document.addEventListener('click', function(e) {
-            if (!sidebar.contains(e.target) && !ham.contains(e.target)) {
-                sidebar.classList.remove('open');
-            }
+        ham.addEventListener('click', function(e) { e.stopPropagation(); sidebar.classList.toggle('open'); });
+    }
+    if (overlay) { overlay.addEventListener('click', closeSidebar); }
+    // Close sidebar when a nav link is clicked on mobile
+    if (sidebar) {
+        sidebar.querySelectorAll('.nav-link').forEach(function(link) {
+            link.addEventListener('click', function() { if (window.innerWidth <= 768) closeSidebar(); });
         });
     }
     // Auto-dismiss flash messages
