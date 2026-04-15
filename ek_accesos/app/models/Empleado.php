@@ -38,11 +38,14 @@ class Empleado extends BaseModel
             $params[] = $filters['empresa_id'];
         }
         if (!empty($filters['buscar'])) {
-            $sql    .= " AND (e.nombre LIKE ? OR e.email LIKE ? OR e.puesto LIKE ?)";
+            $sql    .= " AND (e.nombre LIKE ? OR e.apellido_paterno LIKE ? OR e.apellido_materno LIKE ? OR e.email LIKE ? OR e.puesto LIKE ? OR e.user_id LIKE ?)";
             $q       = '%' . $filters['buscar'] . '%';
-            $params[] = $q;
-            $params[] = $q;
-            $params[] = $q;
+            $params[] = $q; $params[] = $q; $params[] = $q;
+            $params[] = $q; $params[] = $q; $params[] = $q;
+        }
+        if (isset($filters['aprobado']) && $filters['aprobado'] !== '') {
+            $sql    .= " AND e.aprobado = ?";
+            $params[] = (int)$filters['aprobado'];
         }
         if (isset($filters['activo']) && $filters['activo'] !== '') {
             $sql    .= " AND e.activo = ?";
