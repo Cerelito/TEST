@@ -231,14 +231,113 @@ class ModulosErpController extends Controller
         header('Cache-Control: no-cache');
 
         $out = fopen('php://output', 'w');
-        echo "\xEF\xBB\xBF"; // UTF-8 BOM so Excel opens with correct encoding
+        echo "\xEF\xBB\xBF"; // UTF-8 BOM para que Excel abra con tildes correctas
         fputcsv($out, ['nombre', 'clave', 'parent_clave', 'orden', 'es_separador']);
-        fputcsv($out, ['Compras',             'compras',              '',              '0', '0']);
-        fputcsv($out, ['Requisiciones',       'compras.req',          'compras',       '1', '0']);
-        fputcsv($out, ['Crear Requisición',   'compras.req.crear',    'compras.req',   '1', '0']);
-        fputcsv($out, ['Ver Requisiciones',   'compras.req.ver',      'compras.req',   '2', '0']);
-        fputcsv($out, ['Órdenes de Compra',   'compras.oc',           'compras',       '2', '0']);
-        fputcsv($out, ['--- Separador ---',   'compras.sep1',         'compras',       '3', '1']);
+
+        // ── INSTRUCCIONES (filas comentario — el importador las ignora si nombre está vacío)
+        // Se incluyen como filas normales con nombre descriptivo para que el usuario las borre
+
+        // ═══════════════════════════════════════════
+        // NIVEL 0 — Módulos Raíz
+        // ═══════════════════════════════════════════
+        fputcsv($out, ['Compras',              'compras',           '',                  '1', '0']);
+        fputcsv($out, ['Ventas',               'ventas',            '',                  '2', '0']);
+        fputcsv($out, ['Recursos Humanos',     'rh',                '',                  '3', '0']);
+        fputcsv($out, ['Contabilidad',         'contabilidad',      '',                  '4', '0']);
+        fputcsv($out, ['Inventarios',          'inventarios',       '',                  '5', '0']);
+        fputcsv($out, ['Administración',       'admin',             '',                  '6', '0']);
+
+        // ═══════════════════════════════════════════
+        // NIVEL 1 — Hijos directos de Compras
+        // ═══════════════════════════════════════════
+        fputcsv($out, ['--- Documentos ---',   'compras.sep_doc',   'compras',           '1', '1']); // separador
+        fputcsv($out, ['Requisiciones',        'compras.req',       'compras',           '2', '0']);
+        fputcsv($out, ['Órdenes de Compra',    'compras.oc',        'compras',           '3', '0']);
+        fputcsv($out, ['--- Catálogos ---',    'compras.sep_cat',   'compras',           '4', '1']); // separador
+        fputcsv($out, ['Proveedores',          'compras.prov',      'compras',           '5', '0']);
+        fputcsv($out, ['Artículos',            'compras.art',       'compras',           '6', '0']);
+
+        // ═══════════════════════════════════════════
+        // NIVEL 2 — Nietos (hijos de Requisiciones)
+        // ═══════════════════════════════════════════
+        fputcsv($out, ['Crear Requisición',    'compras.req.crear', 'compras.req',       '1', '0']);
+        fputcsv($out, ['Ver Requisiciones',    'compras.req.ver',   'compras.req',       '2', '0']);
+        fputcsv($out, ['Editar Requisición',   'compras.req.editar','compras.req',       '3', '0']);
+        fputcsv($out, ['Autorizar',            'compras.req.aut',   'compras.req',       '4', '0']);
+        fputcsv($out, ['Cancelar',             'compras.req.cancel','compras.req',       '5', '0']);
+
+        // Nietos de Órdenes de Compra
+        fputcsv($out, ['Crear OC',             'compras.oc.crear',  'compras.oc',        '1', '0']);
+        fputcsv($out, ['Ver OC',               'compras.oc.ver',    'compras.oc',        '2', '0']);
+        fputcsv($out, ['Editar OC',            'compras.oc.editar', 'compras.oc',        '3', '0']);
+        fputcsv($out, ['Cerrar OC',            'compras.oc.cerrar', 'compras.oc',        '4', '0']);
+
+        // Nietos de Proveedores
+        fputcsv($out, ['Lista de Proveedores', 'compras.prov.lista','compras.prov',      '1', '0']);
+        fputcsv($out, ['Nuevo Proveedor',      'compras.prov.nuevo','compras.prov',      '2', '0']);
+        fputcsv($out, ['Editar Proveedor',     'compras.prov.edit', 'compras.prov',      '3', '0']);
+
+        // ═══════════════════════════════════════════
+        // NIVEL 3 — Bisnietos (hijos de Autorizar)
+        // ═══════════════════════════════════════════
+        fputcsv($out, ['Autorizar Nivel 1',    'compras.req.aut.n1','compras.req.aut',   '1', '0']);
+        fputcsv($out, ['Autorizar Nivel 2',    'compras.req.aut.n2','compras.req.aut',   '2', '0']);
+        fputcsv($out, ['Autorizar Nivel 3',    'compras.req.aut.n3','compras.req.aut',   '3', '0']);
+        fputcsv($out, ['Rechazar',             'compras.req.aut.rch','compras.req.aut',  '4', '0']);
+
+        // Bisnietos de Crear OC
+        fputcsv($out, ['Desde Requisición',    'compras.oc.crear.req','compras.oc.crear','1', '0']);
+        fputcsv($out, ['Manual',               'compras.oc.crear.man','compras.oc.crear','2', '0']);
+
+        // ═══════════════════════════════════════════
+        // NIVEL 1 — Hijos de Ventas
+        // ═══════════════════════════════════════════
+        fputcsv($out, ['Cotizaciones',         'ventas.cot',        'ventas',            '1', '0']);
+        fputcsv($out, ['Pedidos',              'ventas.ped',        'ventas',            '2', '0']);
+        fputcsv($out, ['Facturas',             'ventas.fact',       'ventas',            '3', '0']);
+        fputcsv($out, ['Clientes',             'ventas.cli',        'ventas',            '4', '0']);
+
+        // NIVEL 2 — Nietos de Ventas
+        fputcsv($out, ['Crear Cotización',     'ventas.cot.crear',  'ventas.cot',        '1', '0']);
+        fputcsv($out, ['Enviar Cotización',    'ventas.cot.enviar', 'ventas.cot',        '2', '0']);
+        fputcsv($out, ['Convertir a Pedido',   'ventas.cot.conv',   'ventas.cot',        '3', '0']);
+        fputcsv($out, ['Crear Pedido',         'ventas.ped.crear',  'ventas.ped',        '1', '0']);
+        fputcsv($out, ['Surtir Pedido',        'ventas.ped.surtir', 'ventas.ped',        '2', '0']);
+        fputcsv($out, ['Cancelar Pedido',      'ventas.ped.cancel', 'ventas.ped',        '3', '0']);
+
+        // ═══════════════════════════════════════════
+        // NIVEL 1 — Hijos de Recursos Humanos
+        // ═══════════════════════════════════════════
+        fputcsv($out, ['Empleados',            'rh.emp',            'rh',                '1', '0']);
+        fputcsv($out, ['Nómina',               'rh.nomina',         'rh',                '2', '0']);
+        fputcsv($out, ['Vacaciones',           'rh.vac',            'rh',                '3', '0']);
+
+        // NIVEL 2 — Nietos de RH
+        fputcsv($out, ['Alta de Empleado',     'rh.emp.alta',       'rh.emp',            '1', '0']);
+        fputcsv($out, ['Baja de Empleado',     'rh.emp.baja',       'rh.emp',            '2', '0']);
+        fputcsv($out, ['Expediente',           'rh.emp.exp',        'rh.emp',            '3', '0']);
+        fputcsv($out, ['Calcular Nómina',      'rh.nomina.calc',    'rh.nomina',         '1', '0']);
+        fputcsv($out, ['Timbrar Nómina',       'rh.nomina.timbrar', 'rh.nomina',         '2', '0']);
+        fputcsv($out, ['Solicitar Vacaciones', 'rh.vac.solicitar',  'rh.vac',            '1', '0']);
+        fputcsv($out, ['Aprobar Vacaciones',   'rh.vac.aprobar',    'rh.vac',            '2', '0']);
+
+        // NIVEL 3 — Bisnietos de Expediente
+        fputcsv($out, ['Documentos',           'rh.emp.exp.docs',   'rh.emp.exp',        '1', '0']);
+        fputcsv($out, ['Contratos',            'rh.emp.exp.contr',  'rh.emp.exp',        '2', '0']);
+        fputcsv($out, ['Evaluaciones',         'rh.emp.exp.eval',   'rh.emp.exp',        '3', '0']);
+
+        // ═══════════════════════════════════════════
+        // NIVEL 1-2 — Contabilidad
+        // ═══════════════════════════════════════════
+        fputcsv($out, ['Pólizas',              'contabilidad.pol',  'contabilidad',      '1', '0']);
+        fputcsv($out, ['Cuentas',              'contabilidad.ctas', 'contabilidad',      '2', '0']);
+        fputcsv($out, ['Reportes',             'contabilidad.rep',  'contabilidad',      '3', '0']);
+        fputcsv($out, ['Póliza de Ingreso',    'contabilidad.pol.i','contabilidad.pol',  '1', '0']);
+        fputcsv($out, ['Póliza de Egreso',     'contabilidad.pol.e','contabilidad.pol',  '2', '0']);
+        fputcsv($out, ['Póliza de Diario',     'contabilidad.pol.d','contabilidad.pol',  '3', '0']);
+        fputcsv($out, ['Balance General',      'contabilidad.rep.bg','contabilidad.rep', '1', '0']);
+        fputcsv($out, ['Estado de Resultados', 'contabilidad.rep.er','contabilidad.rep', '2', '0']);
+
         fclose($out);
         exit;
     }
@@ -325,9 +424,10 @@ class ModulosErpController extends Controller
         $skipped  = 0;
         $warnings = [];
 
-        // Multi-pass: up to N passes to resolve parent dependencies regardless of row order
-        $pending  = $rows;
-        $maxPasses = count($rows) + 1;
+        // Multi-pass: resolves hierarchy regardless of row order.
+        // Worst case: a chain of N nodes each depending on the previous = N passes.
+        $pending   = $rows;
+        $maxPasses = max(count($rows) + 1, 20);
 
         for ($pass = 0; $pass < $maxPasses && !empty($pending); $pass++) {
             $nextPending = [];
