@@ -166,6 +166,20 @@ function renderModuloTree(array $nodes, int $depth = 0): void
 .modal-body { padding:20px 24px; }
 .modal-footer { padding:0 24px 20px; display:flex; justify-content:flex-end; gap:10px; }
 .clave-preview { font-family:monospace; font-size:12px; color:#6366f1; background:rgba(99,102,241,.08); padding:6px 10px; border-radius:6px; margin-top:4px; word-break:break-all; }
+/* Import panel */
+.import-panel { margin-bottom:20px; border:1px solid rgba(255,255,255,0.1); border-radius:16px; overflow:hidden; background:rgba(255,255,255,0.03); }
+.import-toggle { width:100%; display:flex; align-items:center; gap:10px; padding:14px 20px; background:none; border:none; color:#94a3b8; font-size:14px; font-weight:600; font-family:var(--font); cursor:pointer; text-align:left; transition:color .2s; }
+.import-toggle:hover { color:#f1f5f9; }
+.import-toggle svg:first-child { color:#818cf8; }
+.import-chevron { margin-left:auto; transition:transform .25s; color:#475569; }
+.import-chevron.open { transform:rotate(180deg); }
+.import-body { padding:0 20px 20px; }
+.import-info { display:flex; gap:12px; padding:14px 16px; background:rgba(79,142,247,0.07); border:1px solid rgba(79,142,247,0.18); border-radius:12px; font-size:12.5px; color:#94a3b8; line-height:1.7; }
+.import-info strong { color:#f1f5f9; }
+.import-info code { background:rgba(255,255,255,0.08); padding:1px 5px; border-radius:4px; font-size:11px; color:#a5b4fc; }
+.drop-zone { border:2px dashed rgba(255,255,255,0.12); border-radius:12px; padding:24px 20px; text-align:center; cursor:pointer; transition:all .2s; background:rgba(255,255,255,0.02); }
+.drop-zone:hover, .drop-zone.drag-over { border-color:rgba(99,102,241,0.4); background:rgba(99,102,241,0.05); }
+.drop-zone.has-file { border-color:rgba(16,185,129,0.4); background:rgba(16,185,129,0.05); }
 </style>
 
 <div class="page-hdr">
@@ -179,6 +193,52 @@ function renderModuloTree(array $nodes, int $depth = 0): void
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Nuevo Módulo Raíz
     </button>
+</div>
+
+<!-- ── Import CSV panel ──────────────────────────────────────────────────── -->
+<div class="import-panel" id="importPanel">
+    <button type="button" class="import-toggle" id="importToggle" onclick="toggleImport()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Importar desde CSV / Excel
+        <svg class="import-chevron" id="importChevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+
+    <div class="import-body" id="importBody" style="display:none;">
+        <div class="import-info">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;color:#6fa8ff;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <div>
+                <strong>¿Cómo funciona?</strong><br>
+                1. Descarga la plantilla CSV → llénala en Excel → guarda como <em>CSV UTF-8</em> → súbela aquí.<br>
+                Columnas: <code>nombre</code>, <code>clave</code> (opcional), <code>parent_clave</code> (opcional), <code>orden</code>, <code>es_separador</code>.<br>
+                El sistema resuelve la jerarquía automáticamente por <code>parent_clave</code>. Los módulos existentes no se duplican.
+            </div>
+        </div>
+
+        <div style="display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap; margin-top:16px;">
+            <a href="<?= BASE_URL ?>/modulos-erp/plantilla" class="btn btn-glass" style="flex-shrink:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Descargar plantilla
+            </a>
+
+            <form method="POST" action="<?= BASE_URL ?>/modulos-erp/importar"
+                  enctype="multipart/form-data" id="importForm" style="flex:1; min-width:260px;">
+                <?= csrfField() ?>
+                <div class="drop-zone" id="dropZone"
+                     ondragover="event.preventDefault();this.classList.add('drag-over')"
+                     ondragleave="this.classList.remove('drag-over')"
+                     ondrop="handleDrop(event)">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:#475569;margin-bottom:8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    <div id="dropLabel" style="font-size:13px;color:#64748b;">Arrastra tu CSV aquí o <label for="csvFile" style="color:#818cf8;cursor:pointer;text-decoration:underline;">selecciona archivo</label></div>
+                    <div id="fileName" style="font-size:12px;color:#818cf8;margin-top:6px;display:none;"></div>
+                    <input type="file" name="archivo" id="csvFile" accept=".csv" style="display:none;" onchange="showFileName(this)">
+                </div>
+                <button type="submit" class="btn btn-primary" id="importBtn" style="margin-top:12px;width:100%;" disabled>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    Importar módulos
+                </button>
+            </form>
+        </div>
+    </div>
 </div>
 
 <?php if (empty($tree)): ?>
@@ -313,6 +373,44 @@ document.getElementById('mc_clave').addEventListener('input', function() {
 document.getElementById('mc_nombre').addEventListener('focus', function() {
     delete document.getElementById('mc_clave').dataset.userEdited;
 });
+
+// Import panel toggle
+function toggleImport() {
+    var body    = document.getElementById('importBody');
+    var chevron = document.getElementById('importChevron');
+    var open    = body.style.display !== 'none';
+    body.style.display = open ? 'none' : 'block';
+    chevron.classList.toggle('open', !open);
+}
+
+function showFileName(input) {
+    var zone  = document.getElementById('dropZone');
+    var label = document.getElementById('fileName');
+    var btn   = document.getElementById('importBtn');
+    if (input.files && input.files[0]) {
+        label.textContent = '✓ ' + input.files[0].name;
+        label.style.display = 'block';
+        zone.classList.add('has-file');
+        btn.disabled = false;
+    }
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    var zone = document.getElementById('dropZone');
+    zone.classList.remove('drag-over');
+    var file = e.dataTransfer.files[0];
+    if (!file) return;
+    if (!file.name.endsWith('.csv')) {
+        alert('Solo se aceptan archivos .csv');
+        return;
+    }
+    var input = document.getElementById('csvFile');
+    var dt = new DataTransfer();
+    dt.items.add(file);
+    input.files = dt.files;
+    showFileName(input);
+}
 
 // Toggle expand/collapse tree nodes
 function toggleNode(nodeId) {

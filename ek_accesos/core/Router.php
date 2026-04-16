@@ -62,6 +62,9 @@ class Router
         'usuarios'                      => ['UsuariosController',     'index'],
         'usuarios/crear'                => ['UsuariosController',     'crear'],
         'usuarios/guardar'              => ['UsuariosController',     'guardar'],
+        // Módulos ERP
+        'modulos-erp/importar'          => ['ModulosErpController',  'importar'],
+        'modulos-erp/plantilla'         => ['ModulosErpController',  'plantilla'],
     ];
 
     // Dynamic routes (with ID param) resolved by the auto-resolver below.
