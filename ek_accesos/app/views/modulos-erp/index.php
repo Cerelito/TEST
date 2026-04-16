@@ -106,17 +106,18 @@ function renderModuloTree(array $nodes, int $depth = 0): void
 }
 ?>
 <style>
-.page-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
-.page-hdr h2 { font-size:22px; font-weight:800; }
-.mod-tree { border-radius:var(--radius-lg); overflow:hidden; }
+.page-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+.page-hdr h2 { font-size:26px; font-weight:800; color:#f1f5f9; letter-spacing:-0.5px; }
+.mod-tree-wrap { overflow-x:auto; border-radius:var(--radius-lg); }
+.mod-tree { border-radius:var(--radius-lg); overflow:hidden; min-width:560px; }
 .mod-tree-header {
-    display:grid; grid-template-columns:1fr 220px 180px 120px;
+    display:grid; grid-template-columns:1fr 180px 160px 116px;
     padding:10px 16px; background:rgba(255,255,255,0.04);
     border-bottom:1px solid rgba(255,255,255,0.07);
     font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:#475569;
 }
 .mod-row {
-    display:grid; grid-template-columns:1fr 220px 180px 120px;
+    display:grid; grid-template-columns:1fr 180px 160px 116px;
     border-bottom:1px solid rgba(255,255,255,0.04);
     min-height:42px; align-items:center;
     transition:background .15s;
@@ -186,14 +187,16 @@ function renderModuloTree(array $nodes, int $depth = 0): void
     <p style="color:#475569;font-size:13px;margin-top:6px;">Crea el primer módulo raíz usando el botón de arriba.</p>
 </div>
 <?php else: ?>
-<div class="glass mod-tree">
-    <div class="mod-tree-header">
-        <div>Módulo</div>
-        <div>Clave</div>
-        <div>Info</div>
-        <div>Acciones</div>
+<div class="glass mod-tree-wrap">
+    <div class="mod-tree">
+        <div class="mod-tree-header">
+            <div>Módulo</div>
+            <div>Clave</div>
+            <div>Info</div>
+            <div>Acciones</div>
+        </div>
+        <?php renderModuloTree($tree); ?>
     </div>
-    <?php renderModuloTree($tree); ?>
 </div>
 <?php endif; ?>
 
