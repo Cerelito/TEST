@@ -36,13 +36,16 @@ class OrganigramaController extends Controller
 
         if (!$empresaId) {
             $this->json(['ok' => false, 'error' => 'empresa_id requerido'], 400);
+            return;
         }
 
-        $jerarquia = $this->empleadoModel->getForOrganigrama($empresaId);
+        $empleados    = $this->empleadoModel->getForOrganigrama($empresaId);
+        $empresaNombre = $empleados[0]['empresa_nombre'] ?? '';
 
         $this->json([
-            'ok'   => true,
-            'data' => $jerarquia,
+            'ok'       => true,
+            'empresa'  => $empresaNombre,
+            'empleados' => $empleados,
         ]);
     }
 

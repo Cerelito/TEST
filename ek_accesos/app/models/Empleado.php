@@ -167,16 +167,25 @@ class Empleado extends BaseModel
      */
     public function getForOrganigrama(int $empresaId): array
     {
-        $rows = $this->query("
-            SELECT e.id, e.nombre, e.puesto, e.jefe_id, e.activo,
-                   emp.nombre AS empresa_nombre
+        return $this->query("
+            SELECT e.id, e.nombre, e.puesto, e.email, e.jefe_id, e.activo,
+                   emp.nombre AS empresa_nombre,
+                   pn.nombre  AS programa_nivel,
+                   u.id       AS user_id,
+                   jefe.nombre AS jefe_nombre,
+                   IF(r.empleado_id IS NOT NULL, 1, 0) AS es_requisitor,
+                   IF(c.empleado_id IS NOT NULL, 1, 0) AS es_comprador
             FROM empleados e
             LEFT JOIN empresas emp ON emp.id = e.empresa_id
+            LEFT JOIN empleado_programa_nivel epn ON epn.empleado_id = e.id
+            LEFT JOIN programa_nivel pn ON pn.id = epn.programa_nivel_id
+            LEFT JOIN usuarios u ON u.empleado_id = e.id AND u.deleted_at IS NULL
+            LEFT JOIN empleados jefe ON jefe.id = e.jefe_id AND jefe.deleted_at IS NULL
+            LEFT JOIN requisitores r ON r.empleado_id = e.id AND r.activo = 1
+            LEFT JOIN compradores c ON c.empleado_id = e.id AND c.activo = 1
             WHERE e.empresa_id = ? AND e.deleted_at IS NULL AND e.activo = 1
             ORDER BY e.nombre ASC
         ", [$empresaId]);
-
-        return $this->buildHierarchy($rows);
     }
 
     /**

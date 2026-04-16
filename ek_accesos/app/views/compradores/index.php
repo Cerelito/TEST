@@ -111,7 +111,7 @@ $empleados_disponibles = $empleados_disponibles ?? [];
                     <td>
                         <span class="badge badge-purple">
                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/></svg>
-                            <?php echo (int)($comp['centros_count'] ?? 0); ?> CC
+                            <?php echo (int)($comp['total_cc'] ?? 0); ?> CC
                         </span>
                     </td>
                     <td>

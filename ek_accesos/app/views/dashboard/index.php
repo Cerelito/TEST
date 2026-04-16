@@ -271,7 +271,7 @@ $ccDist    = $ccDist    ?? [];
         <div class="kpi-icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
         </div>
-        <div class="kpi-value"><?php echo number_format($stats['centros_costo']); ?></div>
+        <div class="kpi-value"><?php echo number_format($stats['total_centros_costo'] ?? $stats['centros_costo'] ?? 0); ?></div>
         <div class="kpi-label">Centros de Costo</div>
     </div>
 
@@ -279,7 +279,7 @@ $ccDist    = $ccDist    ?? [];
         <div class="kpi-icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         </div>
-        <div class="kpi-value"><?php echo number_format($stats['programas_nivel']); ?></div>
+        <div class="kpi-value"><?php echo number_format($stats['total_programas'] ?? $stats['programas_nivel'] ?? 0); ?></div>
         <div class="kpi-label">Programas Nivel</div>
     </div>
 
