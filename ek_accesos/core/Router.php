@@ -48,6 +48,9 @@ class Router
         'requisitores/asignar'          => ['RequisitorController',   'asignar'],
         'compradores'                   => ['CompradorController',     'index'],
         'compradores/asignar'           => ['CompradorController',     'asignar'],
+        // Empresas
+        'empresas'                      => ['EmpresasController',     'index'],
+        'empresas/guardar'              => ['EmpresasController',     'guardar'],
         // Centros de Costo
         'centros-costo'                 => ['CentrosCostoController', 'index'],
         'centros-costo/guardar'         => ['CentrosCostoController', 'guardar'],

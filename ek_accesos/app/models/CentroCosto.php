@@ -7,7 +7,8 @@ class CentroCosto extends BaseModel
 
     public function getAllWithEmpresa(array $filters = []): array
     {
-        $sql = "SELECT cc.*, emp.nombre AS empresa_nombre
+        $sql = "SELECT cc.*, emp.nombre AS empresa_nombre,
+                       (SELECT COUNT(*) FROM empleado_cc ecc WHERE ecc.centro_costo_id = cc.id) AS total_empleados
                 FROM centros_costo cc
                 JOIN empresas emp ON emp.id = cc.empresa_id
                 WHERE 1=1";
