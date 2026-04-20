@@ -221,6 +221,223 @@ class ModulosErpController extends Controller
     }
 
     // ─────────────────────────────────────────────────────────────────────────
+    // descargarPlantilla — send CSV template (GET)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    public function descargarPlantilla(): void
+    {
+        $pdo = Database::getInstance();
+
+        // Load all modules ordered so parents always come before children
+        $dbRows = $pdo->query(
+            "SELECT m.nombre, m.clave, m.orden, m.es_separador,
+                    p.clave AS parent_clave
+             FROM modulos_erp m
+             LEFT JOIN modulos_erp p ON p.id = m.parent_id
+             ORDER BY ISNULL(m.parent_id) DESC, COALESCE(m.parent_id, 0), m.orden, m.nombre"
+        )->fetchAll(\PDO::FETCH_ASSOC);
+
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="modulos_erp_export.csv"');
+
+        $out = fopen('php://output', 'w');
+        fwrite($out, "\xEF\xBB\xBF"); // BOM for Excel UTF-8
+
+        fputcsv($out, ['nombre', 'clave', 'parent_clave', 'orden', 'es_separador']);
+
+        if (!empty($dbRows)) {
+            // Export existing modules from DB
+            foreach ($dbRows as $r) {
+                fputcsv($out, [
+                    $r['nombre'],
+                    $r['clave'],
+                    $r['parent_clave'] ?? '',
+                    $r['orden'],
+                    $r['es_separador'],
+                ]);
+            }
+        } else {
+            // DB is empty — export example rows so user has a reference
+            $examples = [
+                ['Ventas',               'ventas',                        '',                          1, 0],
+                ['Clientes',             'ventas.clientes',               'ventas',                    1, 0],
+                ['Alta de Clientes',     'ventas.clientes.alta',          'ventas.clientes',           1, 0],
+                ['Consulta',             'ventas.clientes.consulta',      'ventas.clientes',           2, 0],
+                ['Pedidos',              'ventas.pedidos',                'ventas',                    2, 0],
+                ['Nuevo Pedido',         'ventas.pedidos.nuevo',          'ventas.pedidos',            1, 0],
+                ['Autorizar',            'ventas.pedidos.autorizar',      'ventas.pedidos',            2, 0],
+                ['Recursos Humanos',     'rrhh',                          '',                          2, 0],
+                ['Empleados',            'rrhh.empleados',                'rrhh',                      1, 0],
+                ['Expediente',           'rrhh.empleados.expediente',     'rrhh.empleados',            1, 0],
+                ['Documentos',           'rrhh.empleados.expediente.docs','rrhh.empleados.expediente', 1, 0],
+                ['Contratos',            'rrhh.empleados.expediente.cont','rrhh.empleados.expediente', 2, 0],
+                ['Nómina',               'rrhh.nomina',                   'rrhh',                      2, 0],
+                ['Contabilidad',         'contabilidad',                  '',                          3, 0],
+                ['Pólizas',              'contabilidad.polizas',          'contabilidad',              1, 0],
+                ['Ingresos',             'contabilidad.polizas.ingresos', 'contabilidad.polizas',      1, 0],
+                ['Egresos',              'contabilidad.polizas.egresos',  'contabilidad.polizas',      2, 0],
+            ];
+            foreach ($examples as $row) {
+                fputcsv($out, $row);
+            }
+        }
+
+        fclose($out);
+        exit;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // importarCsv — process CSV upload (POST)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    public function importarCsv(): void
+    {
+        verifyCSRF();
+
+        if (empty($_FILES['csv_file']['tmp_name'])) {
+            setFlash('error', 'No se recibió ningún archivo.');
+            redirect('modulos-erp');
+        }
+
+        $tmpFile = $_FILES['csv_file']['tmp_name'];
+        $handle  = fopen($tmpFile, 'r');
+        if (!$handle) {
+            setFlash('error', 'No se pudo abrir el archivo.');
+            redirect('modulos-erp');
+        }
+
+        // Strip BOM if present
+        $bom = fread($handle, 3);
+        if ($bom !== "\xEF\xBB\xBF") {
+            rewind($handle);
+        }
+
+        // Read header row
+        $header = fgetcsv($handle);
+        if (!$header) {
+            setFlash('error', 'Archivo CSV vacío o inválido.');
+            fclose($handle);
+            redirect('modulos-erp');
+        }
+
+        // Normalize headers
+        $header = array_map('trim', array_map('strtolower', $header));
+        $colIdx = [];
+        foreach (['nombre', 'clave', 'parent_clave', 'orden', 'es_separador'] as $col) {
+            $idx = array_search($col, $header);
+            $colIdx[$col] = ($idx !== false) ? $idx : -1;
+        }
+
+        if ($colIdx['nombre'] === -1) {
+            setFlash('error', 'El CSV debe tener al menos la columna "nombre".');
+            fclose($handle);
+            redirect('modulos-erp');
+        }
+
+        $rows = [];
+        while (($line = fgetcsv($handle)) !== false) {
+            $nombre      = trim($line[$colIdx['nombre']] ?? '');
+            $clave       = trim($line[$colIdx['clave']]  ?? '');
+            $parentClave = trim($line[$colIdx['parent_clave']] ?? '');
+            $orden       = (int)($line[$colIdx['orden']] ?? 0);
+            $esSep       = (int)($line[$colIdx['es_separador']] ?? 0);
+
+            if (!$nombre) continue;
+
+            $rows[] = compact('nombre', 'clave', 'parentClave', 'orden', 'esSep');
+        }
+        fclose($handle);
+
+        if (empty($rows)) {
+            setFlash('error', 'El archivo no contiene filas válidas.');
+            redirect('modulos-erp');
+        }
+
+        $pdo       = Database::getInstance();
+        $created   = 0;
+        $updated   = 0;
+        $maxPasses = 15;
+
+        // Index existing claves → id
+        $existing = [];
+        $stmt = $pdo->query("SELECT id, clave FROM modulos_erp");
+        foreach ($stmt->fetchAll(\PDO::FETCH_ASSOC) as $r) {
+            $existing[$r['clave']] = (int)$r['id'];
+        }
+
+        // Build a queue; resolve in multiple passes (handles out-of-order parents)
+        $queue = $rows;
+        $pass  = 0;
+
+        while (!empty($queue) && $pass < $maxPasses) {
+            $pass++;
+            $next = [];
+
+            foreach ($queue as $row) {
+                $nombre      = $row['nombre'];
+                $parentClave = $row['parentClave'];
+                $orden       = $row['orden'];
+                $esSep       = $row['esSep'];
+
+                // Resolve clave
+                $clave = $row['clave'];
+                if (!$clave) {
+                    $slug  = $this->toSlug($nombre);
+                    $clave = $parentClave ? ($parentClave . '.' . $slug) : $slug;
+                }
+
+                // Resolve parent
+                $parentId = null;
+                if ($parentClave) {
+                    if (!isset($existing[$parentClave])) {
+                        // Parent not yet inserted — retry later
+                        $next[] = $row;
+                        continue;
+                    }
+                    $parentId = $existing[$parentClave];
+                }
+
+                if (isset($existing[$clave])) {
+                    // UPDATE existing module
+                    $pdo->prepare(
+                        "UPDATE modulos_erp
+                         SET nombre = ?, parent_id = ?, orden = ?, es_separador = ?
+                         WHERE clave = ?"
+                    )->execute([$nombre, $parentId, $orden, $esSep, $clave]);
+                    $updated++;
+                } else {
+                    // INSERT new module
+                    $baseClave = $clave;
+                    $suffix    = 1;
+                    while ($this->claveExists($pdo, $clave)) {
+                        $clave = $baseClave . '_' . $suffix++;
+                    }
+
+                    $pdo->prepare(
+                        "INSERT INTO modulos_erp (parent_id, clave, nombre, orden, es_separador, activo)
+                         VALUES (?, ?, ?, ?, ?, 1)"
+                    )->execute([$parentId, $clave, $nombre, $orden, $esSep]);
+
+                    $existing[$clave] = (int)$pdo->lastInsertId();
+                    $created++;
+                }
+            }
+
+            $queue = $next;
+        }
+
+        $unresolved = count($queue);
+        $msg = "Importación completada: $created módulo(s) creado(s), $updated actualizado(s).";
+        if ($unresolved > 0) {
+            $msg .= " $unresolved fila(s) no resueltas (padre no encontrado).";
+        }
+
+        logAction('importar', 'modulos_erp', $msg);
+        setFlash('success', $msg);
+        redirect('modulos-erp');
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
     // Private helpers
     // ─────────────────────────────────────────────────────────────────────────
 
