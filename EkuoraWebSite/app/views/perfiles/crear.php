@@ -1,167 +1,583 @@
 <?php
 $pagina_actual = 'perfiles';
-$titulo = 'Nuevo Perfil';
+$titulo = 'Nuevo Perfil | Ekuora Admin';
 require_once VIEWS_PATH . 'layouts/header.php';
 ?>
 
-<div class="d-flex justify-between align-center mb-4">
-    <div>
-        <h1 style="font-size: 1.75rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.25rem;">
-            <i class="bi bi-shield-plus"></i> Nuevo Perfil
-        </h1>
-        <p style="color: var(--text-muted); margin: 0;">
-            Cree un nuevo perfil y asigne permisos
-        </p>
+<style>
+    /* ============================================
+       EKUORA ADMIN - CREAR PERFIL
+       Ultra Glass Pantone Edition
+    ============================================ */
+
+    :root {
+        --ek-navy: #002B49;
+        --ek-orange: #ED8B00;
+        --ek-sky: #7A99AC;
+        --ek-slate: #425563;
+        --ek-navy-light: #003d66;
+        --ek-orange-light: #ff9d1a;
+        --ek-sky-light: #9bb5c4;
+        --ek-sky-pale: #e8eff3;
+
+        --glass-bg: rgba(255, 255, 255, 0.85);
+        --glass-border: rgba(122, 153, 172, 0.3);
+        --glass-shadow: 0 8px 32px rgba(0, 43, 73, 0.12);
+        --glass-blur: blur(20px);
+
+        --radius-sm: 12px;
+        --radius-md: 16px;
+        --radius-lg: 24px;
+        --radius-xl: 32px;
+        --radius-full: 9999px;
+
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .ek-admin-hero {
+        background: linear-gradient(135deg, var(--ek-navy) 0%, var(--ek-navy-light) 100%);
+        border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+        padding: 3rem 2rem;
+        margin: -1.5rem -1.5rem 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ek-admin-hero::before {
+        content: '';
+        position: absolute;
+        top: -100px;
+        right: -100px;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(237, 139, 0, 0.3) 0%, transparent 70%);
+        border-radius: 50%;
+    }
+
+    .ek-admin-hero-content {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 2rem;
+    }
+
+    .ek-admin-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: rgba(237, 139, 0, 0.2);
+        border: 1px solid var(--ek-orange);
+        border-radius: var(--radius-full);
+        color: var(--ek-orange);
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .ek-admin-hero-badge::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        background: var(--ek-orange);
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+
+    .ek-admin-hero-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: white;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .ek-admin-hero-title i { color: var(--ek-orange); }
+    .ek-admin-hero-subtitle { font-size: 1.1rem; color: var(--ek-sky-light); }
+
+    .ek-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        padding: 1rem 2rem;
+        border-radius: var(--radius-full);
+        font-weight: 600;
+        font-size: 1rem;
+        text-decoration: none;
+        transition: var(--transition);
+        cursor: pointer;
+        border: none;
+    }
+
+    .ek-btn-primary {
+        background: var(--ek-orange);
+        color: white;
+        box-shadow: 0 4px 20px rgba(237, 139, 0, 0.4);
+    }
+
+    .ek-btn-primary:hover {
+        background: var(--ek-orange-light);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(237, 139, 0, 0.5);
+        color: white;
+    }
+
+    .ek-btn-secondary {
+        background: white;
+        color: var(--ek-navy);
+        box-shadow: var(--glass-shadow);
+    }
+
+    .ek-btn-secondary:hover { background: var(--ek-sky-pale); color: var(--ek-navy); }
+
+    .ek-btn-sm { padding: 0.6rem 1.25rem; font-size: 0.9rem; }
+
+    /* Cards */
+    .ek-card {
+        background: var(--glass-bg);
+        backdrop-filter: var(--glass-blur);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+        transition: var(--transition);
+    }
+
+    .ek-card:hover { box-shadow: 0 12px 40px rgba(0, 43, 73, 0.15); }
+
+    .ek-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--glass-border);
+        background: linear-gradient(135deg, rgba(0, 43, 73, 0.03) 0%, transparent 100%);
+    }
+
+    .ek-card-header-left { display: flex; align-items: center; gap: 1rem; }
+
+    .ek-card-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 43, 73, 0.1);
+        border-radius: var(--radius-md);
+        color: var(--ek-navy);
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    .ek-card-icon.orange { background: rgba(237, 139, 0, 0.12); color: var(--ek-orange); }
+
+    .ek-card-title { font-size: 1.1rem; font-weight: 700; color: var(--ek-navy); margin: 0 0 0.2rem; }
+    .ek-card-subtitle { font-size: 0.85rem; color: var(--ek-slate); margin: 0; }
+    .ek-card-body { padding: 1.5rem; }
+
+    /* Form */
+    .ek-form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+
+    .ek-form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .ek-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--ek-navy);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .ek-label i { color: var(--ek-sky); }
+    .ek-label .req { color: #ef4444; }
+
+    .ek-input {
+        padding: 0.85rem 1rem;
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-md);
+        background: white;
+        color: var(--ek-navy);
+        font-size: 0.95rem;
+        transition: var(--transition);
+        width: 100%;
+    }
+
+    .ek-input:focus {
+        outline: none;
+        border-color: var(--ek-orange);
+        box-shadow: 0 0 0 3px rgba(237, 139, 0, 0.15);
+    }
+
+    .ek-hint { font-size: 0.8rem; color: var(--ek-slate); }
+
+    /* Permisos Grid */
+    .ek-perms-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 1.25rem;
+    }
+
+    .ek-perm-module {
+        background: var(--ek-sky-pale);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-md);
+        padding: 1.25rem;
+        transition: var(--transition);
+    }
+
+    .ek-perm-module:hover {
+        border-color: var(--ek-orange);
+        box-shadow: 0 4px 16px rgba(0, 43, 73, 0.1);
+    }
+
+    .ek-perm-module-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+
+    .ek-perm-module-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--ek-navy);
+        margin: 0;
+        text-transform: capitalize;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .ek-perm-module-title i { color: var(--ek-orange); }
+
+    .ek-toggle-btn {
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(237, 139, 0, 0.12);
+        color: var(--ek-orange);
+        border: none;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        font-size: 0.85rem;
+        transition: var(--transition);
+    }
+
+    .ek-toggle-btn:hover { background: var(--ek-orange); color: white; }
+
+    .ek-check-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+        border-bottom: 1px dashed var(--glass-border);
+    }
+
+    .ek-check-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .ek-check-item input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        border: 2px solid var(--glass-border);
+        border-radius: 4px;
+        cursor: pointer;
+        accent-color: var(--ek-orange);
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
+    .ek-check-label {
+        font-size: 0.875rem;
+        color: var(--ek-navy);
+        cursor: pointer;
+        line-height: 1.4;
+    }
+
+    .ek-check-label strong { font-weight: 600; }
+    .ek-check-label small { color: var(--ek-slate); font-size: 0.8rem; }
+
+    /* Counter */
+    .ek-counter-bar {
+        background: rgba(0, 43, 73, 0.04);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-md);
+        padding: 1rem 1.25rem;
+        margin-top: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .ek-counter-bar i { color: var(--ek-orange); }
+    .ek-counter-bar span { color: var(--ek-navy); font-size: 0.9rem; }
+    .ek-counter-bar strong { color: var(--ek-orange); font-size: 1.1rem; }
+
+    /* Info alert */
+    .ek-info-banner {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        background: rgba(122, 153, 172, 0.1);
+        border: 1px solid rgba(122, 153, 172, 0.3);
+        border-left: 4px solid var(--ek-sky);
+        border-radius: var(--radius-md);
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.25rem;
+        font-size: 0.9rem;
+        color: var(--ek-slate);
+    }
+
+    .ek-info-banner i { color: var(--ek-sky); font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+
+    /* Dock */
+    .ek-dock {
+        position: sticky;
+        bottom: 1.5rem;
+        background: var(--glass-bg);
+        backdrop-filter: var(--glass-blur);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-lg);
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: var(--glass-shadow);
+        margin-top: 1.5rem;
+    }
+
+    .ek-dock-info { display: flex; align-items: center; gap: 0.5rem; color: var(--ek-slate); font-size: 0.85rem; }
+    .ek-dock-info i { color: var(--ek-sky); }
+    .ek-dock-actions { display: flex; gap: 0.75rem; }
+
+    /* Animations */
+    .ek-fade-up {
+        animation: fadeUp 0.6s ease forwards;
+        opacity: 0;
+    }
+
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 992px) {
+        .ek-admin-hero-content { flex-direction: column; align-items: flex-start; }
+        .ek-form-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+        .ek-admin-hero { padding: 2rem 1.5rem; margin: -1rem -1rem 1.5rem; }
+        .ek-admin-hero-title { font-size: 1.75rem; }
+        .ek-dock { flex-direction: column; gap: 1rem; }
+        .ek-dock-actions { width: 100%; }
+        .ek-btn { width: 100%; justify-content: center; }
+    }
+</style>
+
+<!-- Hero Admin -->
+<section class="ek-admin-hero ek-fade-up">
+    <div class="ek-admin-hero-content">
+        <div>
+            <div class="ek-admin-hero-badge">Nuevo Acceso</div>
+            <h1 class="ek-admin-hero-title">
+                <i class="bi bi-shield-plus"></i>
+                Nuevo Perfil
+            </h1>
+            <p class="ek-admin-hero-subtitle">Crea un nuevo perfil y asigna los permisos correspondientes.</p>
+        </div>
+        <a href="<?= BASE_URL ?>perfiles" class="ek-btn ek-btn-secondary">
+            <i class="bi bi-arrow-left"></i> Volver
+        </a>
     </div>
-    <a href="<?= BASE_URL ?>perfiles" class="btn btn-glass">
-        <i class="bi bi-arrow-left"></i> Volver
-    </a>
-</div>
+</section>
 
 <form method="POST" action="<?= BASE_URL ?>perfiles/guardar" id="formPerfil">
     <input type="hidden" name="csrf_token" value="<?= generarToken() ?>">
 
-    <div class="glass-panel mb-4">
-        <h2 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--text-primary);">
-            <i class="bi bi-info-circle"></i> Información del Perfil
-        </h2>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
-            <div class="form-group">
-                <label for="nombre" class="form-label">Nombre del Perfil <span class="text-danger">*</span></label>
-                <input type="text" id="nombre" name="nombre" class="form-control" required maxlength="50" value="<?= e($perfil['nombre'] ?? '') ?>" autofocus>
-                <small class="form-text">Ej: Gerente, Contador, Asistente</small>
+    <!-- Información Básica -->
+    <div class="ek-card ek-fade-up" style="animation-delay: 0.1s;">
+        <div class="ek-card-header">
+            <div class="ek-card-header-left">
+                <div class="ek-card-icon"><i class="bi bi-info-circle-fill"></i></div>
+                <div>
+                    <h3 class="ek-card-title">Información del Perfil</h3>
+                    <p class="ek-card-subtitle">Define el nombre e identificación del nuevo rol</p>
+                </div>
             </div>
+        </div>
+        <div class="ek-card-body">
+            <div class="ek-form-grid">
+                <div class="ek-form-group">
+                    <label class="ek-label" for="nombre">
+                        <i class="bi bi-person-badge"></i>
+                        Nombre del Perfil <span class="req">*</span>
+                    </label>
+                    <input type="text" id="nombre" name="nombre" class="ek-input" required
+                        maxlength="50" value="<?= e($perfil['nombre'] ?? '') ?>"
+                        placeholder="Ej: Gerente, Contador, Asistente" autofocus>
+                    <span class="ek-hint">Máximo 50 caracteres</span>
+                </div>
 
-            <div class="form-group">
-                <label for="descripcion" class="form-label">Descripción</label>
-                <input type="text" id="descripcion" name="descripcion" class="form-control" maxlength="255" value="<?= e($perfil['descripcion'] ?? '') ?>">
-                <small class="form-text">Breve descripción del rol</small>
+                <div class="ek-form-group">
+                    <label class="ek-label" for="descripcion">
+                        <i class="bi bi-text-paragraph"></i>
+                        Descripción
+                    </label>
+                    <input type="text" id="descripcion" name="descripcion" class="ek-input"
+                        maxlength="255" value="<?= e($perfil['descripcion'] ?? '') ?>"
+                        placeholder="Breve descripción del rol">
+                    <span class="ek-hint">Opcional, máximo 255 caracteres</span>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="glass-panel mb-4">
-        <div class="d-flex justify-between align-center mb-3">
-            <h2 style="font-size: 1.25rem; font-weight: 600; color: var(--text-primary); margin: 0;">
-                <i class="bi bi-key"></i> Permisos <span class="text-danger">*</span>
-            </h2>
-            <div class="d-flex gap-2">
-                <button type="button" class="btn btn-sm btn-glass" onclick="seleccionarTodos()">
+    <!-- Permisos -->
+    <div class="ek-card ek-fade-up" style="animation-delay: 0.15s;">
+        <div class="ek-card-header">
+            <div class="ek-card-header-left">
+                <div class="ek-card-icon orange"><i class="bi bi-key-fill"></i></div>
+                <div>
+                    <h3 class="ek-card-title">Permisos del Perfil <span style="color:#ef4444;">*</span></h3>
+                    <p class="ek-card-subtitle">Selecciona las acciones que podrá realizar este rol</p>
+                </div>
+            </div>
+            <div style="display:flex; gap:0.5rem;">
+                <button type="button" class="ek-btn ek-btn-secondary ek-btn-sm" onclick="seleccionarTodos()">
                     <i class="bi bi-check-all"></i> Todos
                 </button>
-                <button type="button" class="btn btn-sm btn-glass" onclick="deseleccionarTodos()">
+                <button type="button" class="ek-btn ek-btn-secondary ek-btn-sm" onclick="deseleccionarTodos()">
                     <i class="bi bi-x-lg"></i> Ninguno
                 </button>
             </div>
         </div>
-
-        <div class="alert alert-info mb-4">
-            <i class="bi bi-info-circle"></i>
-            Seleccione los permisos que tendrá este perfil. Los permisos están agrupados por módulo y acción.
-        </div>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
-            <?php foreach ($permisos_agrupados as $modulo => $permisos): ?>
-            <div class="glass-panel" style="background: var(--bg-secondary); padding: 1.25rem;">
-                <div class="d-flex justify-between align-center mb-3">
-                    <h3 style="font-size: 1rem; font-weight: 600; color: var(--primary); margin: 0; text-transform: capitalize;">
-                        <i class="bi bi-folder"></i> <?= $modulo ?>
-                    </h3>
-                    <button type="button" class="btn btn-sm btn-glass" onclick="toggleModulo('<?= $modulo ?>')">
-                        <i class="bi bi-check-square"></i>
-                    </button>
-                </div>
-
-                <div class="permisos-modulo" data-modulo="<?= $modulo ?>">
-                    <?php foreach ($permisos as $perm): ?>
-                    <div class="form-check" style="margin-bottom: 0.75rem;">
-                        <input type="checkbox" id="perm_<?= $perm['Id'] ?>" name="permisos[]" value="<?= $perm['Id'] ?>" class="form-check-input" data-modulo="<?= $modulo ?>">
-                        <label for="perm_<?= $perm['Id'] ?>" class="form-check-label">
-                            <strong><?= ucfirst(explode('.', $perm['Codigo'])[1]) ?></strong>
-                            <?php if (!empty($perm['Descripcion'])): ?>
-                            <br><small style="color: var(--text-muted);"><?= e($perm['Descripcion']) ?></small>
-                            <?php endif; ?>
-                        </label>
-                    </div>
-                    <?php endforeach; ?>
-                </div>
+        <div class="ek-card-body">
+            <div class="ek-info-banner">
+                <i class="bi bi-info-circle-fill"></i>
+                <span>Los permisos están agrupados por módulo. Puedes seleccionar todos los de un módulo usando el botón <strong>✓</strong> de cada grupo.</span>
             </div>
-            <?php endforeach; ?>
-        </div>
 
-        <div class="mt-3" style="padding: 1rem; background: var(--bg-secondary); border-radius: 8px; border-left: 3px solid var(--warning);">
-            <strong>Permisos seleccionados: <span id="contador">0</span></strong>
+            <div class="ek-perms-grid">
+                <?php foreach ($permisos_agrupados as $modulo => $permisos): ?>
+                    <div class="ek-perm-module">
+                        <div class="ek-perm-module-header">
+                            <h4 class="ek-perm-module-title">
+                                <i class="bi bi-folder-fill"></i> <?= $modulo ?>
+                            </h4>
+                            <button type="button" class="ek-toggle-btn" onclick="toggleModulo('<?= $modulo ?>')" title="Seleccionar módulo">
+                                <i class="bi bi-check-square"></i>
+                            </button>
+                        </div>
+
+                        <div class="permisos-modulo" data-modulo="<?= $modulo ?>">
+                            <?php foreach ($permisos as $perm): ?>
+                                <div class="ek-check-item">
+                                    <input type="checkbox"
+                                        id="perm_<?= $perm['Id'] ?>"
+                                        name="permisos[]"
+                                        value="<?= $perm['Id'] ?>"
+                                        data-modulo="<?= $modulo ?>">
+                                    <label class="ek-check-label" for="perm_<?= $perm['Id'] ?>">
+                                        <strong><?= ucfirst(explode('.', $perm['Codigo'])[1] ?? $perm['Codigo']) ?></strong>
+                                        <?php if (!empty($perm['Descripcion'])): ?>
+                                            <br><small><?= e($perm['Descripcion']) ?></small>
+                                        <?php endif; ?>
+                                    </label>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <div class="ek-counter-bar">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>Permisos seleccionados: <strong id="contador">0</strong></span>
+            </div>
         </div>
     </div>
 
-    <div class="d-flex gap-2 justify-end">
-        <a href="<?= BASE_URL ?>perfiles" class="btn btn-glass">
-            <i class="bi bi-x-lg"></i> Cancelar
-        </a>
-        <button type="submit" class="btn btn-primary" id="btnGuardar">
-            <i class="bi bi-check-lg"></i> Crear Perfil
-        </button>
+    <!-- Dock de Acciones -->
+    <div class="ek-dock ek-fade-up" style="animation-delay: 0.2s;">
+        <div class="ek-dock-info">
+            <i class="bi bi-shield-check"></i>
+            <span>El perfil se creará con los permisos seleccionados</span>
+        </div>
+        <div class="ek-dock-actions">
+            <a href="<?= BASE_URL ?>perfiles" class="ek-btn ek-btn-secondary">
+                <i class="bi bi-x-lg"></i> Cancelar
+            </a>
+            <button type="submit" class="ek-btn ek-btn-primary" id="btnGuardar">
+                <i class="bi bi-check-lg"></i> Crear Perfil
+            </button>
+        </div>
     </div>
 </form>
 
 <script>
-// Actualizar contador de permisos
-function actualizarContador() {
-    const checked = document.querySelectorAll('input[name="permisos[]"]:checked').length;
-    document.getElementById('contador').textContent = checked;
-}
-
-// Seleccionar todos los permisos
-function seleccionarTodos() {
-    document.querySelectorAll('input[name="permisos[]"]').forEach(cb => {
-        cb.checked = true;
-    });
-    actualizarContador();
-}
-
-// Deseleccionar todos los permisos
-function deseleccionarTodos() {
-    document.querySelectorAll('input[name="permisos[]"]').forEach(cb => {
-        cb.checked = false;
-    });
-    actualizarContador();
-}
-
-// Toggle permisos de un módulo
-function toggleModulo(modulo) {
-    const checkboxes = document.querySelectorAll(`input[data-modulo="${modulo}"]`);
-    const algunoMarcado = Array.from(checkboxes).some(cb => cb.checked);
-
-    checkboxes.forEach(cb => {
-        cb.checked = !algunoMarcado;
-    });
-
-    actualizarContador();
-}
-
-// Escuchar cambios en checkboxes
-document.querySelectorAll('input[name="permisos[]"]').forEach(cb => {
-    cb.addEventListener('change', actualizarContador);
-});
-
-// Validar formulario
-document.getElementById('formPerfil').addEventListener('submit', function(e) {
-    const permisosSeleccionados = document.querySelectorAll('input[name="permisos[]"]:checked').length;
-
-    if (permisosSeleccionados === 0) {
-        e.preventDefault();
-        alert('Debe seleccionar al menos un permiso para el perfil');
-        return false;
+    function actualizarContador() {
+        const checked = document.querySelectorAll('input[name="permisos[]"]:checked').length;
+        document.getElementById('contador').textContent = checked;
     }
 
-    const btnGuardar = document.getElementById('btnGuardar');
-    btnGuardar.disabled = true;
-    btnGuardar.innerHTML = '<i class="bi bi-hourglass-split"></i> Creando perfil...';
-});
+    function seleccionarTodos() {
+        document.querySelectorAll('input[name="permisos[]"]').forEach(cb => cb.checked = true);
+        actualizarContador();
+    }
 
-// Inicializar contador
-actualizarContador();
+    function deseleccionarTodos() {
+        document.querySelectorAll('input[name="permisos[]"]').forEach(cb => cb.checked = false);
+        actualizarContador();
+    }
+
+    function toggleModulo(modulo) {
+        const checkboxes = document.querySelectorAll(`input[data-modulo="${modulo}"]`);
+        const algunoMarcado = Array.from(checkboxes).some(cb => cb.checked);
+        checkboxes.forEach(cb => cb.checked = !algunoMarcado);
+        actualizarContador();
+    }
+
+    document.querySelectorAll('input[name="permisos[]"]').forEach(cb => cb.addEventListener('change', actualizarContador));
+
+    document.getElementById('formPerfil').addEventListener('submit', function(e) {
+        const permisosSeleccionados = document.querySelectorAll('input[name="permisos[]"]:checked').length;
+        if (permisosSeleccionados === 0) {
+            e.preventDefault();
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({ title: 'Atención', text: 'Debe seleccionar al menos un permiso para el perfil', icon: 'warning', confirmButtonColor: '#ED8B00' });
+            } else {
+                alert('Debe seleccionar al menos un permiso para el perfil');
+            }
+            return false;
+        }
+        const btnGuardar = document.getElementById('btnGuardar');
+        btnGuardar.disabled = true;
+        btnGuardar.innerHTML = '<i class="bi bi-hourglass-split"></i> Creando...';
+    });
+
+    actualizarContador();
 </script>
 
 <?php require_once VIEWS_PATH . 'layouts/footer.php'; ?>

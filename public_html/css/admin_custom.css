@@ -125,8 +125,10 @@
 }
 
 .sidebar-link.active {
-    background: #eff6ff !important;
-    color: #2563eb !important;
+    background: rgba(237, 139, 0, 0.1) !important;
+    color: #ED8B00 !important;
+    font-weight: 700 !important;
+    border-left: 3px solid #ED8B00;
 }
 
 .sidebar-divider {
