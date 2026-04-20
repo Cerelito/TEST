@@ -226,57 +226,60 @@ class ModulosErpController extends Controller
 
     public function descargarPlantilla(): void
     {
+        $pdo = Database::getInstance();
+
+        // Load all modules ordered so parents always come before children
+        $dbRows = $pdo->query(
+            "SELECT m.nombre, m.clave, m.orden, m.es_separador,
+                    p.clave AS parent_clave
+             FROM modulos_erp m
+             LEFT JOIN modulos_erp p ON p.id = m.parent_id
+             ORDER BY ISNULL(m.parent_id) DESC, COALESCE(m.parent_id, 0), m.orden, m.nombre"
+        )->fetchAll(\PDO::FETCH_ASSOC);
+
         header('Content-Type: text/csv; charset=utf-8');
-        header('Content-Disposition: attachment; filename="plantilla_modulos_erp.csv"');
+        header('Content-Disposition: attachment; filename="modulos_erp_export.csv"');
 
         $out = fopen('php://output', 'w');
-        // BOM for Excel UTF-8 compatibility
-        fwrite($out, "\xEF\xBB\xBF");
+        fwrite($out, "\xEF\xBB\xBF"); // BOM for Excel UTF-8
 
         fputcsv($out, ['nombre', 'clave', 'parent_clave', 'orden', 'es_separador']);
 
-        $rows = [
-            // Nivel 0 — raíces
-            ['Ventas',                    'ventas',                          '',                                 1,  0],
-            ['Recursos Humanos',          'rrhh',                            '',                                 2,  0],
-            ['Contabilidad',              'contabilidad',                    '',                                 3,  0],
-            // Nivel 1 — hijos de ventas
-            ['Clientes',                  'ventas.clientes',                 'ventas',                           1,  0],
-            ['Pedidos',                   'ventas.pedidos',                  'ventas',                           2,  0],
-            ['Reportes',                  'ventas.reportes',                 'ventas',                           3,  0],
-            // Nivel 1 — hijos de rrhh
-            ['Empleados',                 'rrhh.empleados',                  'rrhh',                             1,  0],
-            ['Nómina',                    'rrhh.nomina',                     'rrhh',                             2,  0],
-            ['Vacaciones',                'rrhh.vacaciones',                 'rrhh',                             3,  0],
-            // Nivel 2 — nietos de ventas.clientes
-            ['Alta de Clientes',          'ventas.clientes.alta',            'ventas.clientes',                  1,  0],
-            ['Consulta de Clientes',      'ventas.clientes.consulta',        'ventas.clientes',                  2,  0],
-            ['Límite de Crédito',         'ventas.clientes.credito',         'ventas.clientes',                  3,  0],
-            // Nivel 2 — nietos de ventas.pedidos
-            ['Nuevo Pedido',              'ventas.pedidos.nuevo',            'ventas.pedidos',                   1,  0],
-            ['Autorizar Pedido',          'ventas.pedidos.autorizar',        'ventas.pedidos',                   2,  0],
-            ['Cancelar Pedido',           'ventas.pedidos.cancelar',         'ventas.pedidos',                   3,  0],
-            // Nivel 2 — nietos de rrhh.empleados
-            ['Alta de Empleados',         'rrhh.empleados.alta',             'rrhh.empleados',                   1,  0],
-            ['Expediente',                'rrhh.empleados.expediente',       'rrhh.empleados',                   2,  0],
-            ['Evaluaciones',              'rrhh.empleados.evaluaciones',     'rrhh.empleados',                   3,  0],
-            // Nivel 3 — bisnietos de rrhh.empleados.expediente
-            ['Documentos',               'rrhh.empleados.expediente.docs',  'rrhh.empleados.expediente',         1,  0],
-            ['Contratos',                'rrhh.empleados.expediente.cont',  'rrhh.empleados.expediente',         2,  0],
-            ['Historial Médico',         'rrhh.empleados.expediente.med',   'rrhh.empleados.expediente',         3,  0],
-            // Nivel 2 — nietos de contabilidad
-            ['Pólizas',                   'contabilidad.polizas',            'contabilidad',                     1,  0],
-            ['Balanza',                   'contabilidad.balanza',            'contabilidad',                     2,  0],
-            ['Cierres',                   'contabilidad.cierres',            'contabilidad',                     3,  0],
-            // Nivel 3 — dentro de pólizas
-            ['Ingresos',                  'contabilidad.polizas.ingresos',   'contabilidad.polizas',              1,  0],
-            ['Egresos',                   'contabilidad.polizas.egresos',    'contabilidad.polizas',              2,  0],
-            ['Diario',                    'contabilidad.polizas.diario',     'contabilidad.polizas',              3,  0],
-            ['Ajustes',                   'contabilidad.polizas.ajustes',    'contabilidad.polizas',              4,  0],
-        ];
-
-        foreach ($rows as $row) {
-            fputcsv($out, $row);
+        if (!empty($dbRows)) {
+            // Export existing modules from DB
+            foreach ($dbRows as $r) {
+                fputcsv($out, [
+                    $r['nombre'],
+                    $r['clave'],
+                    $r['parent_clave'] ?? '',
+                    $r['orden'],
+                    $r['es_separador'],
+                ]);
+            }
+        } else {
+            // DB is empty — export example rows so user has a reference
+            $examples = [
+                ['Ventas',               'ventas',                        '',                          1, 0],
+                ['Clientes',             'ventas.clientes',               'ventas',                    1, 0],
+                ['Alta de Clientes',     'ventas.clientes.alta',          'ventas.clientes',           1, 0],
+                ['Consulta',             'ventas.clientes.consulta',      'ventas.clientes',           2, 0],
+                ['Pedidos',              'ventas.pedidos',                'ventas',                    2, 0],
+                ['Nuevo Pedido',         'ventas.pedidos.nuevo',          'ventas.pedidos',            1, 0],
+                ['Autorizar',            'ventas.pedidos.autorizar',      'ventas.pedidos',            2, 0],
+                ['Recursos Humanos',     'rrhh',                          '',                          2, 0],
+                ['Empleados',            'rrhh.empleados',                'rrhh',                      1, 0],
+                ['Expediente',           'rrhh.empleados.expediente',     'rrhh.empleados',            1, 0],
+                ['Documentos',           'rrhh.empleados.expediente.docs','rrhh.empleados.expediente', 1, 0],
+                ['Contratos',            'rrhh.empleados.expediente.cont','rrhh.empleados.expediente', 2, 0],
+                ['Nómina',               'rrhh.nomina',                   'rrhh',                      2, 0],
+                ['Contabilidad',         'contabilidad',                  '',                          3, 0],
+                ['Pólizas',              'contabilidad.polizas',          'contabilidad',              1, 0],
+                ['Ingresos',             'contabilidad.polizas.ingresos', 'contabilidad.polizas',      1, 0],
+                ['Egresos',              'contabilidad.polizas.egresos',  'contabilidad.polizas',      2, 0],
+            ];
+            foreach ($examples as $row) {
+                fputcsv($out, $row);
+            }
         }
 
         fclose($out);
@@ -352,7 +355,7 @@ class ModulosErpController extends Controller
 
         $pdo       = Database::getInstance();
         $created   = 0;
-        $skipped   = 0;
+        $updated   = 0;
         $maxPasses = 15;
 
         // Index existing claves → id
@@ -383,12 +386,6 @@ class ModulosErpController extends Controller
                     $clave = $parentClave ? ($parentClave . '.' . $slug) : $slug;
                 }
 
-                // Skip if already exists
-                if (isset($existing[$clave])) {
-                    $skipped++;
-                    continue;
-                }
-
                 // Resolve parent
                 $parentId = null;
                 if ($parentClave) {
@@ -400,28 +397,37 @@ class ModulosErpController extends Controller
                     $parentId = $existing[$parentClave];
                 }
 
-                // Ensure unique clave
-                $baseClave = $clave;
-                $suffix    = 1;
-                while ($this->claveExists($pdo, $clave)) {
-                    $clave = $baseClave . '_' . $suffix++;
+                if (isset($existing[$clave])) {
+                    // UPDATE existing module
+                    $pdo->prepare(
+                        "UPDATE modulos_erp
+                         SET nombre = ?, parent_id = ?, orden = ?, es_separador = ?
+                         WHERE clave = ?"
+                    )->execute([$nombre, $parentId, $orden, $esSep, $clave]);
+                    $updated++;
+                } else {
+                    // INSERT new module
+                    $baseClave = $clave;
+                    $suffix    = 1;
+                    while ($this->claveExists($pdo, $clave)) {
+                        $clave = $baseClave . '_' . $suffix++;
+                    }
+
+                    $pdo->prepare(
+                        "INSERT INTO modulos_erp (parent_id, clave, nombre, orden, es_separador, activo)
+                         VALUES (?, ?, ?, ?, ?, 1)"
+                    )->execute([$parentId, $clave, $nombre, $orden, $esSep]);
+
+                    $existing[$clave] = (int)$pdo->lastInsertId();
+                    $created++;
                 }
-
-                $pdo->prepare(
-                    "INSERT INTO modulos_erp (parent_id, clave, nombre, orden, es_separador, activo)
-                     VALUES (?, ?, ?, ?, ?, 1)"
-                )->execute([$parentId, $clave, $nombre, $orden, $esSep]);
-
-                $newId          = (int)$pdo->lastInsertId();
-                $existing[$clave] = $newId;
-                $created++;
             }
 
             $queue = $next;
         }
 
         $unresolved = count($queue);
-        $msg        = "Importación completada: $created módulo(s) creado(s), $skipped omitido(s) (ya existían).";
+        $msg = "Importación completada: $created módulo(s) creado(s), $updated actualizado(s).";
         if ($unresolved > 0) {
             $msg .= " $unresolved fila(s) no resueltas (padre no encontrado).";
         }

@@ -200,9 +200,9 @@ function renderModuloTree(array $nodes, int $depth = 0): void
         <div class="d-flex gap-3 align-center" style="flex-wrap:wrap;margin-bottom:16px;">
             <a href="<?= BASE_URL ?>/modulos-erp/descargar-plantilla" class="btn btn-glass">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Descargar plantilla (.csv)
+                Exportar módulos actuales (.csv)
             </a>
-            <span style="font-size:12px;color:#64748b;">Con ejemplos de 4 niveles de profundidad</span>
+            <span style="font-size:12px;color:#64748b;">Descarga los módulos ya cargados en el sistema para editar y reimportar</span>
         </div>
         <form method="POST" action="<?= BASE_URL ?>/modulos-erp/importar-csv" enctype="multipart/form-data">
             <?= csrfField() ?>
