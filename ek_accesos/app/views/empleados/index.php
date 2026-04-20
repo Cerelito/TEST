@@ -16,42 +16,35 @@ $totalPag  = ceil($total / $perPage);
         margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
     }
     .page-header-left { display: flex; flex-direction: column; gap: 4px; }
-    .page-header-title { font-size: 26px; font-weight: 800; color: #f1f5f9; letter-spacing: -0.5px; }
-    .page-header-sub { font-size: 13px; color: #64748b; }
-    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 12px; font-size: 14px; font-weight: 600; text-decoration: none; cursor: pointer; transition: all 0.2s; border: 1px solid; font-family: var(--font); }
-    .btn-primary { background: linear-gradient(135deg, #6366f1, #8b5cf6); border-color: transparent; color: white; box-shadow: 0 4px 15px rgba(99,102,241,0.35); }
-    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 25px rgba(99,102,241,0.5); }
-    .filters-bar {
-        display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;
-    }
-    .search-wrapper {
-        flex: 1; min-width: 240px; position: relative;
-    }
-    .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #475569; }
+    .page-header-title { font-size: 26px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px; }
+    .page-header-sub { font-size: 13px; color: var(--text-secondary); }
+    .filters-bar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .search-wrapper { flex: 1; min-width: 240px; position: relative; }
+    .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-tertiary); pointer-events: none; }
     .search-input {
         width: 100%; padding: 11px 16px 11px 44px;
         background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,255,255,0.1);
+        border: 1px solid var(--glass-border);
         border-radius: 12px;
-        color: #f1f5f9;
-        font-size: 14px;
-        font-family: var(--font);
+        color: var(--text-primary);
+        font-size: 13.5px;
+        font-family: inherit;
         outline: none;
-        transition: all 0.2s;
+        transition: all var(--dur);
     }
-    .search-input::placeholder { color: #475569; }
-    .search-input:focus { border-color: rgba(99,102,241,0.5); background: rgba(99,102,241,0.05); box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+    .search-input::placeholder { color: var(--text-tertiary); }
+    .search-input:focus { border-color: rgba(79,142,247,0.5); background: rgba(79,142,247,0.05); box-shadow: 0 0 0 3px rgba(79,142,247,0.1); }
     .filter-select {
         padding: 11px 36px 11px 14px;
         background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,255,255,0.1);
+        border: 1px solid var(--glass-border);
         border-radius: 12px;
-        color: #94a3b8;
-        font-size: 14px;
-        font-family: var(--font);
+        color: var(--text-secondary);
+        font-size: 13.5px;
+        font-family: inherit;
         outline: none;
         cursor: pointer;
-        transition: all 0.2s;
+        transition: all var(--dur);
         appearance: none;
         -webkit-appearance: none;
         background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 7L11 1' stroke='%2364748b' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
@@ -59,48 +52,35 @@ $totalPag  = ceil($total / $perPage);
         background-position: right 12px center;
         min-width: 160px;
     }
-    .filter-select:focus { border-color: rgba(99,102,241,0.5); }
-    .glass-card { background: rgba(255,255,255,0.06); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; overflow: hidden; }
-    .table-wrapper { overflow-x: auto; }
-    .glass-table { width: 100%; border-collapse: collapse; }
-    .glass-table th { padding: 13px 16px; font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); white-space: nowrap; }
-    .glass-table td { padding: 14px 16px; font-size: 14px; color: #cbd5e1; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
-    .glass-table tr:last-child td { border-bottom: none; }
-    .glass-table tr:hover td { background: rgba(255,255,255,0.03); }
+    .filter-select option { background: #1a1d27; }
+    .filter-select:focus { border-color: rgba(79,142,247,0.5); }
     .emp-cell { display: flex; align-items: center; gap: 12px; }
-    .emp-avatar { width: 38px; height: 38px; border-radius: 11px; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: white; flex-shrink: 0; }
-    .emp-name { font-size: 14px; font-weight: 600; color: #f1f5f9; line-height: 1.3; }
-    .emp-email { font-size: 12px; color: #64748b; }
-    .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
-    .badge-indigo { background: rgba(99,102,241,0.15); color: #818cf8; border: 1px solid rgba(99,102,241,0.25); }
-    .badge-green { background: rgba(16,185,129,0.12); color: #34d399; border: 1px solid rgba(16,185,129,0.25); }
-    .badge-yellow { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
-    .badge-blue { background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.25); }
-    .badge-gray { background: rgba(100,116,139,0.15); color: #94a3b8; border: 1px solid rgba(100,116,139,0.25); }
+    .emp-avatar { width: 38px; height: 38px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0; }
+    .emp-name { font-size: 14px; font-weight: 600; color: var(--text-primary); line-height: 1.3; }
+    .emp-email { font-size: 12px; color: var(--text-secondary); }
     .role-badges { display: flex; gap: 4px; flex-wrap: wrap; }
     .role-dot { width: 22px; height: 22px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; }
-    .role-elab { background: rgba(99,102,241,0.2); color: #818cf8; border: 1px solid rgba(99,102,241,0.3); }
-    .role-vobo { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
-    .role-aut  { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+    .role-elab { background: rgba(79,142,247,0.2); color: var(--blue-light); border: 1px solid rgba(79,142,247,0.3); }
+    .role-vobo { background: rgba(62,207,142,0.15); color: var(--teal); border: 1px solid rgba(62,207,142,0.3); }
+    .role-aut  { background: rgba(245,200,66,0.15); color: var(--yellow); border: 1px solid rgba(245,200,66,0.3); }
     .actions-cell { display: flex; gap: 6px; white-space: nowrap; }
-    .icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; border: 1px solid; cursor: pointer; transition: all 0.2s; text-decoration: none; background: none; font-family: var(--font); }
-    .icon-btn-view { border-color: rgba(99,102,241,0.25); color: #818cf8; }
-    .icon-btn-view:hover { background: rgba(99,102,241,0.15); }
-    .icon-btn-edit { border-color: rgba(245,158,11,0.25); color: #fbbf24; }
-    .icon-btn-edit:hover { background: rgba(245,158,11,0.12); }
-    .icon-btn-del { border-color: rgba(239,68,68,0.25); color: #f87171; }
-    .icon-btn-del:hover { background: rgba(239,68,68,0.12); }
-    .table-footer { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.06); flex-wrap: wrap; gap: 10px; }
-    .table-count { font-size: 13px; color: #64748b; }
+    .icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; border: 1px solid; cursor: pointer; transition: all var(--dur); text-decoration: none; background: none; font-family: inherit; }
+    .icon-btn-view { border-color: rgba(79,142,247,0.25); color: var(--blue-light); }
+    .icon-btn-view:hover { background: rgba(79,142,247,0.15); }
+    .icon-btn-edit { border-color: rgba(245,200,66,0.25); color: var(--yellow); }
+    .icon-btn-edit:hover { background: rgba(245,200,66,0.12); }
+    .icon-btn-del { border-color: rgba(255,107,107,0.25); color: var(--red); }
+    .icon-btn-del:hover { background: rgba(255,107,107,0.12); }
+    .table-footer { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-top: 1px solid var(--glass-border); flex-wrap: wrap; gap: 10px; }
+    .table-count { font-size: 13px; color: var(--text-secondary); }
     .pagination { display: flex; gap: 6px; align-items: center; }
-    .page-btn { display: inline-flex; align-items: center; justify-content: center; min-width: 34px; height: 34px; padding: 0 6px; border-radius: 9px; font-size: 13px; font-weight: 600; text-decoration: none; border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; background: rgba(255,255,255,0.04); transition: all 0.2s; }
-    .page-btn:hover { background: rgba(255,255,255,0.09); color: #f1f5f9; }
-    .page-btn.active { background: rgba(99,102,241,0.2); border-color: rgba(99,102,241,0.4); color: #818cf8; }
+    .page-btn { display: inline-flex; align-items: center; justify-content: center; min-width: 34px; height: 34px; padding: 0 6px; border-radius: 9px; font-size: 13px; font-weight: 600; text-decoration: none; border: 1px solid var(--glass-border); color: var(--text-secondary); background: rgba(255,255,255,0.04); transition: all var(--dur); }
+    .page-btn:hover { background: rgba(255,255,255,0.09); color: var(--text-primary); }
+    .page-btn.active { background: rgba(79,142,247,0.2); border-color: rgba(79,142,247,0.4); color: var(--blue-light); }
     .page-btn:disabled, .page-btn[disabled] { opacity: 0.4; pointer-events: none; }
-    .empty-state { padding: 60px 20px; text-align: center; color: #475569; }
     .empty-state svg { margin: 0 auto 16px; display: block; opacity: 0.3; }
-    .empty-state p { font-size: 15px; color: #64748b; }
-    .empty-state small { font-size: 13px; color: #475569; }
+    .empty-state p { font-size: 14px; color: var(--text-secondary); }
+    .empty-state small { font-size: 12px; color: var(--text-tertiary); }
 </style>
 
 <div class="page-header">
@@ -147,9 +127,9 @@ $totalPag  = ceil($total / $perPage);
 </form>
 
 <!-- Table -->
-<div class="glass-card">
-    <div class="table-wrapper">
-        <table class="glass-table">
+<div class="glass table-container">
+    <div class="table-scroll">
+        <table>
             <thead>
                 <tr>
                     <th>Empleado</th>
@@ -177,7 +157,7 @@ $totalPag  = ceil($total / $perPage);
                 <?php
                     $nombre = trim(($emp['nombre'] ?? '') . ' ' . ($emp['apellido_paterno'] ?? '') . ' ' . ($emp['apellido_materno'] ?? ''));
                     $ini = strtoupper(substr($emp['nombre'] ?? 'U', 0, 1) . substr($emp['apellido_paterno'] ?? '', 0, 1));
-                    $gradients = ['135deg, #6366f1, #8b5cf6', '135deg, #06b6d4, #6366f1', '135deg, #10b981, #06b6d4', '135deg, #f59e0b, #ef4444'];
+                    $gradients = ['135deg, #4f8ef7, #7c5cbf', '135deg, #06b6d4, #4f8ef7', '135deg, #3ecf8e, #06b6d4', '135deg, #f58642, #ff6b6b'];
                     $grad = $gradients[crc32($emp['id'] ?? 0) % 4];
                 ?>
                 <tr>
@@ -191,16 +171,16 @@ $totalPag  = ceil($total / $perPage);
                         </div>
                     </td>
                     <td><span class="badge badge-blue"><?php echo htmlspecialchars($emp['empresa'] ?? '-'); ?></span></td>
-                    <td style="color:#94a3b8; font-size:13px;"><?php echo htmlspecialchars($emp['puesto'] ?? '-'); ?></td>
+                    <td class="td-muted"><?php echo htmlspecialchars($emp['puesto'] ?? '-'); ?></td>
                     <td>
                         <?php if (!empty($emp['programa_nivel'])): ?>
-                        <span class="badge badge-indigo"><?php echo htmlspecialchars($emp['programa_nivel']); ?></span>
+                        <span class="badge badge-purple"><?php echo htmlspecialchars($emp['programa_nivel']); ?></span>
                         <?php else: ?>
-                        <span style="color:#475569; font-size:12px;">—</span>
+                        <span class="td-muted">—</span>
                         <?php endif; ?>
                     </td>
                     <td>
-                        <span class="badge <?php echo ($emp['tipo'] ?? '') === 'interno' ? 'badge-green' : 'badge-yellow'; ?>">
+                        <span class="badge <?php echo ($emp['tipo'] ?? '') === 'interno' ? 'badge-teal' : 'badge-yellow'; ?>">
                             <?php echo ucfirst(htmlspecialchars($emp['tipo'] ?? '-')); ?>
                         </span>
                     </td>
@@ -210,7 +190,7 @@ $totalPag  = ceil($total / $perPage);
                             <?php if (!empty($emp['es_vobo'])): ?><span class="role-dot role-vobo" title="VoBo">V</span><?php endif; ?>
                             <?php if (!empty($emp['es_autorizador'])): ?><span class="role-dot role-aut" title="Autorizador">A</span><?php endif; ?>
                             <?php if (empty($emp['es_elaborador']) && empty($emp['es_vobo']) && empty($emp['es_autorizador'])): ?>
-                            <span style="color:#475569; font-size:12px;">—</span>
+                            <span class="td-muted">—</span>
                             <?php endif; ?>
                         </div>
                     </td>

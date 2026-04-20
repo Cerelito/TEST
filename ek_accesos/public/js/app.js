@@ -238,3 +238,42 @@ window.apiPost = async function(url, data) {
   });
   return res.json();
 };
+
+/* ── Desktop Notification System ────────────────────────────── */
+window.NotificationSystem = {
+  init() {
+    if (!('Notification' in window)) return;
+    if (Notification.permission === 'default') {
+      document.addEventListener('click', () => {
+        Notification.requestPermission();
+      }, { once: true });
+    }
+    // Show OS notifications for flash messages when the tab is not visible
+    this._showFlashNotifications();
+  },
+
+  _showFlashNotifications() {
+    if (!document.hidden) return;
+    if (Notification.permission !== 'granted') return;
+    document.querySelectorAll('.flash-message').forEach(el => {
+      const titleEl = el.querySelector('.flash-title');
+      const bodyEl  = el.querySelector('.flash-body');
+      const title   = titleEl ? titleEl.textContent.trim() : 'EK Accesos';
+      const body    = bodyEl  ? bodyEl.textContent.trim()  : '';
+      this.show(title, body);
+    });
+  },
+
+  show(title, body = '') {
+    if (!('Notification' in window) || Notification.permission !== 'granted') return;
+    try {
+      new Notification('EK Accesos — ' + title, {
+        body,
+        icon: '/favicon.ico',
+        tag: 'ek-accesos-' + Date.now()
+      });
+    } catch (e) { /* silently ignore */ }
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => NotificationSystem.init());
