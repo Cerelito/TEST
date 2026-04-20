@@ -221,6 +221,217 @@ class ModulosErpController extends Controller
     }
 
     // ─────────────────────────────────────────────────────────────────────────
+    // descargarPlantilla — send CSV template (GET)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    public function descargarPlantilla(): void
+    {
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="plantilla_modulos_erp.csv"');
+
+        $out = fopen('php://output', 'w');
+        // BOM for Excel UTF-8 compatibility
+        fwrite($out, "\xEF\xBB\xBF");
+
+        fputcsv($out, ['nombre', 'clave', 'parent_clave', 'orden', 'es_separador']);
+
+        $rows = [
+            // Nivel 0 — raíces
+            ['Ventas',                    'ventas',                          '',                                 1,  0],
+            ['Recursos Humanos',          'rrhh',                            '',                                 2,  0],
+            ['Contabilidad',              'contabilidad',                    '',                                 3,  0],
+            // Nivel 1 — hijos de ventas
+            ['Clientes',                  'ventas.clientes',                 'ventas',                           1,  0],
+            ['Pedidos',                   'ventas.pedidos',                  'ventas',                           2,  0],
+            ['Reportes',                  'ventas.reportes',                 'ventas',                           3,  0],
+            // Nivel 1 — hijos de rrhh
+            ['Empleados',                 'rrhh.empleados',                  'rrhh',                             1,  0],
+            ['Nómina',                    'rrhh.nomina',                     'rrhh',                             2,  0],
+            ['Vacaciones',                'rrhh.vacaciones',                 'rrhh',                             3,  0],
+            // Nivel 2 — nietos de ventas.clientes
+            ['Alta de Clientes',          'ventas.clientes.alta',            'ventas.clientes',                  1,  0],
+            ['Consulta de Clientes',      'ventas.clientes.consulta',        'ventas.clientes',                  2,  0],
+            ['Límite de Crédito',         'ventas.clientes.credito',         'ventas.clientes',                  3,  0],
+            // Nivel 2 — nietos de ventas.pedidos
+            ['Nuevo Pedido',              'ventas.pedidos.nuevo',            'ventas.pedidos',                   1,  0],
+            ['Autorizar Pedido',          'ventas.pedidos.autorizar',        'ventas.pedidos',                   2,  0],
+            ['Cancelar Pedido',           'ventas.pedidos.cancelar',         'ventas.pedidos',                   3,  0],
+            // Nivel 2 — nietos de rrhh.empleados
+            ['Alta de Empleados',         'rrhh.empleados.alta',             'rrhh.empleados',                   1,  0],
+            ['Expediente',                'rrhh.empleados.expediente',       'rrhh.empleados',                   2,  0],
+            ['Evaluaciones',              'rrhh.empleados.evaluaciones',     'rrhh.empleados',                   3,  0],
+            // Nivel 3 — bisnietos de rrhh.empleados.expediente
+            ['Documentos',               'rrhh.empleados.expediente.docs',  'rrhh.empleados.expediente',         1,  0],
+            ['Contratos',                'rrhh.empleados.expediente.cont',  'rrhh.empleados.expediente',         2,  0],
+            ['Historial Médico',         'rrhh.empleados.expediente.med',   'rrhh.empleados.expediente',         3,  0],
+            // Nivel 2 — nietos de contabilidad
+            ['Pólizas',                   'contabilidad.polizas',            'contabilidad',                     1,  0],
+            ['Balanza',                   'contabilidad.balanza',            'contabilidad',                     2,  0],
+            ['Cierres',                   'contabilidad.cierres',            'contabilidad',                     3,  0],
+            // Nivel 3 — dentro de pólizas
+            ['Ingresos',                  'contabilidad.polizas.ingresos',   'contabilidad.polizas',              1,  0],
+            ['Egresos',                   'contabilidad.polizas.egresos',    'contabilidad.polizas',              2,  0],
+            ['Diario',                    'contabilidad.polizas.diario',     'contabilidad.polizas',              3,  0],
+            ['Ajustes',                   'contabilidad.polizas.ajustes',    'contabilidad.polizas',              4,  0],
+        ];
+
+        foreach ($rows as $row) {
+            fputcsv($out, $row);
+        }
+
+        fclose($out);
+        exit;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // importarCsv — process CSV upload (POST)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    public function importarCsv(): void
+    {
+        verifyCSRF();
+
+        if (empty($_FILES['csv_file']['tmp_name'])) {
+            setFlash('error', 'No se recibió ningún archivo.');
+            redirect('modulos-erp');
+        }
+
+        $tmpFile = $_FILES['csv_file']['tmp_name'];
+        $handle  = fopen($tmpFile, 'r');
+        if (!$handle) {
+            setFlash('error', 'No se pudo abrir el archivo.');
+            redirect('modulos-erp');
+        }
+
+        // Strip BOM if present
+        $bom = fread($handle, 3);
+        if ($bom !== "\xEF\xBB\xBF") {
+            rewind($handle);
+        }
+
+        // Read header row
+        $header = fgetcsv($handle);
+        if (!$header) {
+            setFlash('error', 'Archivo CSV vacío o inválido.');
+            fclose($handle);
+            redirect('modulos-erp');
+        }
+
+        // Normalize headers
+        $header = array_map('trim', array_map('strtolower', $header));
+        $colIdx = [];
+        foreach (['nombre', 'clave', 'parent_clave', 'orden', 'es_separador'] as $col) {
+            $idx = array_search($col, $header);
+            $colIdx[$col] = ($idx !== false) ? $idx : -1;
+        }
+
+        if ($colIdx['nombre'] === -1) {
+            setFlash('error', 'El CSV debe tener al menos la columna "nombre".');
+            fclose($handle);
+            redirect('modulos-erp');
+        }
+
+        $rows = [];
+        while (($line = fgetcsv($handle)) !== false) {
+            $nombre      = trim($line[$colIdx['nombre']] ?? '');
+            $clave       = trim($line[$colIdx['clave']]  ?? '');
+            $parentClave = trim($line[$colIdx['parent_clave']] ?? '');
+            $orden       = (int)($line[$colIdx['orden']] ?? 0);
+            $esSep       = (int)($line[$colIdx['es_separador']] ?? 0);
+
+            if (!$nombre) continue;
+
+            $rows[] = compact('nombre', 'clave', 'parentClave', 'orden', 'esSep');
+        }
+        fclose($handle);
+
+        if (empty($rows)) {
+            setFlash('error', 'El archivo no contiene filas válidas.');
+            redirect('modulos-erp');
+        }
+
+        $pdo       = Database::getInstance();
+        $created   = 0;
+        $skipped   = 0;
+        $maxPasses = 15;
+
+        // Index existing claves → id
+        $existing = [];
+        $stmt = $pdo->query("SELECT id, clave FROM modulos_erp");
+        foreach ($stmt->fetchAll(\PDO::FETCH_ASSOC) as $r) {
+            $existing[$r['clave']] = (int)$r['id'];
+        }
+
+        // Build a queue; resolve in multiple passes (handles out-of-order parents)
+        $queue = $rows;
+        $pass  = 0;
+
+        while (!empty($queue) && $pass < $maxPasses) {
+            $pass++;
+            $next = [];
+
+            foreach ($queue as $row) {
+                $nombre      = $row['nombre'];
+                $parentClave = $row['parentClave'];
+                $orden       = $row['orden'];
+                $esSep       = $row['esSep'];
+
+                // Resolve clave
+                $clave = $row['clave'];
+                if (!$clave) {
+                    $slug  = $this->toSlug($nombre);
+                    $clave = $parentClave ? ($parentClave . '.' . $slug) : $slug;
+                }
+
+                // Skip if already exists
+                if (isset($existing[$clave])) {
+                    $skipped++;
+                    continue;
+                }
+
+                // Resolve parent
+                $parentId = null;
+                if ($parentClave) {
+                    if (!isset($existing[$parentClave])) {
+                        // Parent not yet inserted — retry later
+                        $next[] = $row;
+                        continue;
+                    }
+                    $parentId = $existing[$parentClave];
+                }
+
+                // Ensure unique clave
+                $baseClave = $clave;
+                $suffix    = 1;
+                while ($this->claveExists($pdo, $clave)) {
+                    $clave = $baseClave . '_' . $suffix++;
+                }
+
+                $pdo->prepare(
+                    "INSERT INTO modulos_erp (parent_id, clave, nombre, orden, es_separador, activo)
+                     VALUES (?, ?, ?, ?, ?, 1)"
+                )->execute([$parentId, $clave, $nombre, $orden, $esSep]);
+
+                $newId          = (int)$pdo->lastInsertId();
+                $existing[$clave] = $newId;
+                $created++;
+            }
+
+            $queue = $next;
+        }
+
+        $unresolved = count($queue);
+        $msg        = "Importación completada: $created módulo(s) creado(s), $skipped omitido(s) (ya existían).";
+        if ($unresolved > 0) {
+            $msg .= " $unresolved fila(s) no resueltas (padre no encontrado).";
+        }
+
+        logAction('importar', 'modulos_erp', $msg);
+        setFlash('success', $msg);
+        redirect('modulos-erp');
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
     // Private helpers
     // ─────────────────────────────────────────────────────────────────────────
 

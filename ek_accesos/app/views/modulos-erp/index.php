@@ -174,10 +174,47 @@ function renderModuloTree(array $nodes, int $depth = 0): void
             Administra el árbol de módulos y sus submódulos. Los cambios aquí afectan los checkboxes de todos los Programa Nivel.
         </p>
     </div>
-    <button type="button" class="btn btn-primary" onclick="openCrear(0,'','Raíz')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Nuevo Módulo Raíz
-    </button>
+    <div class="d-flex gap-2">
+        <button type="button" class="btn btn-glass" onclick="toggleImport()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Importar CSV
+        </button>
+        <button type="button" class="btn btn-primary" onclick="openCrear(0,'','Raíz')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Nuevo Módulo Raíz
+        </button>
+    </div>
+</div>
+
+<!-- Import Panel -->
+<div id="importPanel" style="display:none;margin-bottom:20px;">
+    <div class="glass" style="padding:24px;border-radius:16px;border-color:rgba(99,102,241,0.3);">
+        <div class="d-flex align-center gap-2 mb-3">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <span style="font-size:15px;font-weight:700;color:#f1f5f9;">Importar módulos desde CSV / Excel</span>
+        </div>
+        <p style="font-size:13px;color:#94a3b8;margin-bottom:16px;">
+            Descarga la plantilla, llénala en Excel (guarda como CSV UTF-8) y súbela aquí.
+            Columnas: <code>nombre, clave, parent_clave, orden, es_separador</code>
+        </p>
+        <div class="d-flex gap-3 align-center" style="flex-wrap:wrap;margin-bottom:16px;">
+            <a href="<?= BASE_URL ?>/modulos-erp/descargar-plantilla" class="btn btn-glass">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Descargar plantilla (.csv)
+            </a>
+            <span style="font-size:12px;color:#64748b;">Con ejemplos de 4 niveles de profundidad</span>
+        </div>
+        <form method="POST" action="<?= BASE_URL ?>/modulos-erp/importar-csv" enctype="multipart/form-data">
+            <?= csrfField() ?>
+            <div class="d-flex gap-2 align-center" style="flex-wrap:wrap;">
+                <input type="file" name="csv_file" accept=".csv,.txt" class="form-control" style="max-width:320px;" required>
+                <button type="submit" class="btn btn-primary">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    Importar módulos
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <?php if (empty($tree)): ?>
@@ -262,6 +299,10 @@ function toSlug(str) {
     return str.toLowerCase().replace(/[áéíóúüñàèìòù]/g, function(c){ return map[c]||c; }).replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'');
 }
 
+function toggleImport() {
+    var p = document.getElementById('importPanel');
+    p.style.display = p.style.display === 'none' ? 'block' : 'none';
+}
 function openCrear(parentId, parentClave, parentNombre) {
     document.getElementById('mc_parent_id').value = parentId;
     document.getElementById('mc_nombre').value    = '';

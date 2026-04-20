@@ -33,8 +33,9 @@ class ProgramaNivelController extends Controller
     {
         verifyCSRF();
 
-        $nombre      = sanitize($_POST['nombre'] ?? '');
+        $nombre      = sanitize($_POST['nombre']      ?? '');
         $descripcion = sanitize($_POST['descripcion'] ?? '');
+        $nivel       = (int)($_POST['nivel']           ?? 0);
 
         if (!$nombre) {
             setFlash('error', 'El nombre es requerido.');
@@ -42,6 +43,7 @@ class ProgramaNivelController extends Controller
         }
 
         $id = $this->model->create([
+            'nivel'       => $nivel,
             'nombre'      => $nombre,
             'descripcion' => $descripcion,
             'activo'      => 1,
@@ -84,8 +86,9 @@ class ProgramaNivelController extends Controller
             redirect('programa-nivel');
         }
 
-        $nombre      = sanitize($_POST['nombre'] ?? '');
+        $nombre      = sanitize($_POST['nombre']      ?? '');
         $descripcion = sanitize($_POST['descripcion'] ?? '');
+        $nivel       = (int)($_POST['nivel']           ?? 0);
 
         if (!$nombre) {
             setFlash('error', 'El nombre es requerido.');
@@ -93,6 +96,7 @@ class ProgramaNivelController extends Controller
         }
 
         $this->model->update((int)$id, [
+            'nivel'       => $nivel,
             'nombre'      => $nombre,
             'descripcion' => $descripcion,
             'activo'      => isset($_POST['activo']) ? 1 : 0,
