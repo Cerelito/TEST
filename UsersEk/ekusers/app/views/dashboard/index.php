@@ -14,6 +14,12 @@ $recientes = $recientes ?? [];
 $ccDist    = $ccDist    ?? [];
 ?>
 <style>
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-bottom: 28px;
+    }
     .kpi-card {
         background: rgba(255,255,255,0.06);
         backdrop-filter: blur(20px);
@@ -156,6 +162,20 @@ $ccDist    = $ccDist    ?? [];
     .emp-info { display: flex; align-items: center; gap: 10px; }
     .emp-name { font-size: 14px; font-weight: 600; color: #f1f5f9; }
     .emp-email { font-size: 12px; color: #64748b; }
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+    }
+    .badge-indigo { background: rgba(99,102,241,0.15); color: #818cf8; border: 1px solid rgba(99,102,241,0.25); }
+    .badge-green  { background: rgba(16,185,129,0.12); color: #34d399; border: 1px solid rgba(16,185,129,0.25); }
+    .badge-yellow { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
+    .badge-red    { background: rgba(239,68,68,0.12);  color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
+    .badge-blue   { background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.25); }
     .dist-item { padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.04); }
     .dist-item:last-child { border-bottom: none; }
     .dist-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
@@ -324,9 +344,9 @@ $ccDist    = $ccDist    ?? [];
                             </div>
                         </td>
                         <td><span class="badge badge-blue"><?php echo htmlspecialchars($emp['empresa'] ?? '-'); ?></span></td>
-                        <td><span class="badge badge-blue"><?php echo htmlspecialchars($emp['programa_nivel'] ?? '-'); ?></span></td>
+                        <td><span class="badge badge-indigo"><?php echo htmlspecialchars($emp['programa_nivel'] ?? '-'); ?></span></td>
                         <td>
-                            <span class="badge <?php echo ($emp['tipo'] ?? '') === 'interno' ? 'badge-teal' : 'badge-yellow'; ?>">
+                            <span class="badge <?php echo ($emp['tipo'] ?? '') === 'interno' ? 'badge-green' : 'badge-yellow'; ?>">
                                 <?php echo htmlspecialchars(ucfirst($emp['tipo'] ?? '-')); ?>
                             </span>
                         </td>
@@ -383,3 +403,4 @@ $ccDist    = $ccDist    ?? [];
 $content = ob_get_clean();
 include VIEWS_PATH . 'layouts/app.php';
 ?>
+
