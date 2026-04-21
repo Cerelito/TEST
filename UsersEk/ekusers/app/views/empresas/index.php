@@ -50,7 +50,7 @@ ob_start();
 }
 .estad { text-align: center; }
 .estad-val { font-size: 22px; font-weight: 800; color: #f1f5f9; line-height: 1; }
-.estad-val.blue { color: #60a5fa; }
+.estad-val.blue { color: #818cf8; }
 .estad-val.teal { color: #34d399; }
 .estad-lbl { font-size: 11px; color: #64748b; margin-top: 2px; }
 .empresa-actions { display: flex; gap: 8px; }

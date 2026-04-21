@@ -10,8 +10,8 @@ $empleados_disponibles = $empleados_disponibles ?? [];
     .page-header-left { display:flex; flex-direction:column; gap:4px; }
     .page-header-title { font-size:26px; font-weight:800; color:#f1f5f9; letter-spacing:-0.5px; }
     .page-header-sub { font-size:13px; color:#64748b; }
-    .info-banner { display:flex; align-items:flex-start; gap:12px; padding:14px 18px; background:rgba(79,142,247,0.08); border:1px solid rgba(79,142,247,0.2); border-radius:14px; margin-bottom:20px; }
-    .info-banner-icon { color:#6fa8ff; flex-shrink:0; margin-top:1px; }
+    .info-banner { display:flex; align-items:flex-start; gap:12px; padding:14px 18px; background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.2); border-radius:14px; margin-bottom:20px; }
+    .info-banner-icon { color:#818cf8; flex-shrink:0; margin-top:1px; }
     .info-banner-text { font-size:13px; color:#94a3b8; line-height:1.6; }
     .info-banner-text strong { color:#f1f5f9; }
     .filters-bar { display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; align-items:center; }
@@ -19,7 +19,7 @@ $empleados_disponibles = $empleados_disponibles ?? [];
     .search-icon-pos { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#475569; pointer-events:none; }
     .search-input { width:100%; padding:10px 16px 10px 42px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:12px; color:#f1f5f9; font-size:14px; font-family:var(--font); outline:none; transition:all 0.2s; }
     .search-input::placeholder { color:#475569; }
-    .search-input:focus { border-color:rgba(79,142,247,0.5); background:rgba(79,142,247,0.05); }
+    .search-input:focus { border-color:rgba(99,102,241,0.5); background:rgba(99,102,241,0.05); }
     .emp-cell { display:flex; align-items:center; gap:12px; }
     .emp-avatar { width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg,#10b981,#06b6d4); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:white; flex-shrink:0; }
     .emp-name { font-size:14px; font-weight:600; color:#f1f5f9; }
@@ -36,7 +36,7 @@ $empleados_disponibles = $empleados_disponibles ?? [];
     .empty-state small { font-size:13px; color:#475569; }
     /* Modal */
     .modal-select { width:100%; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.15); border-radius:10px; color:#f1f5f9; font-size:14px; padding:10px 14px; outline:none; font-family:var(--font); }
-    .modal-select:focus { border-color:rgba(79,142,247,0.5); }
+    .modal-select:focus { border-color:rgba(99,102,241,0.5); }
 </style>
 
 <div class="page-header">

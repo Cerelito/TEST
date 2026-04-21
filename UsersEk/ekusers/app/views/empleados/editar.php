@@ -101,14 +101,14 @@ if (!function_exists('ccFilaHTML')) {
     .cc-table td { padding:8px 10px; vertical-align:middle; border-bottom:1px solid rgba(255,255,255,0.05); }
     .cc-table tr:last-child td { border-bottom:none; }
     .cc-table input[type="text"], .cc-table select { width:100%; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); border-radius:7px; color:#f1f5f9; font-size:12px; padding:6px 9px; outline:none; font-family:var(--font); }
-    .cc-table input[type="text"]:focus, .cc-table select:focus { border-color:rgba(79,142,247,0.5); }
+    .cc-table input[type="text"]:focus, .cc-table select:focus { border-color:rgba(99,102,241,0.5); }
     .cc-table input[type="number"] { width:90px; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); border-radius:7px; color:#f1f5f9; font-size:12px; padding:6px 9px; outline:none; font-family:var(--font); }
     .radio-group { display:flex; gap:6px; }
     .radio-group label { display:flex; align-items:center; gap:4px; font-size:11px; color:#94a3b8; cursor:pointer; white-space:nowrap; }
     .del-row-btn { display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:7px; border:1px solid rgba(239,68,68,0.3); background:rgba(239,68,68,0.08); color:#f87171; cursor:pointer; transition:all 0.2s; }
     .del-row-btn:hover { background:rgba(239,68,68,0.18); }
-    .add-cc-btn { display:inline-flex; align-items:center; gap:7px; margin-top:12px; padding:8px 16px; border-radius:10px; font-size:13px; font-weight:600; border:1px dashed rgba(79,142,247,0.4); background:rgba(79,142,247,0.07); color:#6fa8ff; cursor:pointer; transition:all 0.2s; font-family:var(--font); }
-    .add-cc-btn:hover { background:rgba(79,142,247,0.14); border-color:rgba(79,142,247,0.6); }
+    .add-cc-btn { display:inline-flex; align-items:center; gap:7px; margin-top:12px; padding:8px 16px; border-radius:10px; font-size:13px; font-weight:600; border:1px dashed rgba(99,102,241,0.4); background:rgba(99,102,241,0.07); color:#818cf8; cursor:pointer; transition:all 0.2s; font-family:var(--font); }
+    .add-cc-btn:hover { background:rgba(99,102,241,0.14); border-color:rgba(99,102,241,0.6); }
     .section-hint { font-size:12px; color:#64748b; margin-bottom:14px; }
     .existing-badge { display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:600; padding:2px 7px; border-radius:99px; background:rgba(62,207,142,0.12); color:#3ecf8e; border:1px solid rgba(62,207,142,0.25); }
 </style>

@@ -148,7 +148,7 @@ $pnMapJson = json_encode(
       <?php endif; ?>
 
       <?php if (!$esAdmin): ?>
-      <div style="padding:14px 18px;background:rgba(79,142,247,0.08);border:1px solid rgba(79,142,247,0.2);
+      <div style="padding:14px 18px;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);
                   border-radius:12px;margin-bottom:20px;font-size:13px;color:#94a3b8;">
         ℹ El usuario quedará <strong style="color:#f1f5f9;">pendiente de aprobación</strong>.
         Se notificará al administrador (<strong style="color:#f1f5f9;"><?= ADMIN_EMAIL ?></strong>).
