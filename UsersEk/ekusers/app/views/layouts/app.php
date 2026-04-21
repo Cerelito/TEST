@@ -286,6 +286,7 @@ $flash = getFlash();
         .main-content {
             padding: 28px 28px;
             max-width: 1400px;
+            margin-left: 0;
         }
         /* Flash messages */
         .flash-container {

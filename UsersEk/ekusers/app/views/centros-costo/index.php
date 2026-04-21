@@ -2,7 +2,7 @@
 $title = 'Centros de Costo';
 ob_start();
 ?>
-<div class="d-flex gap-2 mb-4 align-center">
+<div class="d-flex gap-2 align-center sticky-bar" style="margin-bottom:16px;">
   <select id="filtroEmpresa" class="form-control" style="max-width:280px;" onchange="location.href='<?= BASE_URL ?>/centros-costo?empresa_id='+this.value">
     <option value="">Todas las empresas</option>
     <?php foreach($empresas??[] as $e): ?>

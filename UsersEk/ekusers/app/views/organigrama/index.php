@@ -3,7 +3,7 @@ $title = 'Organigrama';
 ob_start();
 ?>
 <!-- Selector de empresa -->
-<div class="glass d-flex gap-3 align-center mb-4" style="padding:16px 20px;border-radius:12px;">
+<div class="glass d-flex gap-3 align-center sticky-bar" style="padding:16px 20px;border-radius:12px;margin-bottom:16px;flex-wrap:wrap;">
   <label class="form-label" style="margin:0;white-space:nowrap;">Empresa:</label>
   <select id="empresaSelect" class="form-control" style="max-width:320px;" onchange="loadOrganigrama(this.value)">
     <option value="">— Selecciona empresa —</option>

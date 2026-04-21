@@ -68,7 +68,7 @@ ob_start();
 </style>
 
 <!-- Toolbar -->
-<div class="toolbar d-flex gap-3 mb-4 align-center" style="flex-wrap:wrap;">
+<div class="toolbar d-flex gap-3 align-center sticky-bar" style="flex-wrap:wrap;margin-bottom:16px;">
     <form method="GET" action="<?= BASE_URL ?>/empresas" class="d-flex gap-2 align-center" style="flex:1; min-width:200px;">
         <input type="text" name="buscar" class="form-control" placeholder="Buscar empresa..."
                value="<?= htmlspecialchars($filters['buscar'] ?? '') ?>" style="max-width:260px;">
@@ -88,7 +88,7 @@ ob_start();
 </div>
 
 <!-- KPI -->
-<div class="kpi-grid mb-4" style="grid-template-columns: repeat(3, 1fr);">
+<div class="kpi-grid mb-4" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));">
     <div class="glass kpi-card">
         <div class="kpi-label">Total Empresas</div>
         <div class="kpi-value kpi-accent-blue"><?= count($empresas) ?></div>

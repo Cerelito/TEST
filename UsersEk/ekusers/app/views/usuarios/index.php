@@ -34,7 +34,7 @@ ob_start();
 </div>
 
 <!-- Filtros -->
-<div class="glass d-flex gap-2 align-center mb-3" style="padding:12px 16px;border-radius:10px;">
+<div class="glass d-flex gap-2 align-center sticky-bar" style="padding:12px 16px;border-radius:10px;margin-bottom:12px;flex-wrap:wrap;">
   <a href="<?= BASE_URL ?>/usuarios" class="btn btn-sm <?= empty($_GET['filter']) ? 'btn-primary' : 'btn-glass' ?>">Todos</a>
   <a href="<?= BASE_URL ?>/usuarios?filter=pendiente" class="btn btn-sm <?= ($_GET['filter']??'')==='pendiente' ? 'btn-primary' : 'btn-glass' ?>">
     Pendientes <?php if(($stats['pendientes']??0) > 0): ?><span class="nav-badge"><?= $stats['pendientes'] ?></span><?php endif; ?>

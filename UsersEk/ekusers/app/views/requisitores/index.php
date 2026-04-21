@@ -14,7 +14,7 @@ $empleados_disponibles = $empleados_disponibles ?? [];
     .info-banner-icon { color:#818cf8; flex-shrink:0; margin-top:1px; }
     .info-banner-text { font-size:13px; color:#94a3b8; line-height:1.6; }
     .info-banner-text strong { color:#f1f5f9; }
-    .filters-bar { display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; align-items:center; }
+    .filters-bar { display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; align-items:center; position:sticky; top:64px; z-index:48; background:rgba(10,14,26,0.94); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); padding-bottom:8px; }
     .search-wrapper { flex:1; min-width:240px; position:relative; }
     .search-icon-pos { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#475569; pointer-events:none; }
     .search-input { width:100%; padding:10px 16px 10px 42px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:12px; color:#f1f5f9; font-size:14px; font-family:var(--font); outline:none; transition:all 0.2s; }

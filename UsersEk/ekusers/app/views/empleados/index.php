@@ -59,7 +59,7 @@ $totalPag  = ceil($total / $perPage);
 </div>
 
 <!-- Filters -->
-<form method="GET" action="<?php echo BASE_URL; ?>/empleados" id="filterForm">
+<form method="GET" action="<?php echo BASE_URL; ?>/empleados" id="filterForm" class="sticky-bar" style="margin-bottom:4px;">
     <div class="filters-bar">
         <div class="search-wrapper">
             <span class="search-icon">

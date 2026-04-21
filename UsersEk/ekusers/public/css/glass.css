@@ -673,6 +673,17 @@ tbody td {
   pointer-events: none;
 }
 
+/* ─── Sticky filter toolbar ───────────────────────────────────── */
+.sticky-bar {
+  position: sticky;
+  top: 64px;
+  z-index: 48;
+  background: rgba(10,14,26,0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding-bottom: 8px;
+}
+
 /* ─── Toggle switch ───────────────────────────────────────────── */
 .toggle { position: relative; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
 .toggle input { display: none; }
@@ -806,9 +817,12 @@ tbody td {
   .main-content { margin-left: 0; }
   .form-row-2, .form-row-3 { grid-template-columns: 1fr; }
   .kpi-grid { grid-template-columns: 1fr 1fr; }
+  .sticky-bar { top: 0; }
 }
 @media (max-width: 600px) {
   .page-body { padding: 16px; }
-  .kpi-grid { grid-template-columns: 1fr; }
+  .main-content { padding: 16px !important; }
+  .kpi-grid { grid-template-columns: 1fr !important; }
   .auth-card { padding: 28px 22px; }
+  .sticky-bar { padding-bottom: 4px; }
 }

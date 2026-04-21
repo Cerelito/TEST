@@ -106,7 +106,7 @@ function renderModuloTree(array $nodes, int $depth = 0): void
 }
 ?>
 <style>
-.page-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+.page-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px; position:sticky; top:64px; z-index:48; background:rgba(10,14,26,0.94); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); padding-bottom:12px; }
 .page-hdr h2 { font-size:22px; font-weight:800; }
 .mod-tree { border-radius:var(--radius-lg); overflow:hidden; }
 .mod-tree-header {
@@ -155,6 +155,10 @@ function renderModuloTree(array $nodes, int $depth = 0): void
 .icon-btn-del:hover   { background:rgba(239,68,68,.12); }
 .icon-btn-disabled    { border-color:rgba(255,255,255,.06); color:#334155; cursor:default; }
 .clave-preview { font-family:monospace; font-size:12px; color:#6366f1; background:rgba(99,102,241,.08); padding:6px 10px; border-radius:6px; margin-top:4px; word-break:break-all; }
+@media (max-width:768px) {
+    .mod-tree-header,.mod-row { grid-template-columns:1fr auto; }
+    .mod-cell.mod-clave,.mod-cell.mod-stats { display:none; }
+}
 </style>
 
 <div class="page-hdr">
