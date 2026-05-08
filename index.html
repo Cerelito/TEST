@@ -1,0 +1,1662 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cerelit Minds | Consultoría IT, Google Workspace y Microsoft 365 en México</title>
+  <meta name="description"
+    content="Cerelit Minds: soporte técnico IT y consultoría en Google Workspace, Microsoft 365, redes, servidores y ciberseguridad para empresas en México. Ingenieros certificados, SLA garantizado.">
+  <meta name="keywords"
+    content="consultoría IT México, soporte técnico empresas, Google Workspace, Microsoft 365, ciberseguridad, servidores cloud, Cerelit Minds">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="Cerelit Minds">
+  <link rel="canonical" href="https://www.cerelit.com/">
+  <meta name="theme-color" content="#1A7A6A">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.cerelit.com/">
+  <meta property="og:title" content="Cerelit Minds | Consultoría IT y Cloud Solutions">
+  <meta property="og:description"
+    content="Tu socio experto en tecnología. Google Workspace, Microsoft 365, soporte técnico y ciberseguridad para empresas en México.">
+  <meta property="og:image" content="https://www.cerelit.com/img/og-image.jpg">
+  <meta property="og:locale" content="es_MX">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LocalBusiness","name":"Cerelit Minds","url":"https://www.cerelit.com","telephone":"+525610070786","email":"hola@cerelit.com","address":{"@type":"PostalAddress","addressCountry":"MX"},"description":"Consultoría IT, Google Workspace, Microsoft 365 y soporte técnico para empresas en México."}</script>
+  <link rel="icon" href="img/favicon_96x96.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Liberation+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================================
+       CERELIT MINDS — PREMIUM MINIMAL SYSTEM
+    ============================================ */
+    :root {
+      --ink:          #0D1117;
+      --ink-2:        #374151;
+      --ink-3:        #6B7280;
+      --ink-4:        #9CA3AF;
+      --primary:      #1A7A6A;
+      --primary-mid:  #3A9D8A;
+      --primary-pale: rgba(26,122,106,.08);
+      --primary-line: rgba(26,122,106,.18);
+      --accent:       #FF8C00;
+      --accent-pale:  rgba(255,140,0,.1);
+      --surface:      #FFFFFF;
+      --surface-off:  #F7F9FB;
+      --border:       #E5EAF0;
+      --border-light: #F0F4F8;
+      --green-ws:     #25D366;
+
+      --font: 'Liberation Mono', monospace;
+      --ease: cubic-bezier(.4,0,.2,1);
+      --spring: cubic-bezier(.2,1,.3,1);
+      --dur: 280ms;
+      --r: 1rem;
+      --r-lg: 1.5rem;
+      --r-xl: 2rem;
+      --r-full: 9999px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { overflow-x: hidden; scroll-behavior: smooth; }
+
+    body {
+      background: var(--surface);
+      color: var(--ink-2);
+      font-family: var(--font);
+      font-size: 1rem;
+      line-height: 1.65;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    html.menu-open, body.menu-open { overflow: hidden; }
+    @media (min-width: 768px) { html.menu-open, body.menu-open { overflow: auto; } }
+
+    h1,h2,h3,h4 { font-family: var(--font); font-weight: 700; color: var(--ink); line-height: 1.1; }
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      width: 100%;
+      max-width: 1140px;
+      margin-inline: auto;
+      padding-inline: clamp(1.25rem, 5vw, 2.5rem);
+    }
+
+    .section-py { padding-block: clamp(5rem, 12vw, 9rem); }
+
+    /* ── SCROLL REVEALS ── */
+    .reveal {
+      opacity: 0; transform: translateY(32px);
+      transition: opacity .65s var(--ease), transform .65s var(--spring);
+    }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+
+    .reveal-l {
+      opacity: 0; transform: translateX(-32px);
+      transition: opacity .65s var(--ease), transform .65s var(--spring);
+    }
+    .reveal-l.in { opacity: 1; transform: translateX(0); }
+
+    .reveal-r {
+      opacity: 0; transform: translateX(32px);
+      transition: opacity .65s var(--ease), transform .65s var(--spring);
+    }
+    .reveal-r.in { opacity: 1; transform: translateX(0); }
+
+    .reveal-scale {
+      opacity: 0; transform: scale(.97);
+      transition: opacity .65s var(--ease), transform .65s var(--spring);
+    }
+    .reveal-scale.in { opacity: 1; transform: scale(1); }
+
+    .d1 { transition-delay: .08s; }
+    .d2 { transition-delay: .16s; }
+    .d3 { transition-delay: .24s; }
+    .d4 { transition-delay: .32s; }
+
+    /* ============================================
+       NAVIGATION — pill que cambia verde → blanco
+    ============================================ */
+    #mainNav {
+      position: fixed;
+      top: 0;
+      inset-inline: 0;
+      z-index: 100;
+      padding: .875rem clamp(1rem, 3vw, 1.5rem);
+    }
+
+    .nav-glass {
+      background: var(--primary);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: var(--r-full);
+      padding: .625rem 1.375rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      max-width: 880px;
+      margin: .875rem auto;
+      transition: background .4s var(--ease), border-color .4s, box-shadow .4s;
+      box-shadow: 0 2px 16px rgba(0,0,0,.08);
+    }
+
+    .nav-glass.scrolled {
+      background: var(--surface);
+      border-color: var(--border);
+      box-shadow: 0 4px 28px rgba(0,0,0,.07);
+    }
+
+    .nav-logo img {
+      height: 2rem;
+      width: auto;
+      display: block;
+      transition: opacity .25s;
+    }
+
+    .nav-links-wrap {
+      display: none;
+      align-items: center;
+      gap: .125rem;
+    }
+    @media (min-width:768px) { .nav-links-wrap { display: flex; } }
+
+    .nav-link {
+      font-family: var(--font);
+      font-size: .82rem;
+      font-weight: 500;
+      color: rgba(255,255,255,.9);
+      padding: .45rem .9rem;
+      border-radius: var(--r-full);
+      letter-spacing: .03em;
+      transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
+    }
+    .nav-glass.scrolled .nav-link { color: var(--ink-2); }
+    .nav-link:hover { background: rgba(255,255,255,.15); }
+    .nav-glass.scrolled .nav-link:hover { background: var(--surface-off); color: var(--primary); }
+
+    .nav-cta {
+      font-family: var(--font);
+      font-size: .82rem;
+      font-weight: 700;
+      background: rgba(255,255,255,.15);
+      color: #fff;
+      padding: .55rem 1.375rem;
+      border-radius: var(--r-full);
+      border: 1px solid rgba(255,255,255,.25);
+      cursor: pointer;
+      transition: background var(--dur), color var(--dur), border-color var(--dur), transform var(--dur) var(--ease);
+      display: none;
+      letter-spacing: .02em;
+    }
+    .nav-glass.scrolled .nav-cta {
+      background: var(--primary);
+      color: #fff;
+      border-color: transparent;
+    }
+    @media (min-width:768px) { .nav-cta { display: inline-block; } }
+    .nav-cta:hover { transform: translateY(-1px); filter: brightness(1.1); }
+
+    /* Hamburger */
+    #hambtn {
+      display: flex; flex-direction: column; gap: 5px;
+      width: 40px; height: 40px;
+      align-items: center; justify-content: center;
+      background: none; border: none; cursor: pointer; z-index: 101;
+    }
+    @media (min-width:768px) { #hambtn { display: none; } }
+
+    .hline {
+      display: block; width: 20px; height: 2px;
+      background: #fff; border-radius: 2px;
+      transition: transform .38s var(--spring), opacity .2s, background .3s;
+    }
+    .nav-glass.scrolled .hline { background: var(--ink); }
+    #hambtn.open .hline { background: var(--ink); }
+    #hambtn.open .hline:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    #hambtn.open .hline:nth-child(2) { opacity: 0; }
+    #hambtn.open .hline:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile overlay */
+    #mobileMenu {
+      position: fixed; inset: 0; z-index: 99;
+      background: rgba(255,255,255,.97);
+      backdrop-filter: blur(20px);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: .75rem;
+      opacity: 0; visibility: hidden;
+      transition: opacity .3s var(--ease), visibility .3s;
+    }
+    #mobileMenu.open { opacity: 1; visibility: visible; }
+
+    .mmlink {
+      font-family: var(--font);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--ink);
+      padding: 1rem 2rem;
+      border-radius: var(--r);
+      width: min(100%, 280px);
+      text-align: center;
+      background: var(--surface-off);
+      border: 1px solid var(--border);
+      opacity: 0; transform: translateY(16px);
+      transition: opacity .38s var(--spring), transform .38s var(--spring), color .2s, background .2s;
+    }
+    #mobileMenu.open .mmlink { opacity: 1; transform: translateY(0); }
+    #mobileMenu.open .mmlink:nth-child(1) { transition-delay:.04s }
+    #mobileMenu.open .mmlink:nth-child(2) { transition-delay:.08s }
+    #mobileMenu.open .mmlink:nth-child(3) { transition-delay:.12s }
+    #mobileMenu.open .mmlink:nth-child(4) { transition-delay:.16s }
+    #mobileMenu.open .mmlink:nth-child(5) { transition-delay:.20s }
+    .mmlink:hover { color: var(--primary); background: var(--primary-pale); border-color: var(--primary-line); }
+
+    /* ============================================
+       HERO — Editorial Split
+    ============================================ */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr;
+      overflow: hidden;
+      background: var(--surface);
+    }
+    @media (min-width: 1024px) { #hero { grid-template-columns: 55% 45%; } }
+
+    .hero-left {
+      position: relative;
+      z-index: 10;
+      padding: clamp(7rem, 15vw, 10rem) clamp(1.5rem, 5vw, 4rem) clamp(4rem, 8vw, 6rem);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background: var(--surface);
+    }
+
+    .hero-right {
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      min-height: 50vh;
+      background: var(--ink);
+    }
+
+    .hero-video {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; z-index: 0;
+      opacity: .75;
+    }
+
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(160deg, rgba(13,17,23,.55) 0%, rgba(26,122,106,.25) 100%);
+      z-index: 1;
+    }
+
+    /* Vertical accent line in hero */
+    .hero-left::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 0;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 40%;
+      background: linear-gradient(180deg, transparent, var(--primary), transparent);
+      border-radius: var(--r-full);
+    }
+    @media (max-width: 1023px) { .hero-left::before { display: none; } }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 2rem;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      width: 2rem; height: 2px;
+      background: var(--primary);
+      border-radius: var(--r-full);
+    }
+
+    .hero-h1 {
+      font-size: clamp(2.8rem, 7vw, 5rem);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--ink);
+      margin-bottom: 1.75rem;
+      letter-spacing: -.02em;
+    }
+
+    .hero-h1 em {
+      font-style: normal;
+      color: var(--primary);
+    }
+
+    .hero-desc {
+      font-size: .95rem;
+      font-weight: 400;
+      line-height: 1.8;
+      color: var(--ink-3);
+      margin-bottom: 2.75rem;
+      max-width: 460px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .875rem;
+      align-items: center;
+    }
+
+    .btn-prim {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: var(--ink);
+      color: #fff !important;
+      padding: .9rem 2.25rem;
+      border-radius: var(--r-full);
+      font-family: var(--font);
+      font-weight: 700;
+      font-size: .875rem;
+      letter-spacing: .02em;
+      border: none; cursor: pointer;
+      transition: background .25s, transform .3s var(--spring), box-shadow .3s;
+      text-decoration: none;
+    }
+    .btn-prim:hover { background: var(--primary); transform: translateY(-2px); box-shadow: 0 12px 28px rgba(26,122,106,.25); }
+
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: transparent;
+      color: var(--ink-2) !important;
+      padding: .9rem 2.25rem;
+      border-radius: var(--r-full);
+      font-family: var(--font);
+      font-weight: 600;
+      font-size: .875rem;
+      border: 1.5px solid var(--border);
+      cursor: pointer;
+      transition: border-color .25s, color .25s, transform .3s var(--spring);
+      text-decoration: none;
+    }
+    .btn-ghost:hover { border-color: var(--primary); color: var(--primary) !important; transform: translateY(-2px); }
+
+    /* ============================================
+       TRUST STRIP
+    ============================================ */
+    .trust-strip {
+      background: var(--surface-off);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 2.75rem 0;
+    }
+
+    .trust-inner {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      text-align: center;
+    }
+    @media (min-width:640px) { .trust-inner { grid-template-columns: repeat(4, 1fr); gap: 0; } }
+
+    .trust-item { padding: .5rem 1rem; }
+    @media (min-width:640px) { .trust-item + .trust-item { border-left: 1px solid var(--border); } }
+
+    .trust-num {
+      font-family: var(--font);
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: .35rem;
+    }
+
+    .trust-lbl {
+      font-size: .65rem;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+
+    /* ============================================
+       SECTION LABELS
+    ============================================ */
+    .sec-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: .625rem;
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 1.25rem;
+    }
+
+    .sec-eyebrow::before {
+      content: '';
+      width: 1.5rem; height: 2px;
+      background: var(--primary);
+      border-radius: var(--r-full);
+      flex-shrink: 0;
+    }
+
+    .sec-title {
+      font-family: var(--font);
+      font-size: clamp(1.9rem, 4.5vw, 3rem);
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 1.125rem;
+      letter-spacing: -.02em;
+      line-height: 1.1;
+    }
+
+    .sec-sub {
+      font-size: .925rem;
+      font-weight: 400;
+      line-height: 1.8;
+      color: var(--ink-3);
+      max-width: 480px;
+    }
+
+    .text-center { text-align: center; }
+    .mx-auto { margin-inline: auto; }
+
+    /* ============================================
+       ABOUT
+    ============================================ */
+    #about { background: var(--surface); }
+
+    .about-wrap {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    @media (min-width:768px) { .about-wrap { grid-template-columns: 1fr 1fr; gap: 5rem; } }
+
+    .about-text p {
+      font-size: .925rem;
+      color: var(--ink-3);
+      line-height: 1.9;
+      margin-top: 1rem;
+    }
+    .about-text strong { color: var(--ink); font-weight: 700; }
+
+    .about-visual {
+      position: relative;
+      border-radius: var(--r-xl);
+      background: var(--surface-off);
+      border: 1px solid var(--border);
+      padding: 2.25rem 2rem;
+    }
+
+    /* Subtle corner accent */
+    .about-visual::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 80px; height: 80px;
+      border-top: 2px solid var(--primary-line);
+      border-right: 2px solid var(--primary-line);
+      border-radius: 0 var(--r-xl) 0 0;
+      pointer-events: none;
+    }
+
+    .about-stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .about-stat {
+      background: var(--surface);
+      border-radius: var(--r);
+      padding: 1.375rem 1.25rem;
+      border: 1px solid var(--border);
+      text-align: left;
+      transition: border-color .25s, transform .3s var(--spring);
+    }
+    .about-stat:hover { border-color: var(--primary-mid); transform: translateY(-3px); }
+
+    .about-stat-num {
+      font-family: var(--font);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1;
+      margin-bottom: .25rem;
+    }
+
+    .about-stat-lbl {
+      font-size: .65rem;
+      font-weight: 600;
+      letter-spacing: .12em;
+      color: var(--ink-3);
+      text-transform: uppercase;
+    }
+
+    .value-pills { display: flex; flex-wrap: wrap; gap: .5rem; }
+
+    .vpill {
+      padding: .3rem .875rem;
+      border-radius: var(--r-full);
+      border: 1px solid var(--primary-line);
+      background: var(--primary-pale);
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      color: var(--primary);
+      text-transform: uppercase;
+    }
+
+    /* ============================================
+       SERVICES
+    ============================================ */
+    #services { background: var(--surface-off); }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+      margin-top: 4rem;
+    }
+    @media (min-width:640px) { .services-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width:1024px) { .services-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    .svc-card {
+      position: relative;
+      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 2.25rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: .75rem;
+      transition: transform .4s var(--spring), border-color .3s, box-shadow .4s;
+      cursor: default;
+    }
+
+    .svc-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 24px 48px rgba(0,0,0,.06);
+      border-color: var(--primary-line);
+    }
+
+    /* Top accent line */
+    .svc-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 2rem; right: 2rem;
+      height: 2px;
+      background: var(--primary);
+      border-radius: 0 0 var(--r-full) var(--r-full);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .45s var(--spring);
+    }
+    .svc-card:hover::after { transform: scaleX(1); }
+
+    .svc-icon-wrap {
+      width: 48px; height: 48px;
+      border-radius: var(--r);
+      background: var(--primary-pale);
+      border: 1px solid var(--primary-line);
+      display: flex;
+      align-items: center; justify-content: center;
+      transition: background .3s, box-shadow .3s;
+    }
+    .svc-card:hover .svc-icon-wrap { background: var(--primary-pale); box-shadow: 0 0 0 4px var(--primary-pale); }
+    .svc-icon-wrap svg { width: 22px; height: 22px; color: var(--primary); }
+
+    .svc-tag {
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--ink-4);
+    }
+
+    .svc-h3 {
+      font-family: var(--font);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+
+    .svc-p {
+      font-size: .875rem;
+      font-weight: 400;
+      line-height: 1.8;
+      color: var(--ink-3);
+      flex-grow: 1;
+    }
+
+    .svc-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .375rem;
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: .04em;
+      margin-top: .5rem;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity .3s, transform .3s var(--spring);
+    }
+    .svc-card:hover .svc-link { opacity: 1; transform: translateY(0); }
+    .svc-link svg { width: 14px; height: 14px; transition: transform .25s var(--spring); }
+    .svc-link:hover svg { transform: translateX(3px); }
+
+    /* ============================================
+       CLOUD SOLUTIONS
+    ============================================ */
+    #cloud-solutions { background: var(--surface); }
+
+    .cloud-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin-top: 4rem;
+    }
+    @media (min-width:768px) { .cloud-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .cloud-card {
+      position: relative;
+      overflow: hidden;
+      background: var(--surface-off);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 2.5rem;
+      transition: transform .4s var(--spring), box-shadow .4s, border-color .3s;
+    }
+    .cloud-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 48px rgba(0,0,0,.06);
+      border-color: var(--primary-line);
+    }
+
+    .cloud-provider-tag {
+      display: inline-block;
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      padding: .25rem .75rem;
+      border-radius: var(--r-full);
+      margin-bottom: 1.75rem;
+    }
+
+    .cloud-hdr {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .cloud-logo-box {
+      padding: .75rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+    }
+    .cloud-logo-box svg { width: 28px; height: 28px; display: block; }
+
+    .cloud-name {
+      font-family: var(--font);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .cloud-sub-lbl {
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-top: .1rem;
+    }
+
+    .cloud-ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: .875rem;
+    }
+    .cloud-ul li {
+      display: flex;
+      align-items: flex-start;
+      gap: .75rem;
+      font-size: .875rem;
+      color: var(--ink-3);
+      line-height: 1.6;
+    }
+
+    .check-dot {
+      display: inline-flex;
+      align-items: center; justify-content: center;
+      width: 16px; height: 16px;
+      min-width: 16px;
+      border-radius: 50%;
+      margin-top: 2px;
+    }
+
+    /* ============================================
+       PROCESS
+    ============================================ */
+    #process { background: var(--surface-off); }
+
+    .process-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1px;
+      margin-top: 4rem;
+      background: var(--border);
+      border-radius: var(--r-xl);
+      overflow: hidden;
+    }
+    @media (min-width:640px) { .process-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width:1024px) { .process-grid { grid-template-columns: repeat(4, 1fr); } }
+
+    .proc-card {
+      background: var(--surface);
+      padding: 2.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: .875rem;
+      transition: background .3s;
+      position: relative;
+    }
+    .proc-card:hover { background: var(--primary-pale); }
+
+    .proc-num {
+      font-family: var(--font);
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--primary);
+      opacity: .18;
+    }
+
+    .proc-h3 {
+      font-family: var(--font);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .proc-p {
+      font-size: .85rem;
+      font-weight: 400;
+      line-height: 1.8;
+      color: var(--ink-3);
+    }
+
+    /* ============================================
+       CONTACT
+    ============================================ */
+    #contact { background: var(--surface); }
+
+    .contact-wrap {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3.5rem;
+    }
+    @media (min-width:768px) { .contact-wrap { grid-template-columns: 1fr 1fr; align-items: start; } }
+
+    .contact-lhs .sec-title { font-size: clamp(1.7rem, 3.5vw, 2.5rem); }
+
+    .contact-desc {
+      font-size: .925rem;
+      color: var(--ink-3);
+      line-height: 1.85;
+      margin-top: 1rem;
+      margin-bottom: 2.25rem;
+    }
+
+    .ch-list { display: flex; flex-direction: column; gap: .875rem; }
+
+    .ch-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.125rem 1.25rem;
+      border-radius: var(--r-lg);
+      background: var(--surface-off);
+      border: 1px solid var(--border);
+      transition: border-color .25s, transform .35s var(--spring), background .25s;
+    }
+    .ch-item:hover { transform: translateX(6px); border-color: var(--primary-line); background: var(--primary-pale); }
+
+    .ch-icon {
+      width: 40px; height: 40px; min-width: 40px;
+      border-radius: .625rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .ch-icon svg { width: 18px; height: 18px; }
+    .ch-icon.wa { background: rgba(37,211,102,.1); border: 1px solid rgba(37,211,102,.2); }
+    .ch-icon.wa svg { color: var(--green-ws); }
+    .ch-icon.em { background: var(--primary-pale); border: 1px solid var(--primary-line); }
+    .ch-icon.em svg { color: var(--primary); }
+    .ch-icon.ph { background: rgba(13,17,23,.05); border: 1px solid var(--border); }
+    .ch-icon.ph svg { color: var(--ink-2); }
+
+    .ch-lbl { font-size: .62rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-4); margin-bottom: .1rem; }
+    .ch-val { font-family: var(--font); font-size: .875rem; font-weight: 700; color: var(--ink); }
+
+    /* Form */
+    .form-wrap {
+      background: var(--surface-off);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: clamp(1.75rem, 4vw, 2.75rem);
+    }
+
+    .form-group { margin-bottom: 1.25rem; }
+
+    .form-lbl {
+      display: block;
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+      margin-bottom: .5rem;
+    }
+
+    .form-input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: .625rem;
+      padding: .825rem 1rem;
+      font-family: var(--font);
+      font-size: .875rem;
+      color: var(--ink);
+      outline: none;
+      transition: border-color .25s, box-shadow .25s;
+      -webkit-appearance: none; appearance: none;
+    }
+    .form-input::placeholder { color: var(--ink-4); }
+    .form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-pale); }
+    select.form-input { cursor: pointer; }
+    textarea.form-input { resize: vertical; min-height: 108px; }
+
+    .btn-submit {
+      width: 100%;
+      display: flex; align-items: center; justify-content: center; gap: .5rem;
+      background: var(--ink);
+      color: #fff;
+      padding: 1rem;
+      border-radius: .625rem;
+      font-family: var(--font);
+      font-size: .9rem;
+      font-weight: 700;
+      border: none; cursor: pointer;
+      transition: background .25s var(--ease), transform .35s var(--spring);
+      letter-spacing: .02em;
+    }
+    .btn-submit:hover { background: var(--primary); transform: translateY(-2px); }
+    .btn-submit svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    .form-success, .form-error {
+      display: none;
+      padding: .875rem 1rem;
+      border-radius: .5rem;
+      font-size: .82rem;
+      font-weight: 600;
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .form-success { background: rgba(37,211,102,.08); border: 1px solid rgba(37,211,102,.2); color: #1a9e4a; }
+    .form-error { background: rgba(220,38,38,.06); border: 1px solid rgba(220,38,38,.15); color: #dc2626; }
+    .form-success.show, .form-error.show { display: block; }
+
+    .hp-field { position: absolute; opacity: 0; pointer-events: none; height: 0; overflow: hidden; }
+
+    /* ============================================
+       FOOTER
+    ============================================ */
+    footer {
+      background: var(--ink);
+      padding: 4rem 0 2.25rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    @media (min-width:768px) { .footer-grid { grid-template-columns: 2fr 1fr 1fr; gap: 4rem; align-items: start; } }
+
+    .footer-logo img { height: 1.75rem; width: auto; display: block; margin-bottom: 1rem; }
+
+    .footer-tag {
+      font-size: .8rem;
+      color: rgba(255,255,255,.45);
+      line-height: 1.75;
+      max-width: 260px;
+    }
+
+    .footer-contacts { display: flex; flex-direction: column; gap: .5rem; margin-top: 1.25rem; }
+
+    .footer-contacts a {
+      font-size: .78rem;
+      color: rgba(255,255,255,.5);
+      display: flex; align-items: center; gap: .5rem;
+      transition: color .25s;
+    }
+    .footer-contacts a svg { width: 13px; height: 13px; flex-shrink: 0; opacity: .6; }
+    .footer-contacts a:hover { color: var(--primary-mid); }
+
+    .footer-col-h {
+      font-family: var(--font);
+      font-size: .68rem;
+      font-weight: 700;
+      color: rgba(255,255,255,.35);
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+    }
+
+    .footer-links { display: flex; flex-direction: column; gap: .75rem; }
+    .footer-links a { font-size: .82rem; color: rgba(255,255,255,.55); transition: color .25s; }
+    .footer-links a:hover { color: var(--primary-mid); }
+
+    .footer-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: .375rem;
+      align-items: center;
+      text-align: center;
+      padding-top: 2rem;
+    }
+    @media (min-width:768px) { .footer-bottom { flex-direction: row; justify-content: space-between; text-align: left; } }
+
+    .footer-bottom p, .footer-bottom a { font-size: .72rem; color: rgba(255,255,255,.35); }
+    .footer-bottom a:hover { color: var(--primary-mid); }
+
+    /* ============================================
+       WHATSAPP FAB & COOKIES
+    ============================================ */
+    .wa-float {
+      position: fixed;
+      bottom: 1.5rem; right: 1.5rem;
+      z-index: 90;
+      background: var(--ink);
+      color: #fff !important;
+      border-radius: var(--r-full);
+      padding: .75rem 1.375rem;
+      display: flex; align-items: center; gap: .5rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,.18);
+      transition: background .3s, transform .4s var(--spring);
+      font-family: var(--font);
+      font-weight: 700;
+      font-size: .82rem;
+      opacity: 0; transform: translateY(40px);
+    }
+    .wa-float.show { opacity: 1; transform: translateY(0); }
+    .wa-float:hover { background: var(--primary); transform: translateY(-4px); }
+    .wa-float svg { width: 20px; height: 20px; fill: currentColor; }
+
+    #cookieBanner {
+      position: fixed;
+      bottom: 1.5rem; left: 1.5rem;
+      max-width: 420px;
+      z-index: 100;
+      background: var(--ink);
+      color: rgba(255,255,255,.8);
+      padding: 1.5rem;
+      border-radius: var(--r-lg);
+      box-shadow: 0 16px 40px rgba(0,0,0,.25);
+      display: flex; flex-direction: column; gap: 1rem;
+      opacity: 0; transform: translateY(16px);
+      transition: all .45s var(--ease);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    @media (min-width:600px) { #cookieBanner { flex-direction: row; align-items: center; } }
+    #cookieBanner.show { opacity: 1; transform: translateY(0); }
+    #cookieBanner p { font-size: .82rem; line-height: 1.6; }
+    #cookieBanner a { color: var(--primary-mid); font-weight: 700; text-decoration: underline; }
+
+    #cookieOk {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: .7rem 1.375rem;
+      border-radius: .5rem;
+      font-family: var(--font);
+      font-weight: 700;
+      font-size: .82rem;
+      cursor: pointer;
+      transition: background .25s, transform .25s;
+      white-space: nowrap;
+    }
+    #cookieOk:hover { background: var(--primary-mid); transform: scale(1.03); }
+
+    /* ============================================
+       MOBILE
+    ============================================ */
+    @media (max-width:480px) {
+      .hero-h1 { font-size: 2.5rem; }
+      .svc-card, .cloud-card { padding: 1.75rem 1.5rem; }
+      .form-wrap { padding: 1.5rem; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============ NAVIGATION ============ -->
+  <nav id="mainNav" aria-label="Navegación principal">
+    <div class="nav-glass">
+      <a href="#hero" class="nav-logo" aria-label="Cerelit Minds — inicio">
+        <img src="img/blanco.svg" alt="Cerelit Minds" width="130" height="34" id="nav-logo-img"
+          onerror="this.onerror=null;this.src='img/cerelit.svg';">
+      </a>
+
+      <div class="nav-links-wrap" role="list">
+        <a href="#about" class="nav-link" role="listitem">Nosotros</a>
+        <a href="#services" class="nav-link" role="listitem">Servicios</a>
+        <a href="#cloud-solutions" class="nav-link" role="listitem">Cloud</a>
+        <a href="#process" class="nav-link" role="listitem">Proceso</a>
+        <a href="#contact" class="nav-link" role="listitem">Contacto</a>
+      </div>
+
+      <a href="#contact" class="nav-cta" id="nav-cta-btn">Hablar con un experto</a>
+
+      <button id="hambtn" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
+        <span class="hline"></span><span class="hline"></span><span class="hline"></span>
+      </button>
+    </div>
+  </nav>
+
+  <div id="mobileMenu" role="dialog" aria-modal="true" aria-label="Menú">
+    <a href="#about" class="mmlink">Nosotros</a>
+    <a href="#services" class="mmlink">Servicios</a>
+    <a href="#cloud-solutions" class="mmlink">Cloud</a>
+    <a href="#process" class="mmlink">Proceso</a>
+    <a href="#contact" class="mmlink">Contacto</a>
+  </div>
+
+  <!-- ============ HERO ============ -->
+  <header id="hero" role="banner">
+    <div class="hero-left">
+      <div class="hero-content">
+        <div class="hero-eyebrow">Consultoría IT para Empresas</div>
+
+        <h1 class="hero-h1">
+          Tu tecnología,<br>
+          <em>sin interrupciones.</em>
+        </h1>
+
+        <p class="hero-desc">
+          Cerelit Minds gestiona tu infraestructura tecnológica de extremo a extremo: redes, servidores, Google Workspace y Microsoft 365. Tu equipo opera, tú creces.
+        </p>
+
+        <div class="hero-ctas">
+          <a href="#contact" class="btn-prim">Iniciar Proyecto</a>
+          <a href="#services" class="btn-ghost">Ver Servicios</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right" aria-label="Dynamic Tech Background">
+      <video autoplay loop muted playsinline class="hero-video">
+        <source src="hero-video.mp4" type="video/mp4">
+      </video>
+      <div class="hero-overlay"></div>
+    </div>
+  </header>
+
+  <!-- ============ TRUST STRIP ============ -->
+  <section class="trust-strip reveal-scale" aria-label="Indicadores">
+    <div class="container">
+      <div class="trust-inner">
+        <div class="trust-item">
+          <div class="trust-num">+100</div>
+          <div class="trust-lbl">Empresas atendidas</div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-num">24/7</div>
+          <div class="trust-lbl">Monitoreo activo</div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-num">&lt;4h</div>
+          <div class="trust-lbl">Tiempo de respuesta</div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-num">99.9%</div>
+          <div class="trust-lbl">Uptime garantizado</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <!-- ============ ABOUT ============ -->
+    <section id="about" class="section-py">
+      <div class="container">
+        <div class="about-wrap">
+          <div class="about-text reveal-l">
+            <div class="sec-eyebrow">Quiénes somos</div>
+            <h2 class="sec-title">Tu socio en tecnología y <span style="color:var(--primary)">total tranquilidad.</span></h2>
+            <p>En Cerelit Minds somos un equipo de <strong>ingenieros certificados</strong> especializados en consultoría IT y soporte técnico empresarial.</p>
+            <p>Gestionamos tu operación tecnológica de extremo a extremo — desde redes y servidores hasta Google Workspace y Microsoft 365 — para que tu equipo opere con <strong>máxima eficiencia</strong> y tú puedas dedicarte a crecer.</p>
+          </div>
+
+          <div class="about-visual reveal-r">
+            <div class="about-stat-grid">
+              <div class="about-stat">
+                <div class="about-stat-num">+100</div>
+                <div class="about-stat-lbl">Clientes</div>
+              </div>
+              <div class="about-stat">
+                <div class="about-stat-num">8+</div>
+                <div class="about-stat-lbl">Años</div>
+              </div>
+              <div class="about-stat">
+                <div class="about-stat-num">24/7</div>
+                <div class="about-stat-lbl">Soporte</div>
+              </div>
+              <div class="about-stat">
+                <div class="about-stat-num">100%</div>
+                <div class="about-stat-lbl">Compromiso</div>
+              </div>
+            </div>
+            <div class="value-pills">
+              <span class="vpill">Confianza</span>
+              <span class="vpill">Precisión</span>
+              <span class="vpill">SLA</span>
+              <span class="vpill">Certificados</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SERVICES ============ -->
+    <section id="services" class="section-py">
+      <div class="container">
+        <div class="text-center reveal-scale">
+          <div class="sec-eyebrow mx-auto" style="justify-content:center;">Lo que ofrecemos</div>
+          <h2 class="sec-title">Soporte IT diseñado<br>para tu negocio</h2>
+          <p class="sec-sub mx-auto">Desde atención puntual hasta la gestión integral de tu área tecnológica. Elige el esquema que se adapta a tu escala.</p>
+        </div>
+
+        <div class="services-grid">
+          <div class="svc-card reveal d1">
+            <div class="svc-icon-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+              </svg>
+            </div>
+            <span class="svc-tag">On-demand</span>
+            <div class="svc-h3">Soporte por Ticket</div>
+            <p class="svc-p">Para imprevistos que exigen solución inmediata. Sin contratos forzosos — solo resultados medibles y tiempos de resolución garantizados.</p>
+            <a href="#contact" class="svc-link">
+              Solicitar
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+
+          <div class="svc-card reveal d2">
+            <div class="svc-icon-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <span class="svc-tag">Managed Services</span>
+            <div class="svc-h3">Soporte Proactivo</div>
+            <p class="svc-p">Monitoreo continuo 24/7, parches de seguridad automáticos y auditorías periódicas. Anticipamos problemas antes de que impacten tu operación.</p>
+            <a href="#contact" class="svc-link">
+              Solicitar
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+
+          <div class="svc-card reveal d3">
+            <div class="svc-icon-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+              </svg>
+            </div>
+            <span class="svc-tag">Enterprise</span>
+            <div class="svc-h3">Consultoría Integral</div>
+            <p class="svc-p">Delega por completo tu área de IT. Nos convertimos en tu departamento tecnológico: estrategia, operación y optimización continua.</p>
+            <a href="#contact" class="svc-link">
+              Solicitar
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CLOUD SOLUTIONS ============ -->
+    <section id="cloud-solutions" class="section-py">
+      <div class="container">
+        <div class="text-center reveal-scale">
+          <div class="sec-eyebrow mx-auto" style="justify-content:center;">Infraestructura y nube</div>
+          <h2 class="sec-title">Google Workspace<br>&amp; Microsoft 365</h2>
+          <p class="sec-sub mx-auto">Como proveedores certificados, garantizamos una gestión integral de tu entorno cloud: segura, eficiente y alineada con tu negocio.</p>
+        </div>
+
+        <div class="cloud-grid">
+          <div class="cloud-card reveal d1">
+            <div class="cloud-provider-tag" style="background:#EBF3FF;color:#4285F4;">Proveedor Google</div>
+            <div class="cloud-hdr">
+              <div class="cloud-logo-box">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M23.49 12.28a12 12 0 00-.19-2.28H12v4.51h6.47a5.54 5.54 0 01-2.4 3.64h.01l3.56 2.76.24.02c2.22-2.05 3.61-5.07 3.61-8.65z" fill="#4285F4"/>
+                  <path d="M12 24c3.24 0 5.96-1.07 7.94-2.91l-3.78-2.93a7.5 7.5 0 01-4.16 1.15 7.51 7.51 0 01-7.09-5.19H.92l-3.87 3C1.06 21.03 6.18 24 12 24z" fill="#34A853"/>
+                  <path d="M4.91 14.12A7.56 7.56 0 014.5 12c0-.73.13-1.45.41-2.12V6.82H1.04A12.04 12.04 0 000 12c0 1.93.46 3.75 1.04 5.18l3.87-3.06z" fill="#FBBC05"/>
+                  <path d="M12 4.77c1.77 0 3.35.61 4.6 1.8l3.44-3.44A11.93 11.93 0 0012 0C6.18 0 1.06 2.97-.04 7.36l3.87 3.06A7.51 7.51 0 0112 4.77z" fill="#EA4335"/>
+                </svg>
+              </div>
+              <div>
+                <div class="cloud-name">Google Workspace</div>
+                <div class="cloud-sub-lbl">Administración completa</div>
+              </div>
+            </div>
+            <ul class="cloud-ul">
+              <li>
+                <span class="check-dot" style="background:rgba(52,168,83,.12)">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#34A853" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                </span>
+                Configuración de Gmail, Drive, Meet y Calendar
+              </li>
+              <li>
+                <span class="check-dot" style="background:rgba(52,168,83,.12)">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#34A853" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                </span>
+                Administración centralizada de usuarios y dispositivos
+              </li>
+              <li>
+                <span class="check-dot" style="background:rgba(52,168,83,.12)">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#34A853" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                </span>
+                Políticas de seguridad avanzadas y cumplimiento
+              </li>
+              <li>
+                <span class="check-dot" style="background:rgba(52,168,83,.12)">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#34A853" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                </span>
+                Migraciones seguras desde cualquier plataforma
+              </li>
+            </ul>
+          </div>
+
+          <div class="cloud-card reveal d2">
+            <div class="cloud-provider-tag" style="background:var(--primary-pale);color:var(--primary);">Proveedor Microsoft</div>
+            <div class="cloud-hdr">
+              <div class="cloud-logo-box">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23" width="30" height="30">
+                  <path d="M0 0h10.9v10.9H0z" fill="#F25022"/>
+                  <path d="M12.1 0H23v10.9H12.1z" fill="#7FBA00"/>
+                  <path d="M0 12.1h10.9V23H0z" fill="#00A4EF"/>
+                  <path d="M12.1 12.1H23V23H12.1z" fill="#FFB900"/>
+                </svg>
+              </div>
+              <div>
+                <div class="cloud-name">Microsoft 365</div>
+                <div class="cloud-sub-lbl">Gestión integral</div>
+              </div>
+            </div>
+            <ul class="cloud-ul">
+              <li>
+                <span class="check-dot" style="background:var(--primary-pale)">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                </span>
+                Exchange, SharePoint, Teams y OneDrive
+              </li>
+              <li>
+                <span class="check-dot" style="background:var(--primary-pale)">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                </span>
+                Azure, Entra ID (Azure AD) e Intune MDM
+              </li>
+              <li>
+                <span class="check-dot" style="background:var(--primary-pale)">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                </span>
+                Cumplimiento normativo y políticas de seguridad
+              </li>
+              <li>
+                <span class="check-dot" style="background:var(--primary-pale)">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                </span>
+                Automatización con Power Platform y Power Automate
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PROCESS ============ -->
+    <section id="process" class="section-py">
+      <div class="container">
+        <div class="text-center reveal-scale">
+          <div class="sec-eyebrow mx-auto" style="justify-content:center;">Cómo trabajamos</div>
+          <h2 class="sec-title">Un proceso claro,<br>sin sorpresas</h2>
+          <p class="sec-sub mx-auto">Cada paso está diseñado para maximizar tu tranquilidad y minimizar el impacto en tu negocio.</p>
+        </div>
+
+        <div class="process-grid reveal">
+          <div class="proc-card d1">
+            <div class="proc-num">01</div>
+            <div class="proc-h3">Contacto</div>
+            <p class="proc-p">Nos explicas tu necesidad. Escuchamos con atención para entender tu entorno tecnológico y sus particularidades.</p>
+          </div>
+          <div class="proc-card d2">
+            <div class="proc-num">02</div>
+            <div class="proc-h3">Diagnóstico</div>
+            <p class="proc-p">Analizamos la causa raíz con precisión técnica y te presentamos un plan de acción con tiempos y alcances definidos.</p>
+          </div>
+          <div class="proc-card d3">
+            <div class="proc-num">03</div>
+            <div class="proc-h3">Implementación</div>
+            <p class="proc-p">Nuestros ingenieros aplican la solución con el mínimo impacto en tu operación. Cada cambio es documentado y validado.</p>
+          </div>
+          <div class="proc-card d4">
+            <div class="proc-num">04</div>
+            <div class="proc-h3">Seguimiento</div>
+            <p class="proc-p">Verificamos los resultados contigo y nos aseguramos de tu completa satisfacción. Tu operación queda estable y documentada.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section id="contact" class="section-py">
+      <div class="container">
+        <div class="contact-wrap">
+          <div class="contact-lhs reveal-l">
+            <div class="sec-eyebrow">Hablemos</div>
+            <h2 class="sec-title">Conecta con<br>los expertos</h2>
+            <p class="contact-desc">Sin colas ni intermediarios. Elige el canal que prefieras y recibe atención inmediata de un ingeniero de Cerelit Minds.</p>
+
+            <div class="ch-list">
+              <a href="https://wa.me/525610070786" target="_blank" rel="noopener noreferrer" class="ch-item" id="cta-whatsapp">
+                <div class="ch-icon wa">
+                  <svg viewBox="0 0 32 32" fill="currentColor">
+                    <path d="M16.1 4.51C9.2 4.51 3.6 10.1 3.6 17c0 2.3.6 4.5 1.8 6.5L3.3 30l6.7-2.1c1.9.9 4.1 1.4 6.2 1.4 6.9 0 12.5-5.6 12.5-12.4 0-6.9-5.6-12.4-12.6-12.4zM22 20.3c-.2-.1-1.3-.6-1.5-.7-.2-.1-.4-.1-.6.1s-.6.7-.7.8-.3.2-.5.1-1-.4-1.9-1.2c-.7-.6-1.2-1.4-1.3-1.6s0-.3.1-.4.2-.3.4-.4.2-.2.3-.3.2-.3 0-.5-.1-.2-1.5-3.6-1.8-4.1c-.2-.5-.5-.4-.6-.4h-.4c-.2 0-.4.1-.6.3s-.9 1-.9 2.4.9 2.8 1 2.9 1.3.6 3.1 2.4 2.2 2 2.7 2.2 1 .2 1.3.1.4-.1 1.3-.5 1.5-.9.2-.5.2-1 .1-1.1-.2-.2-.4-.3z"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="ch-lbl">Chat inmediato</div>
+                  <div class="ch-val">WhatsApp · +52 56 1007 0786</div>
+                </div>
+              </a>
+              <a href="mailto:hola@cerelit.com" class="ch-item" id="cta-email">
+                <div class="ch-icon em">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="ch-lbl">Correo electrónico</div>
+                  <div class="ch-val">hola@cerelit.com</div>
+                </div>
+              </a>
+              <a href="tel:5610070786" class="ch-item" id="cta-phone">
+                <div class="ch-icon ph">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="ch-lbl">Llamada directa</div>
+                  <div class="ch-val">56 1007 0786</div>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <div class="form-wrap reveal-r">
+            <form id="contactForm" novalidate>
+              <div class="hp-field" aria-hidden="true">
+                <label for="hp-web">Website</label>
+                <input id="hp-web" name="website" type="text" tabindex="-1" autocomplete="off">
+              </div>
+              <div class="form-group">
+                <label for="f-name" class="form-lbl">Nombre completo *</label>
+                <input id="f-name" name="nombre" type="text" class="form-input" placeholder="Ej. María García" autocomplete="name" required>
+              </div>
+              <div class="form-group">
+                <label for="f-email" class="form-lbl">Correo corporativo *</label>
+                <input id="f-email" name="email" type="email" class="form-input" placeholder="maria@tuempresa.com" autocomplete="email" required>
+              </div>
+              <div class="form-group">
+                <label for="f-service" class="form-lbl">Servicio de interés</label>
+                <select id="f-service" name="servicio" class="form-input">
+                  <option value="">Selecciona una opción…</option>
+                  <option>Soporte IT por Ticket</option>
+                  <option>Soporte Proactivo 24/7</option>
+                  <option>Consultoría IT Integral</option>
+                  <option>Google Workspace</option>
+                  <option>Microsoft 365</option>
+                  <option>Ciberseguridad</option>
+                  <option>Otro proyecto</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="f-msg" class="form-lbl">Cuéntanos tu desafío</label>
+                <textarea id="f-msg" name="mensaje" class="form-input" placeholder="Describe tu infraestructura actual y el problema que deseas resolver…" rows="4"></textarea>
+              </div>
+              <button type="submit" class="btn-submit" id="form-send">
+                <span id="btn-text">Enviar solicitud</span>
+                <svg id="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+              </button>
+              <div class="form-success" id="form-success" role="alert">✓ ¡Mensaje preparado! Se abrirá tu cliente de correo para enviarlo.</div>
+              <div class="form-error" id="form-error" role="alert">✗ Por favor completa nombre y correo válido antes de enviar.</div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="reveal">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-logo">
+            <a href="#hero" aria-label="Inicio">
+              <img src="img/blanco.svg" alt="Cerelit Minds" width="110" height="28"
+                onerror="this.onerror=null;this.src='img/cerelit.svg';">
+            </a>
+          </div>
+          <p class="footer-tag">Consultoría IT y cloud solutions para empresas en México. Ingenieros certificados, SLA garantizado.</p>
+          <div class="footer-contacts">
+            <a href="tel:5610070786">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+              </svg>
+              56 1007 0786
+            </a>
+            <a href="mailto:hola@cerelit.com">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+              hola@cerelit.com
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <div class="footer-col-h">Servicios</div>
+          <div class="footer-links">
+            <a href="#services">Soporte por Ticket</a>
+            <a href="#services">Soporte Proactivo</a>
+            <a href="#services">Consultoría Integral</a>
+            <a href="#cloud-solutions">Google Workspace</a>
+            <a href="#cloud-solutions">Microsoft 365</a>
+          </div>
+        </div>
+
+        <div>
+          <div class="footer-col-h">Legal</div>
+          <div class="footer-links">
+            <a href="politica-datos.html">Aviso de Privacidad</a>
+            <a href="politica-cookies.html">Política de Cookies</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; <span id="yr"></span> Cerelit Minds. Todos los derechos reservados.</p>
+        <p>Desarrollado por <a href="#" rel="noopener">Apotema One</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============ COOKIE BANNER ============ -->
+  <div id="cookieBanner" role="dialog" aria-live="polite">
+    <p>Usamos cookies para mejorar tu experiencia. <a href="politica-cookies.html">Política de Cookies</a>.</p>
+    <button id="cookieOk">Aceptar</button>
+  </div>
+
+  <!-- ============ WHATSAPP FAB ============ -->
+  <a href="https://wa.me/525610070786" target="_blank" rel="noopener noreferrer" class="wa-float" id="wa-fab" aria-label="Contactar por WhatsApp">
+    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16.1 4.51C9.2 4.51 3.6 10.1 3.6 17c0 2.3.6 4.5 1.8 6.5L3.3 30l6.7-2.1c1.9.9 4.1 1.4 6.2 1.4 6.9 0 12.5-5.6 12.5-12.4 0-6.9-5.6-12.4-12.6-12.4zM22 20.3c-.2-.1-1.3-.6-1.5-.7-.2-.1-.4-.1-.6.1s-.6.7-.7.8-.3.2-.5.1-1-.4-1.9-1.2c-.7-.6-1.2-1.4-1.3-1.6s0-.3.1-.4.2-.3.4-.4.2-.2.3-.3.2-.3 0-.5-.1-.2-1.5-3.6-1.8-4.1c-.2-.5-.5-.4-.6-.4h-.4c-.2 0-.4.1-.6.3s-.9 1-.9 2.4.9 2.8 1 2.9 1.3.6 3.1 2.4 2.2 2 2.7 2.2 1 .2 1.3.1.4-.1 1.3-.5 1.5-.9.2-.5.2-1 .1-1.1-.2-.2-.4-.3z"/>
+    </svg>
+    <span>WhatsApp</span>
+  </a>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      /* ── Año ── */
+      const yr = document.getElementById('yr');
+      if (yr) yr.textContent = new Date().getFullYear();
+
+      /* ── MOBILE MENU ── */
+      const hambtn = document.getElementById('hambtn');
+      const mm = document.getElementById('mobileMenu');
+      const toggleMenu = () => {
+        const open = mm.classList.toggle('open');
+        hambtn.classList.toggle('open');
+        hambtn.setAttribute('aria-expanded', open);
+        document.documentElement.classList.toggle('menu-open', open);
+        document.body.classList.toggle('menu-open', open);
+      };
+      hambtn.addEventListener('click', toggleMenu);
+      mm.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        if (mm.classList.contains('open')) toggleMenu();
+      }));
+
+      /* ── NAV SCROLL — verde → blanco ── */
+      const navGlass = document.querySelector('.nav-glass');
+      const logoImg = document.getElementById('nav-logo-img');
+
+      function updateNav() {
+        if (window.scrollY > 60) {
+          navGlass.classList.add('scrolled');
+          if (logoImg) logoImg.src = 'img/azul.svg';
+        } else {
+          navGlass.classList.remove('scrolled');
+          if (logoImg) logoImg.src = 'img/blanco.svg';
+        }
+      }
+      updateNav();
+      window.addEventListener('scroll', updateNav, { passive: true });
+
+      /* ── INTERSECTION OBSERVER ── */
+      const io = new IntersectionObserver((entries, obs) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+        });
+      }, { threshold: .08, rootMargin: '0px 0px -40px 0px' });
+
+      document.querySelectorAll('.reveal, .reveal-l, .reveal-r, .reveal-scale').forEach(el => io.observe(el));
+
+      /* ── WHATSAPP FAB ── */
+      setTimeout(() => { const fab = document.getElementById('wa-fab'); if (fab) fab.classList.add('show'); }, 1800);
+
+      /* ── COOKIE ── */
+      const banner = document.getElementById('cookieBanner');
+      const okBtn = document.getElementById('cookieOk');
+      if (banner && localStorage.getItem('ck') !== '1') setTimeout(() => banner.classList.add('show'), 2500);
+      if (okBtn) okBtn.addEventListener('click', () => {
+        localStorage.setItem('ck', '1');
+        banner.classList.remove('show');
+      });
+
+      /* ── FORMULARIO ── */
+      const form = document.getElementById('contactForm');
+      if (form) {
+        let lastSent = 0;
+        form.addEventListener('submit', e => {
+          e.preventDefault();
+          const successEl = document.getElementById('form-success');
+          const errorEl = document.getElementById('form-error');
+          const btn = document.getElementById('form-send');
+          const btnTxt = document.getElementById('btn-text');
+
+          successEl.classList.remove('show');
+          errorEl.classList.remove('show');
+
+          const hp = form.querySelector('#hp-web');
+          if (hp && hp.value.trim() !== '') return;
+
+          const now = Date.now();
+          if (now - lastSent < 60000) { successEl.classList.add('show'); return; }
+
+          const nombre = form.querySelector('#f-name').value.trim();
+          const email = form.querySelector('#f-email').value.trim();
+          const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+          if (!nombre || nombre.length < 2) { errorEl.classList.add('show'); return; }
+          if (!emailRx.test(email)) { errorEl.classList.add('show'); return; }
+
+          btn.disabled = true;
+          btnTxt.textContent = 'Enviando…';
+
+          const servicio = form.querySelector('#f-service').value || 'Consulta general';
+          const msg = form.querySelector('#f-msg').value.trim();
+          const body = encodeURIComponent(`Nombre: ${nombre}\nCorreo: ${email}\nServicio: ${servicio}\n\n${msg || '(sin mensaje adicional)'}`);
+
+          window.location.href = `mailto:hola@cerelit.com?subject=Solicitud%20Cerelit%3A%20${encodeURIComponent(servicio)}&body=${body}`;
+
+          lastSent = Date.now();
+          setTimeout(() => {
+            successEl.classList.add('show');
+            btn.disabled = false;
+            btnTxt.textContent = 'Enviar solicitud';
+            form.reset();
+          }, 800);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
