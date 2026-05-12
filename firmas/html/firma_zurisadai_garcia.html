@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firma Cerelit Minds - Zurisadai García</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            background-color: #e2e8f0;
+            font-family: 'Liberation Mono', 'Courier New', monospace;
+        }
+
+        .signature-card {
+            width: 600px;
+            height: 200px;
+            background-color: #F4F4F4; /* Fondo Crema */
+            display: flex;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            position: relative;
+            border: 1px solid #e0e0e0;
+        }
+
+        /* Barra lateral Verde */
+        .accent-bar {
+            width: 8px;
+            height: 100%;
+            background-color: #45B39D;
+            z-index: 2;
+        }
+
+        .logo-container {
+            width: 240px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.01);
+            z-index: 2;
+            order: 2; /* Logo a la derecha */
+        }
+
+        .logo-container svg {
+            max-width: 210px;
+            height: auto;
+        }
+
+        .content {
+            flex: 1;
+            padding: 30px 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            z-index: 2;
+            order: 1; /* Texto a la izquierda */
+        }
+
+        .user-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2A4D69; /* Azul Real */
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .user-position {
+            font-size: 11px;
+            color: #45B39D; /* Verde */
+            font-weight: 700;
+            margin: 3px 0 14px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .contact-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            color: #1E293B;
+            font-size: 12px;
+            text-decoration: none;
+        }
+
+        .contact-icon {
+            width: 5px;
+            height: 5px;
+            background-color: #FF8C00; /* Naranja Energy */
+            border-radius: 50%;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        .contact-link {
+            color: #1E293B;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .contact-link:hover {
+            color: #45B39D;
+        }
+
+        /* Nodos decorativos en Azul Real detrás del logo */
+        .dot {
+            position: absolute;
+            border-radius: 50%;
+            z-index: 1;
+            background-color: #2A4D69; /* Azul Real */
+        }
+
+        .dot-1 { width: 14px; height: 14px; opacity: 0.12; top: 25px; right: 100px; }
+        .dot-2 { width: 8px; height: 8px; opacity: 0.08; top: 60px; right: 160px; }
+        .dot-3 { width: 28px; height: 28px; opacity: 0.04; bottom: 15px; right: 180px; }
+        .dot-4 { width: 6px; height: 6px; background-color: #FF8C00; opacity: 0.18; bottom: 50px; right: 50px; }
+        .dot-5 { width: 11px; height: 11px; opacity: 0.1; top: 120px; right: 35px; }
+        .dot-6 { width: 16px; height: 16px; opacity: 0.06; bottom: 85px; right: 120px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="signature-card">
+        <div class="accent-bar"></div>
+        
+        <!-- Puntos decorativos azules -->
+        <div class="dot dot-1"></div>
+        <div class="dot dot-2"></div>
+        <div class="dot dot-3"></div>
+        <div class="dot dot-4"></div>
+        <div class="dot dot-5"></div>
+        <div class="dot dot-6"></div>
+
+        <div class="content">
+            <h2 class="user-name">Zurisadai García</h2>
+            <p class="user-position">Analista de Operaciones</p>
+            
+            <div class="contact-list">
+                <div class="contact-item">
+                    <div class="contact-icon"></div>
+                    <a href="tel:+5617475848" class="contact-link">(56) 1747-5848</a>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon"></div>
+                    <a href="mailto:zurisadai@cerelit.com" class="contact-link">zurisadai@cerelit.com</a>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon"></div>
+                    <a href="https://cerelit.com" class="contact-link">www.cerelit.com</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="logo-container">
+            <svg id="Capa_2" data-name="Capa 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 218.44 76.2">
+              <defs>
+                <style>
+                  .logo-text { fill: #2a4d69; font-family: 'Liberation Mono', 'Courier New', monospace; font-size: 52px; isolation: isolate; }
+                  .logo-minds { fill: #2a4d69; font-family: 'Liberation Mono', 'Courier New', monospace; font-size: 13px; letter-spacing: .38em; isolation: isolate; }
+                  .logo-dot { fill: #2a4d69; isolation: isolate; }
+                </style>
+              </defs>
+              <g id="Capa_1-2" data-name="Capa 1">
+                <text class="logo-text" transform="translate(0 40.85)">cerelit</text>
+                <circle class="logo-dot" cx="15" cy="55.85" r="2" style="opacity: 0.4;"/>
+                <circle class="logo-dot" cx="45" cy="55.85" r="1.8" style="opacity: 0.3;"/>
+                <circle class="logo-dot" cx="76" cy="55.85" r="2" style="opacity: 0.35;"/>
+                <text class="logo-minds" transform="translate(135 64.85)">minds</text>
+              </g>
+            </svg>
+        </div>
+    </div>
+
+</body>
+</html>
