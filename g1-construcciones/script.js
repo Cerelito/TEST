@@ -153,7 +153,7 @@ if ('IntersectionObserver' in window && spySections.length) {
   spySections.forEach(sec => spyObserver.observe(sec));
 }
 
-// ---------- Subtle 3D tilt on glass cards (fine pointers only, no reduced motion) ----------
+// ---------- Subtle 3D tilt + cursor-tracking glare on glass cards (fine pointers only, no reduced motion) ----------
 if (finePointer && !reduceMotion) {
   document.querySelectorAll('.tilt').forEach(card => {
     let raf = null;
@@ -166,12 +166,16 @@ if (finePointer && !reduceMotion) {
       raf = requestAnimationFrame(() => {
         card.style.setProperty('--rx', (-py * 6).toFixed(2) + 'deg');
         card.style.setProperty('--ry', (px * 6).toFixed(2) + 'deg');
+        card.style.setProperty('--mx', ((px + 0.5) * 100).toFixed(1) + '%');
+        card.style.setProperty('--my', ((py + 0.5) * 100).toFixed(1) + '%');
       });
     });
     card.addEventListener('mouseleave', () => {
       card.classList.remove('tilting');
       card.style.setProperty('--rx', '0deg');
       card.style.setProperty('--ry', '0deg');
+      card.style.setProperty('--mx', '150%');
+      card.style.setProperty('--my', '150%');
     });
   });
 }

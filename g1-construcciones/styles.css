@@ -84,24 +84,72 @@ img{ max-width: 100%; display:block; }
   mix-blend-mode: overlay;
 }
 
-/* ---------- Glass primitive ---------- */
-.glass{
-  background: var(--glass-fill);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(22px) saturate(140%);
-  -webkit-backdrop-filter: blur(22px) saturate(140%);
-  border-radius: var(--radius-md);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
+/* ---------- Glass primitive: liquid-glass material ----------
+   Layered like real glass: a warped gradient body, a bright
+   top-edge highlight, a refractive ring at the boundary where
+   light bends, and (on .tilt cards) a cursor-tracking glare. */
+:root{
+  --mx: 150%; --my: 150%; /* off-element by default: glare hidden until JS moves it */
 }
+.glass{
+  position: relative;
+  isolation: isolate;
+  background:
+    linear-gradient(155deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02) 45%, rgba(114,213,227,0.05) 100%),
+    var(--glass-fill);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(26px) saturate(165%) brightness(1.05);
+  -webkit-backdrop-filter: blur(26px) saturate(165%) brightness(1.05);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.3),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 2px 8px rgba(0,0,0,0.3),
+    0 24px 60px -20px rgba(0,0,0,0.5),
+    0 30px 70px -30px rgba(114,213,227,0.18);
+  transition: box-shadow .4s var(--ease), border-color .35s;
+}
+/* Diagonal sheen + cursor-following glare, both painted, non-interactive */
+.glass::before{
+  content: '';
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    var(--glow, none),
+    radial-gradient(340px circle at var(--mx) var(--my), rgba(255,255,255,0.4), transparent 60%),
+    linear-gradient(125deg, rgba(255,255,255,0.16) 0%, transparent 28%, transparent 68%, rgba(114,213,227,0.10) 100%);
+  mix-blend-mode: overlay;
+  transition: background .35s var(--ease);
+}
+/* Refractive edge ring: a thin gradient border where the glass "bends" light */
+.glass::after{
+  content: '';
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  border-radius: inherit; padding: 1px;
+  background: linear-gradient(160deg, rgba(255,255,255,0.55), rgba(255,255,255,0.04) 35%, rgba(215,230,0,0.18) 75%, rgba(114,213,227,0.35) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+.glass > *{ position: relative; z-index: 2; }
 
 /* ---------- Tilt (pointer:fine only, set via JS custom properties) ---------- */
 .tilt{
   --rx: 0deg; --ry: 0deg; --lift: 0px;
   transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(var(--lift));
-  transition: transform .5s var(--ease), border-color .35s;
+  transition: transform .5s var(--ease), border-color .35s, box-shadow .5s var(--ease);
 }
 .tilt.tilting{ transition: transform .08s linear, border-color .35s; }
-.tilt:hover{ --lift: -6px; }
+.tilt:hover{
+  --lift: -8px;
+  border-color: var(--glass-border-lime);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.35),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 2px 8px rgba(0,0,0,0.35),
+    0 34px 70px -18px rgba(0,0,0,0.55),
+    0 20px 50px -18px rgba(215,230,0,0.28);
+}
 
 /* ---------- Scroll progress ---------- */
 .scroll-progress{
@@ -128,6 +176,8 @@ img{ max-width: 100%; display:block; }
   display: flex; align-items: center; justify-content: space-between;
   padding: 12px 14px 12px 22px;
   border-radius: 999px;
+  overflow: visible; /* .glass sets overflow:hidden, but the mobile dropdown
+    is a fixed-position child of this element and must not be clipped */
   transition: background .3s var(--ease), box-shadow .3s var(--ease);
 }
 .brand{ display: flex; align-items: baseline; gap: 8px; }
@@ -171,20 +221,31 @@ img{ max-width: 100%; display:block; }
 
 /* ---------- Buttons ---------- */
 .btn{
+  position: relative; overflow: hidden;
   display: inline-flex; align-items: center; justify-content: center;
   padding: 15px 30px; border-radius: 999px; font-weight: 600; font-size: .95rem;
   cursor: pointer; border: 1px solid transparent; transition: all .3s var(--ease);
 }
+/* Glossy sweep: a light streak that glides across on hover, like light
+   catching the curved surface of glass. */
+.btn::after{
+  content: ''; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,0.55), transparent);
+  transform: skewX(-18deg); pointer-events: none;
+  transition: left .7s var(--ease);
+}
+.btn:hover::after{ left: 130%; }
 .btn-primary{
   background: linear-gradient(135deg, var(--lime), var(--lime-soft));
   color: var(--ink);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), inset 0 -2px 4px rgba(0,0,0,0.12);
 }
-.btn-primary:hover{ transform: translateY(-3px); box-shadow: 0 16px 32px rgba(215,230,0,0.28); }
+.btn-primary:hover{ transform: translateY(-3px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 16px 32px rgba(215,230,0,0.32); }
 .btn-ghost{
   background: var(--glass-fill); border-color: var(--glass-border); color: var(--text-hi);
   backdrop-filter: blur(12px);
 }
-.btn-ghost:hover{ background: var(--glass-fill-strong); border-color: var(--glass-border-lime); }
+.btn-ghost:hover{ background: var(--glass-fill-strong); border-color: var(--glass-border-lime); transform: translateY(-3px); }
 .btn-block{ width: 100%; margin-top: 22px; }
 
 /* ---------- Hero ---------- */
@@ -297,17 +358,11 @@ img{ max-width: 100%; display:block; }
 .values-grid{
   display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px; margin-bottom: 28px;
 }
-.value-card{
-  padding: 32px 26px; transition: border-color .35s;
-  position: relative; overflow: hidden;
+.value-card{ padding: 32px 26px; }
+.value-card:hover{
+  border-color: var(--glass-border-lime);
+  --glow: radial-gradient(120px circle at 100% 0%, rgba(215,230,0,0.35), transparent 70%);
 }
-.value-card::before{
-  content:''; position: absolute; top: -40px; right: -40px; width: 100px; height: 100px;
-  border-radius: 50%; background: radial-gradient(circle, rgba(215,230,0,0.25), transparent 70%);
-  opacity: 0; transition: opacity .35s;
-}
-.value-card:hover{ border-color: var(--glass-border-lime); }
-.value-card:hover::before{ opacity: 1; }
 .value-num{ font-family: 'Space Grotesk', sans-serif; font-size: .95rem; color: var(--lime); font-weight: 700; }
 .value-card h3{ font-size: 1.15rem; margin: 14px 0 6px; }
 .value-card p{ font-size: .9rem; margin: 0; }
@@ -470,7 +525,13 @@ html.js .reveal:not(.in){ opacity: 0; transform: translateY(28px); }
   }
   .nav-links.open{ transform: translateY(0); opacity: 1; pointer-events: auto; }
   .nav-links a{ padding: 12px 10px; border-radius: 10px; }
-  .nav-links a:hover{ background: rgba(255,255,255,0.06); }
+  /* The underline decoration is sized for desktop links that hug their own
+     text; on mobile the links stretch full-width, so it would draw as a
+     stray bar across the whole row. Swap it for a contained highlight. */
+  .nav-links a:not(.nav-cta)::after{ display: none; }
+  .nav-links a:not(.nav-cta):hover,
+  .nav-links a:not(.nav-cta).active{ background: rgba(255,255,255,0.07); }
+  .nav-links a:not(.nav-cta).active{ box-shadow: inset 0 0 0 1px var(--glass-border-lime); }
   .nav-cta{ text-align: center; margin-top: 6px; }
   .nav-toggle{ display: flex; }
   .hero{ padding-top: 120px; align-items: flex-start; }
