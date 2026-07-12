@@ -126,20 +126,6 @@ img{ max-width: 100%; display:block; }
   to  { transform: translate3d(7vw,-4vh,0) scale(1.15); }
 }
 
-/* Pointer light: a soft lime pool that lives BEHIND the glass, so
-   moving the cursor makes each panel glow as the light passes under it. */
-.cursor-glow{
-  position: fixed; top: 0; left: 0; z-index: 0; pointer-events: none;
-  width: 44vw; height: 44vw; margin: -22vw 0 0 -22vw;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(215,230,0,0.16), rgba(215,230,0,0.05) 40%, transparent 68%);
-  filter: blur(30px);
-  opacity: 0; mix-blend-mode: screen;
-  transition: opacity .6s var(--ease);
-  will-change: transform;
-}
-.cursor-glow.live{ opacity: 1; }
-
 .noise-overlay{
   position: fixed; inset: 0; z-index: 1; pointer-events: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
@@ -147,49 +133,57 @@ img{ max-width: 100%; display:block; }
 }
 
 /* ============================================================
-   GLASS PRIMITIVE — layered like real liquid glass
-   body: translucent tinted fill + soft internal gradient
-   ::before: bright top sheen + pointer glare (light on the surface)
-   ::after: refractive edge ring with a faint chromatic split
+   GLASS PRIMITIVE — Apple-style "Liquid Glass" material
+   The 3D depth comes from the MATERIAL, not from motion:
+   - heavy background blur + vibrancy (saturation lift)
+   - a beveled edge (inset highlights top/left, shade bottom)
+     so the panel reads as a thick pane of glass
+   - a broad specular highlight where light hits the domed top
+   - a bright refractive rim that lenses light at the border
    ============================================================ */
 .glass{
   position: relative;
   isolation: isolate;
   background:
-    linear-gradient(150deg, rgba(255,255,255,0.10), rgba(255,255,255,0.015) 42%, rgba(255,255,255,0.05) 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.02) 32%, rgba(255,255,255,0.015) 68%, rgba(255,255,255,0.05) 100%),
     var(--glass-fill);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
   overflow: hidden;
-  backdrop-filter: blur(24px) saturate(175%) brightness(1.06);
-  -webkit-backdrop-filter: blur(24px) saturate(175%) brightness(1.06);
+  backdrop-filter: blur(22px) saturate(185%) brightness(1.08);
+  -webkit-backdrop-filter: blur(22px) saturate(185%) brightness(1.08);
+  /* Beveled glass depth: bright top/left edges, shaded bottom, soft inner
+     top-glow and a deeper inner bottom-shade give the pane real thickness. */
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.32),
-    inset 0 -1px 0 rgba(0,0,0,0.32),
-    0 2px 10px rgba(0,0,0,0.30),
-    0 26px 60px -22px rgba(0,0,0,0.55);
+    inset 0 1.5px 1px rgba(255,255,255,0.55),
+    inset 1.5px 0 1px rgba(255,255,255,0.12),
+    inset 0 -1.5px 1px rgba(0,0,0,0.35),
+    inset 0 12px 28px -16px rgba(255,255,255,0.16),
+    inset 0 -16px 34px -16px rgba(0,0,0,0.42),
+    0 2px 10px rgba(0,0,0,0.28),
+    0 30px 64px -24px rgba(0,0,0,0.6);
   transition: box-shadow .5s var(--ease), border-color .4s var(--ease), backdrop-filter .4s var(--ease), transform .5s var(--ease-liquid);
 }
-/* Surface light: soft diagonal sheen + a glare that tracks the pointer */
+/* Specular surface highlight: a broad soft glow where light reflects off
+   the curved top of the glass, plus a gentle diagonal sheen. */
 .glass::before{
   content:''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
   border-radius: inherit;
   background:
-    var(--glow, none),
-    radial-gradient(300px circle at var(--mx) var(--my), rgba(255,255,255,0.34), transparent 62%),
-    linear-gradient(125deg, rgba(255,255,255,0.16) 0%, transparent 30%, transparent 66%, rgba(255,255,255,0.05) 100%);
-  mix-blend-mode: overlay;
+    radial-gradient(130% 80% at 50% -12%, rgba(255,255,255,0.30), transparent 58%),
+    linear-gradient(125deg, rgba(255,255,255,0.12) 0%, transparent 34%, transparent 68%, rgba(255,255,255,0.05) 100%);
+  mix-blend-mode: soft-light;
   transition: background .4s var(--ease);
 }
-/* Refractive edge: bright lime-lit top-left fading to a faint cyan
-   dispersion bottom-right — glass bending & splitting light. */
+/* Refractive rim: a bright specular border that bends light — lime-lit at
+   the top-left, fading to a faint cool dispersion at the bottom-right. */
 .glass::after{
   content:''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
-  border-radius: inherit; padding: 1px;
+  border-radius: inherit; padding: 1.25px;
   background: linear-gradient(150deg,
-    rgba(255,255,255,0.6) 0%,
-    rgba(215,230,0,0.22) 32%,
-    rgba(255,255,255,0.03) 60%,
+    rgba(255,255,255,0.9) 0%,
+    rgba(215,230,0,0.30) 24%,
+    rgba(255,255,255,0.04) 55%,
     var(--dispersion) 100%);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: destination-out;
@@ -404,7 +398,6 @@ img{ max-width: 100%; display:block; }
 /* ---------- Valores ---------- */
 .values-grid{ display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 22px; margin-bottom: 28px; }
 .value-card{ padding: 32px 26px; }
-.value-card:hover{ --glow: radial-gradient(140px circle at 100% 0%, rgba(215,230,0,0.32), transparent 70%); }
 .value-num{ font-family: 'Space Grotesk', sans-serif; font-size: .95rem; color: var(--lime); font-weight: 700; }
 .value-card h3{ font-size: 1.15rem; margin: 14px 0 6px; }
 .value-card p{ font-size: .9rem; margin: 0; }
@@ -499,7 +492,7 @@ html.js .reveal:not(.in){
   transform: translateY(46px) scale(.965);
   filter: blur(12px);
 }
-/* Media panels condense from the side, still with the blur-to-sharp feel */
+/* Media panels condense in from the side (blur → sharp, no rotation) */
 html.js .story-media.reveal:not(.in),
 html.js .contact-visual.reveal:not(.in){
   transform: translateX(52px) scale(.965);
@@ -509,13 +502,10 @@ html.js .story-copy.reveal:not(.in),
 html.js .contact-card.reveal:not(.in){
   transform: translateX(-46px) scale(.98);
 }
-/* Cards puff into place */
+/* Card grids condense up into place on scroll */
 html.js .value-card.reveal:not(.in),
 html.js .counter-card.reveal:not(.in){
-  transform: scale(.8) translateY(26px);
-}
-html.js .mv-card.reveal:not(.in){
-  transform: perspective(900px) rotateX(12deg) translateY(38px) scale(.97);
+  transform: scale(.82) translateY(28px);
 }
 
 /* Hero orchestrated entrance */

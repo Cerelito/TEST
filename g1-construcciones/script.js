@@ -69,9 +69,8 @@ if ('IntersectionObserver' in window && !location.hash) {
         revealObserver.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.07, rootMargin: '0px 0px 60px 0px' });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
   revealEls.forEach(el => revealObserver.observe(el));
-  setTimeout(revealAll, 800);
 } else {
   revealAll();
 }
@@ -102,7 +101,6 @@ if ('IntersectionObserver' in window) {
     });
   }, { threshold: 0.4 });
   counters.forEach(el => counterObserver.observe(el));
-  setTimeout(() => counters.forEach(runCounter), 1500);
 } else {
   counters.forEach(runCounter);
 }
@@ -153,30 +151,6 @@ if ('IntersectionObserver' in window && spySections.length) {
   spySections.forEach(sec => spyObserver.observe(sec));
 }
 
-// ---------- Liquid pointer light: a soft glow that lives behind the glass ----------
-const cursorGlow = document.getElementById('cursorGlow');
-if (cursorGlow && finePointer && !reduceMotion) {
-  let gx = window.innerWidth / 2, gy = window.innerHeight / 2;
-  let cx = gx, cy = gy, glowRaf = null;
-  function glowFrame(){
-    // ease toward the pointer so the light trails like liquid
-    cx += (gx - cx) * 0.12;
-    cy += (gy - cy) * 0.12;
-    cursorGlow.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
-    if (Math.abs(gx - cx) > 0.5 || Math.abs(gy - cy) > 0.5) {
-      glowRaf = requestAnimationFrame(glowFrame);
-    } else {
-      glowRaf = null;
-    }
-  }
-  window.addEventListener('mousemove', (e) => {
-    gx = e.clientX; gy = e.clientY;
-    cursorGlow.classList.add('live');
-    if (!glowRaf) glowRaf = requestAnimationFrame(glowFrame);
-  }, { passive: true });
-  window.addEventListener('mouseleave', () => cursorGlow.classList.remove('live'));
-}
-
 // ---------- Liquid button fill: bloom the pool from where the pointer enters ----------
 document.querySelectorAll('.btn').forEach(btn => {
   btn.addEventListener('mouseenter', (e) => {
@@ -186,29 +160,3 @@ document.querySelectorAll('.btn').forEach(btn => {
   });
 });
 
-// ---------- Subtle 3D tilt + cursor-tracking glare on glass cards (fine pointers only, no reduced motion) ----------
-if (finePointer && !reduceMotion) {
-  document.querySelectorAll('.tilt').forEach(card => {
-    let raf = null;
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const px = (e.clientX - rect.left) / rect.width - 0.5;
-      const py = (e.clientY - rect.top) / rect.height - 0.5;
-      card.classList.add('tilting');
-      if (raf) cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        card.style.setProperty('--rx', (-py * 6).toFixed(2) + 'deg');
-        card.style.setProperty('--ry', (px * 6).toFixed(2) + 'deg');
-        card.style.setProperty('--mx', ((px + 0.5) * 100).toFixed(1) + '%');
-        card.style.setProperty('--my', ((py + 0.5) * 100).toFixed(1) + '%');
-      });
-    });
-    card.addEventListener('mouseleave', () => {
-      card.classList.remove('tilting');
-      card.style.setProperty('--rx', '0deg');
-      card.style.setProperty('--ry', '0deg');
-      card.style.setProperty('--mx', '150%');
-      card.style.setProperty('--my', '150%');
-    });
-  });
-}
