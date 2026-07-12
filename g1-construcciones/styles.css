@@ -110,10 +110,14 @@ img{ max-width: 100%; display:block; }
     0 30px 70px -30px rgba(114,213,227,0.18);
   transition: box-shadow .4s var(--ease), border-color .35s;
 }
-/* Diagonal sheen + cursor-following glare, both painted, non-interactive */
+/* Diagonal sheen + cursor-following glare, both painted, non-interactive.
+   border-radius:inherit keeps the sheen rounded on its own, so it stays
+   inside the pill/card shape even where the parent uses overflow:visible
+   (e.g. the nav pill, which must not clip its mobile dropdown). */
 .glass::before{
   content: '';
   position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  border-radius: inherit;
   background:
     var(--glow, none),
     radial-gradient(340px circle at var(--mx) var(--my), rgba(255,255,255,0.4), transparent 60%),
