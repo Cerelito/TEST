@@ -118,7 +118,40 @@
 
     <div class="hero-showcase" aria-hidden="true">
       <div class="hero-img-wrap">
-        <img src="img/hero-visual.png" alt="Plataforma Cerelit" loading="eager">
+<svg class="hero-svg" viewBox="0 0 480 380" role="img" aria-label="Gestión IT: nube, dispositivos e identidad conectados y protegidos" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="hsPanel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0e2a3a"/><stop offset="1" stop-color="#123a4c"/></linearGradient>
+            <linearGradient id="hsCloud" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#46b8a2"/><stop offset="1" stop-color="#2A7869"/></linearGradient>
+            <filter id="hsGlow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <rect x="8" y="8" width="464" height="364" rx="26" fill="url(#hsPanel)" stroke="rgba(255,255,255,.08)"/>
+          <g stroke="#3A9D8A" stroke-width="2" fill="none" opacity=".75">
+            <path class="flow" d="M240 150 C 240 210, 132 205, 122 258"/>
+            <path class="flow" d="M240 150 C 240 205, 240 220, 240 258"/>
+            <path class="flow" d="M240 150 C 240 210, 348 205, 360 258"/>
+          </g>
+          <g filter="url(#hsGlow)" fill="url(#hsCloud)">
+            <circle cx="212" cy="118" r="26"/><circle cx="250" cy="104" r="34"/><circle cx="288" cy="120" r="24"/>
+            <rect x="196" y="118" width="108" height="34" rx="17"/>
+          </g>
+          <text x="250" y="132" text-anchor="middle" font-family="monospace" font-size="13" fill="#fff" font-weight="700">CLOUD</text>
+          <g class="pulse">
+            <rect x="86" y="258" width="72" height="48" rx="6" fill="#123a4c" stroke="#3A9D8A" stroke-width="2"/>
+            <rect x="78" y="308" width="88" height="8" rx="4" fill="#3A9D8A"/>
+          </g>
+          <g class="pulse b">
+            <rect x="225" y="262" width="30" height="54" rx="7" fill="#123a4c" stroke="#3A9D8A" stroke-width="2"/>
+            <circle cx="240" cy="308" r="2.6" fill="#3A9D8A"/>
+          </g>
+          <g class="pulse c">
+            <path d="M360 258 l26 8 v18 c0 16 -14 24 -26 30 c-12 -6 -26 -14 -26 -30 v-18 z" fill="#123a4c" stroke="#3A9D8A" stroke-width="2"/>
+            <path d="M349 288 l8 8 14 -16" stroke="#46b8a2" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+          <circle class="pulse" cx="108" cy="120" r="5" fill="#3A9D8A"/>
+          <circle class="pulse c" cx="382" cy="108" r="5" fill="#3A9D8A"/>
+          <circle class="pulse d" cx="410" cy="182" r="4" fill="#3A9D8A"/>
+          <circle class="pulse b" cx="70" cy="180" r="4" fill="#3A9D8A"/>
+        </svg>
 
         <!-- Floating info pills -->
         <div class="hero-pill pill-1">
@@ -380,6 +413,32 @@
                   </svg></span>Automatización con Power Platform y Power Automate</li>
             </ul>
           </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="dispositivos" class="section-py hl-band">
+      <div class="container">
+        <div class="hl-inner">
+          <div class="reveal-l">
+            <span class="hl-eyebrow">Gestión de dispositivos · Nuestro fuerte</span>
+            <h2 class="hl-title">Intune, MDM y control total de tus equipos</h2>
+            <p class="hl-lead">Inscribimos, aseguramos y administramos cada laptop y celular de tu empresa — con <strong>Intune</strong>, <strong>MDM de Google Workspace</strong>, <strong>Entra ID</strong> y <strong>Microsoft Defender</strong>. Si un equipo se pierde, se bloquea y se borra en remoto.</p>
+            <div class="hl-chips">
+              <span class="hl-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>MDM de Intune</span>
+              <span class="hl-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>MDM de Google</span>
+              <span class="hl-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Entra ID</span>
+              <span class="hl-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Microsoft Defender</span>
+              <span class="hl-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Migraciones</span>
+            </div>
+            <a href="microsoft-365.html" class="btn-prim hl-cta">Ver Intune y Microsoft 365</a>
+          </div>
+          <div class="hl-metrics reveal-r">
+            <div class="hl-metric"><div class="n"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg></div><div class="l">MDM de Intune</div></div>
+            <div class="hl-metric"><div class="n"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19a4.5 4.5 0 100-9 6 6 0 00-11.6 1.5A3.5 3.5 0 006 19z"/></svg></div><div class="l">MDM de Google</div></div>
+            <div class="hl-metric"><div class="n"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="5"/><path d="M12.5 11.5L20 4"/><path d="M17 7l2 2M15 9l2 2"/></svg></div><div class="l">Entra ID</div></div>
+            <div class="hl-metric"><div class="n"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div><div class="l">Defender</div></div>
+          </div>
         </div>
       </div>
     </section>

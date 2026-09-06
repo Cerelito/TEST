@@ -2850,9 +2850,128 @@
     }
     .page-hero .lead { color: rgba(255,255,255,.72); }
 
+    /* ============================================
+     BANDA DESTACADA (sustituye a las FAQ) — puntos clave
+  ============================================ */
+    .hl-band {
+      position: relative;
+      overflow: hidden;
+      background: var(--secondary);
+      color: #fff;
+    }
+    .hl-band::before {
+      content: "";
+      position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background:
+        radial-gradient(ellipse 55% 65% at 82% 30%, rgba(58,157,138,.22), transparent 70%),
+        radial-gradient(ellipse 50% 70% at 10% 90%, rgba(58,157,138,.12), transparent 65%);
+    }
+    .hl-band > .container { position: relative; z-index: 2; }
+    .hl-inner {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+      align-items: center;
+    }
+    @media (min-width: 900px) { .hl-inner { grid-template-columns: 1.05fr .95fr; gap: 3.5rem; } }
+    .hl-eyebrow {
+      display: block;
+      font-family: var(--font-h); font-size: .68rem; font-weight: 700;
+      letter-spacing: .18em; text-transform: uppercase;
+      color: var(--primary); margin-bottom: .85rem;
+    }
+    .hl-title {
+      color: #fff; text-wrap: balance;
+      font-size: clamp(1.6rem, 3.6vw, 2.4rem);
+      margin-bottom: .9rem; line-height: 1.12;
+    }
+    .hl-lead { color: rgba(255,255,255,.72); font-size: .95rem; line-height: 1.8; max-width: 46ch; }
+    .hl-chips { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.4rem; }
+    .hl-chip {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .6rem 1rem; border-radius: 9999px;
+      background: rgba(58,157,138,.14);
+      border: 1px solid rgba(58,157,138,.4);
+      color: #fff; font-family: var(--font-h); font-weight: 700; font-size: .78rem;
+      transition: transform .3s var(--spring), background .3s;
+    }
+    .hl-chip:hover { transform: translateY(-2px); background: rgba(58,157,138,.24); }
+    .hl-chip svg { width: 16px; height: 16px; color: var(--primary); flex-shrink: 0; }
+    .hl-metrics { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .hl-metric {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 1.1rem;
+      padding: 1.5rem 1rem; text-align: center;
+    }
+    .hl-metric .n {
+      font-family: var(--font-h); font-weight: 800;
+      font-size: clamp(1.7rem, 4.5vw, 2.3rem);
+      color: var(--primary); line-height: 1; letter-spacing: -.02em;
+    }
+    .hl-metric .l {
+      font-size: .66rem; text-transform: uppercase; letter-spacing: .1em;
+      color: rgba(255,255,255,.55); margin-top: .5rem;
+    }
+    .hl-cta { margin-top: 1.6rem; }
+
+    /* ── "Explora" — tarjetas descriptivas (sustituyen a los chips vacíos) ── */
+    .explora-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 2rem; }
+    @media (min-width: 700px) { .explora-grid { grid-template-columns: repeat(3, 1fr); } }
+    .explora-card {
+      display: flex; flex-direction: column; gap: .5rem;
+      background: var(--surface-mid);
+      border: 1px solid rgba(63,72,77,.12);
+      border-radius: 1.15rem;
+      padding: 1.5rem 1.4rem;
+      transition: transform .4s var(--spring), border-color .3s, box-shadow .4s var(--ease);
+    }
+    .explora-card:hover { transform: translateY(-6px); border-color: var(--primary); box-shadow: 0 20px 42px -22px rgba(42,77,105,.45); }
+    .explora-card .ec-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .explora-card h3 { font-size: 1.02rem; color: var(--secondary); }
+    .explora-card p { font-size: .84rem; color: var(--on-surface-var); margin: 0; line-height: 1.55; }
+    .explora-card .rel-arrow { width: 22px; height: 22px; color: var(--primary); flex-shrink: 0; transition: transform .4s var(--spring); }
+    .explora-card:hover .rel-arrow { transform: translateX(5px); }
+
+    /* ── Hero: ilustración SVG (reemplaza imagen externa, nítida en todo tamaño) ── */
+    .hero-svg { width: 100%; height: auto; display: block; border-radius: 1.5rem; filter: drop-shadow(0 40px 80px rgba(0,0,0,.4)); }
+    .hero-svg .pulse { animation: nodePulse 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .hero-svg .pulse.b { animation-delay: .6s; }
+    .hero-svg .pulse.c { animation-delay: 1.2s; }
+    .hero-svg .pulse.d { animation-delay: 1.8s; }
+    .hero-svg .flow { stroke-dasharray: 5 7; animation: flowDash 3s linear infinite; }
+    @keyframes nodePulse { 0%,100% { opacity: .5; } 50% { opacity: 1; } }
+    @keyframes flowDash { to { stroke-dashoffset: -48; } }
+
+    /* ============================================
+     RESPONSIVE FINO — móviles y plegables
+  ============================================ */
+    @media (max-width: 480px) {
+      .hero-ctas { width: 100%; }
+      .hero-ctas .btn-prim, .hero-ctas .btn-ghost { flex: 1 1 100%; justify-content: center; }
+      .hl-metrics { gap: .7rem; }
+      .hl-metric { padding: 1.15rem .75rem; }
+    }
+    /* Plegables cerrados / pantallas muy angostas (~280–360px) */
+    @media (max-width: 360px) {
+      .nav-glass { width: 94%; padding: .55rem .8rem; gap: .5rem; }
+      .hero-h1 { font-size: clamp(2rem, 9vw, 2.4rem); }
+      .hero-stats { gap: 1rem; flex-wrap: wrap; }
+      .feat-card, .flow-card { padding: 1.4rem 1.2rem; }
+      .cta-panel { padding: 1.6rem 1.1rem; }
+      .cta-channels { flex-direction: column; }
+      .cta-chip { width: 100%; justify-content: center; }
+      .hl-chip { font-size: .72rem; padding: .5rem .8rem; }
+    }
+    /* Plegables abiertos (~700–900px): asegura respiración */
+    @media (min-width: 700px) and (max-width: 900px) {
+      .container { padding-inline: 1.5rem; }
+    }
+
     /* ── Respeto a movimiento reducido ── */
     @media (prefers-reduced-motion: reduce) {
       .ph-canvas { display: none; }
+      .hero-svg .pulse, .hero-svg .flow { animation: none !important; }
       .page-hero > .container { animation: none !important; }
       ::view-transition-group(*),
       ::view-transition-old(*),
