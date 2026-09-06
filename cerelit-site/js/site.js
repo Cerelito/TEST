@@ -48,7 +48,7 @@
       function initParticles(canvas) {
         if (!canvas || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         const ctx = canvas.getContext('2d');
-        let W, H, dots = [];
+        let W, H, dots = [], mx = -9999, my = -9999;
         const N = () => Math.min(80, Math.round(window.innerWidth / 16));
 
         function resize() {
@@ -57,6 +57,14 @@
         }
         resize();
         new ResizeObserver(resize).observe(canvas.parentElement);
+
+        /* El cursor se convierte en un nodo: la red reacciona a él */
+        const host = canvas.parentElement;
+        host.addEventListener('pointermove', e => {
+          const r = canvas.getBoundingClientRect();
+          mx = e.clientX - r.left; my = e.clientY - r.top;
+        }, { passive: true });
+        host.addEventListener('pointerleave', () => { mx = my = -9999; });
 
         function initDots() {
           dots = [];
@@ -97,11 +105,39 @@
               }
             }
           }
+          if (mx > -9999) {
+            for (let i = 0; i < dots.length; i++) {
+              const dx = dots[i].x - mx, dy = dots[i].y - my, dist = Math.sqrt(dx * dx + dy * dy);
+              if (dist < 175) {
+                ctx.beginPath();
+                ctx.moveTo(dots[i].x, dots[i].y);
+                ctx.lineTo(mx, my);
+                ctx.strokeStyle = `rgba(58,157,138,${(1 - dist / 175) * .5})`;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+              }
+            }
+            ctx.beginPath();
+            ctx.arc(mx, my, 3, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(58,157,138,.9)';
+            ctx.fill();
+          }
           requestAnimationFrame(draw);
         }
         draw();
       }
       document.querySelectorAll('#hero-canvas, .ph-canvas').forEach(initParticles);
+
+      /* ── SPOTLIGHT que sigue al cursor en tarjetas ── */
+      if (window.matchMedia('(hover: hover) and (pointer: fine)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.querySelectorAll('.svc-card, .cloud-card').forEach(card => {
+          card.addEventListener('pointermove', e => {
+            const r = card.getBoundingClientRect();
+            card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+            card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+          });
+        });
+      }
 
       /* ── INTERSECTION OBSERVER (Animaciones fluidas en todo el sitio) ── */
       const io = new IntersectionObserver((entries, obs) => {

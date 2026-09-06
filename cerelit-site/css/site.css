@@ -2990,9 +2990,33 @@
       .container { padding-inline: 1.5rem; }
     }
 
+    /* ── Spotlight que sigue al cursor (tarjetas del index) ── */
+    .svc-card::after, .cloud-card::after {
+      content: ""; position: absolute; z-index: 0;
+      width: 320px; height: 320px;
+      left: var(--mx, 50%); top: var(--my, 50%);
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(58,157,138,.16), transparent 70%);
+      opacity: 0; transition: opacity .35s var(--ease); pointer-events: none;
+    }
+    .svc-card:hover::after, .cloud-card:hover::after { opacity: 1; }
+    .svc-card > *, .cloud-card > * { position: relative; z-index: 1; }
+
+    /* ── Línea "en vivo" en la franja de indicadores ── */
+    .trust-strip { position: relative; overflow: hidden; }
+    .trust-strip::before {
+      content: ""; position: absolute; top: 0; left: 0; height: 2px; width: 100%;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+      background-size: 42% 100%; background-repeat: no-repeat;
+      animation: trust-scan 3.6s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes trust-scan { 0% { background-position: -42% 0; } 100% { background-position: 142% 0; } }
+
     /* ── Respeto a movimiento reducido ── */
     @media (prefers-reduced-motion: reduce) {
       .ph-canvas { display: none; }
+      .trust-strip::before { animation: none !important; }
       .hero-svg .pulse, .hero-svg .flow { animation: none !important; }
       .page-hero > .container { animation: none !important; }
       ::view-transition-group(*),
