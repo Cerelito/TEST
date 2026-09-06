@@ -2917,7 +2917,7 @@
 
     /* ── "Explora" — tarjetas descriptivas (sustituyen a los chips vacíos) ── */
     .explora-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 2rem; }
-    @media (min-width: 700px) { .explora-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 640px) { .explora-grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); } }
     .explora-card {
       position: relative;
       overflow: hidden;

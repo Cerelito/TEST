@@ -15,6 +15,13 @@
   RewriteRule ^ https://cerelit.com%{REQUEST_URI} [L,R=301]
 </IfModule>
 
+
+# ── Consultoría fusionada en Soporte (301) ────────────────────
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^consultoria-it\.html$ /soporte-tecnico-it.html [L,R=301]
+</IfModule>
+
 # ── Cabeceras de seguridad ────────────────────────────────────
 <IfModule mod_headers.c>
   Header always set X-Frame-Options "SAMEORIGIN"
