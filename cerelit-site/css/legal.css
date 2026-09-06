@@ -14,7 +14,7 @@
       --ease:              cubic-bezier(0.4, 0, 0.2, 1);
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html,body { overflow-x: hidden; }
+    html,body { overflow-x: clip; }
     html {
       background-color: var(--surface);
       background-image: linear-gradient(var(--secondary), var(--secondary)), linear-gradient(var(--primary), var(--primary));
