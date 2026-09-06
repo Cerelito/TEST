@@ -1,0 +1,30 @@
+CERELIT MINDS — Sitio web (versión rediseñada)
+================================================
+
+CÓMO SUBIRLO
+1. Sube TODO el contenido de esta carpeta a la raíz de tu hosting
+   (donde hoy está tu sitio: public_html / www).
+2. IMPORTANTE: conserva/sube tu carpeta "img/" con tus imágenes reales
+   (logos blanco.svg y azul.svg, favicon_96x96.png y og-image.jpg 1200x630).
+   Esta carpeta NO viene en el ZIP porque son tus archivos originales.
+   Sin ella, verás el logo/imágenes rotas.
+
+INCLUIDO
+- index.html                 Página principal
+- soporte-tecnico-it.html    Soporte y Consultoría IT (servicio unificado)
+- google-workspace.html      Google Workspace
+- microsoft-365.html         Microsoft 365 / Intune
+- consultoria-it.html        Redirección 301 -> soporte-tecnico-it.html
+- politica-datos.html, politica-cookies.html, 404.html
+- css/site.css, css/legal.css
+- js/site.js
+- sitemap.xml, robots.txt, .htaccess
+
+NOTAS
+- Dominio canónico: https://cerelit.com (sin www). El .htaccess ya redirige
+  www -> sin www. Si prefieres usar www, avísame y lo invierto.
+- Contacto por WhatsApp (sin formularios de correo).
+- Las transiciones fluidas entre páginas (View Transitions) funcionan en
+  Chrome, Edge y Safari recientes; en otros navegadores la navegación es normal.
+
+Desarrollado con Cerelit Minds.
