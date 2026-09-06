@@ -15,7 +15,13 @@
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html,body { overflow-x: hidden; }
-    html { background-color: var(--primary); }
+    html {
+      background-color: var(--surface);
+      background-image: linear-gradient(var(--secondary), var(--secondary)), linear-gradient(var(--primary), var(--primary));
+      background-repeat: no-repeat, no-repeat;
+      background-position: top center, bottom center;
+      background-size: 100% 320px, 100% 320px;
+    }
     body { background: var(--surface); color: var(--on-surface); font-family: var(--font-b); font-size: 1rem; line-height: 1.7; padding-top: 80px; -webkit-font-smoothing: antialiased; }
     a { color: var(--primary); }
     h1,h2,h3 { font-family: var(--font-h); color: var(--secondary); }

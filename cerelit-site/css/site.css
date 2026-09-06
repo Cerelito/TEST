@@ -47,8 +47,16 @@
     html {
       overflow-x: hidden;
       width: 100%;
-      /* Verde de marca en las barras del navegador móvil (zonas seguras / overscroll) */
-      background-color: var(--primary);
+      /* Barras del navegador móvil: azul (hero) arriba, verde (marca) abajo.
+         El body (crema) cubre el contenido; estas franjas solo se ven en las
+         zonas de las barras / overscroll. */
+      background-color: var(--surface);
+      background-image:
+        linear-gradient(var(--secondary), var(--secondary)),
+        linear-gradient(var(--primary), var(--primary));
+      background-repeat: no-repeat, no-repeat;
+      background-position: top center, bottom center;
+      background-size: 100% 320px, 100% 320px;
     }
 
     body {
