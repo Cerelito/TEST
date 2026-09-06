@@ -7,7 +7,7 @@
 
   <!-- Página principal -->
   <url>
-    <loc>https://cerelit.com/</loc>
+    <loc>https://www.cerelit.com/</loc>
     <lastmod>2026-05-09T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.00</priority>
@@ -15,28 +15,28 @@
 
   <!-- Páginas de servicio -->
   <url>
-    <loc>https://cerelit.com/soporte-tecnico-it.html</loc>
+    <loc>https://www.cerelit.com/soporte-tecnico-it.html</loc>
     <lastmod>2026-09-05T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
 
   <url>
-    <loc>https://cerelit.com/consultoria-it.html</loc>
+    <loc>https://www.cerelit.com/consultoria-it.html</loc>
     <lastmod>2026-09-05T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
 
   <url>
-    <loc>https://cerelit.com/google-workspace.html</loc>
+    <loc>https://www.cerelit.com/google-workspace.html</loc>
     <lastmod>2026-09-05T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
 
   <url>
-    <loc>https://cerelit.com/microsoft-365.html</loc>
+    <loc>https://www.cerelit.com/microsoft-365.html</loc>
     <lastmod>2026-09-05T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
@@ -44,14 +44,14 @@
 
   <!-- Páginas legales -->
   <url>
-    <loc>https://cerelit.com/politica-datos.html</loc>
+    <loc>https://www.cerelit.com/politica-datos.html</loc>
     <lastmod>2026-05-09T00:00:00+00:00</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.30</priority>
   </url>
 
   <url>
-    <loc>https://cerelit.com/politica-cookies.html</loc>
+    <loc>https://www.cerelit.com/politica-cookies.html</loc>
     <lastmod>2026-05-09T00:00:00+00:00</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.30</priority>

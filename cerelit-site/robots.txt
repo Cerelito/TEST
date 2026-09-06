@@ -4,4 +4,4 @@ User-agent: *
 Allow: /
 
 # Ubicación del sitemap para acelerar la indexación
-Sitemap: https://cerelit.com/sitemap.xml
+Sitemap: https://www.cerelit.com/sitemap.xml
