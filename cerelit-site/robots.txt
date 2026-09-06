@@ -1,0 +1,7 @@
+# robots.txt — Cerelit Minds
+# Permite que Google y demás buscadores indexen todo el sitio
+User-agent: *
+Allow: /
+
+# Ubicación del sitemap para acelerar la indexación
+Sitemap: https://cerelit.com/sitemap.xml

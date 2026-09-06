@@ -117,41 +117,18 @@
       if (banner && localStorage.getItem('ck') !== '1') setTimeout(() => banner.classList.add('show'), 2500);
       if (okBtn) okBtn.addEventListener('click', () => { localStorage.setItem('ck', '1'); banner.classList.remove('show'); });
 
-      /* ── FORMULARIO — arma un mailto: con los datos, sin backend ── */
-      const form = document.getElementById('contactForm');
-
-      if (form) {
-        form.addEventListener('submit', e => {
-          e.preventDefault();
-
-          const successEl = document.getElementById('form-success');
-          const errorEl = document.getElementById('form-error');
-
-          successEl.classList.remove('show');
-          errorEl.classList.remove('show');
-
-          const nombre = form.querySelector('#f-name').value.trim();
-          const email = form.querySelector('#f-email').value.trim();
-          const servicio = form.querySelector('#f-service').value || 'Consulta general';
-          const mensaje = form.querySelector('#f-msg').value.trim();
-          const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-          if (!nombre || nombre.length < 2) { errorEl.classList.add('show'); return; }
-          if (!emailRx.test(email)) { errorEl.classList.add('show'); return; }
-
-          const subject = `Nuevo contacto Cerelit: ${servicio} — ${nombre}`;
-          const body =
-            `Nombre: ${nombre}\n` +
-            `Correo: ${email}\n` +
-            `Servicio: ${servicio}\n\n` +
-            `Mensaje:\n${mensaje || '(Sin mensaje adicional)'}`;
-
-          const mailtoLink = `mailto:hola@cerelit.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-          successEl.classList.add('show');
-          window.location.href = mailtoLink;
-          form.reset();
+      /* ── MENÚ DESPLEGABLE "SERVICIOS" (accesible, hover + clic + teclado) ── */
+      const dd = document.querySelector('.nav-dd');
+      const ddBtn = document.querySelector('.nav-dd-btn');
+      if (dd && ddBtn) {
+        const closeDd = () => { dd.classList.remove('open'); ddBtn.setAttribute('aria-expanded', 'false'); };
+        ddBtn.addEventListener('click', e => {
+          e.stopPropagation();
+          const open = dd.classList.toggle('open');
+          ddBtn.setAttribute('aria-expanded', open);
         });
+        document.addEventListener('click', e => { if (!dd.contains(e.target)) closeDd(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDd(); });
       }
 
       /* ── PREFERENCIA DE MOVIMIENTO ── */

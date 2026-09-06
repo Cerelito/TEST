@@ -9,8 +9,8 @@
       --on-surface:        #1E293B;
       --on-surface-var:    #475569;
       --outline:           #CBD5E1;
-      --font-h:            'Liberation Mono', monospace;
-      --font-b:            'Liberation Mono', monospace;
+      --font-h:            'Roboto Mono', 'Liberation Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      --font-b:            'Roboto Mono', 'Liberation Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
       --ease:              cubic-bezier(0.4, 0, 0.2, 1);
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
