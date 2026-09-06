@@ -45,8 +45,8 @@
       window.addEventListener('scroll', updateNav, { passive: true });
 
       /* ── HERO CANVAS PARTICLES ── */
-      const canvas = document.getElementById('hero-canvas');
-      if (canvas) {
+      function initParticles(canvas) {
+        if (!canvas || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         const ctx = canvas.getContext('2d');
         let W, H, dots = [];
         const N = () => Math.min(80, Math.round(window.innerWidth / 16));
@@ -101,6 +101,7 @@
         }
         draw();
       }
+      document.querySelectorAll('#hero-canvas, .ph-canvas').forEach(initParticles);
 
       /* ── INTERSECTION OBSERVER (Animaciones fluidas en todo el sitio) ── */
       const io = new IntersectionObserver((entries, obs) => {
