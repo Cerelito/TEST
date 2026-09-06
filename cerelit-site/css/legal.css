@@ -15,6 +15,7 @@
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html,body { overflow-x: hidden; }
+    html { background-color: var(--primary); }
     body { background: var(--surface); color: var(--on-surface); font-family: var(--font-b); font-size: 1rem; line-height: 1.7; padding-top: 80px; -webkit-font-smoothing: antialiased; }
     a { color: var(--primary); }
     h1,h2,h3 { font-family: var(--font-h); color: var(--secondary); }

@@ -47,6 +47,8 @@
     html {
       overflow-x: hidden;
       width: 100%;
+      /* Verde de marca en las barras del navegador móvil (zonas seguras / overscroll) */
+      background-color: var(--primary);
     }
 
     body {
